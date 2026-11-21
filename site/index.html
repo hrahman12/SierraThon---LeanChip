@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LeanChip: 2D to 3D, verified in Lean</title>
+<title>LeanChip Board Verifier</title>
 <meta name="description" content="Does the 2D design really become the 3D board? LeanChip proves it with the Lean 4 kernel for the Sierrathon RP2040 board.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1a33'/%3E%3Cpath d='M11 8v16M11 16h11' stroke='%23b9a7ff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,6 +16,7 @@
 :root{--bg:#060b18;--bg2:#0b1a33;--card:#0f1c36;--line:#22314f;--ink:#f3efe6;--dim:#a9b6c6;--lav:#b9a7ff;--teal:#2dd4bf;--amber:#f5a524;
   --good:#1f9d55;--warn:#d69e2e;--crit:#e5484d;--mono:'JetBrains Mono',Consolas,monospace;--sans:'Space Grotesk','Segoe UI',Arial,sans-serif}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html{scroll-behavior:smooth}
 body{margin:0;background:linear-gradient(180deg,var(--bg),var(--bg2) 60%,var(--bg));color:var(--ink);font:17px/1.6 var(--sans)}
 a{color:var(--lav)}
@@ -71,35 +72,94 @@ figcaption{color:var(--dim);font-size:14.5px;margin-top:6px}
 .note{border-left:3px solid var(--amber);padding:8px 14px;background:rgba(245,165,36,.07);border-radius:0 10px 10px 0;max-width:860px}
 footer{color:var(--dim);font-size:14px;margin-top:70px;border-top:1px solid var(--line);padding-top:18px}
 ul{padding-left:20px;max-width:820px} li{margin:4px 0}
+
+.tool{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:16px;align-items:start}
+@media (max-width:900px){.tool{grid-template-columns:minmax(0,1fr)}}
+.col{display:grid;gap:16px;min-width:0}
+.pane{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0}
+.ph{font:700 13px var(--mono);letter-spacing:.08em;color:var(--teal);margin-bottom:10px}
+.sm{font-size:14.5px} .btn{font:600 13.5px var(--mono);background:var(--bg2);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 12px;cursor:pointer}
+.btn.primary{background:var(--lav);color:#12122a;border-color:var(--lav)} .btn:disabled{opacity:.5;cursor:default}
+.btn:focus-visible,select:focus-visible,.cap:focus-visible,.prop:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.row2{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+details{border-top:1px solid var(--line);padding:8px 0} summary{cursor:pointer;font-weight:600}
+.knob{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:center;padding:6px 0}
+.knob small{display:block;color:var(--dim);font-size:12.5px}
+select{width:100%;font:14px var(--sans);background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px}
+.cap{font:600 12.5px var(--mono);border:1px solid var(--line);background:var(--bg2);color:var(--ink);border-radius:8px;padding:6px 8px;margin:3px;cursor:pointer}
+.cap[aria-pressed=true]{opacity:.55;text-decoration:line-through;border-style:dashed}
+.prop{display:block;width:100%;text-align:left;background:var(--bg2);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin:6px 0;cursor:pointer;font:15px var(--sans)}
+.prop[aria-pressed=true]{border-color:var(--lav);box-shadow:0 0 0 1px var(--lav) inset} .prop small{display:block;color:var(--dim);font-size:13px;margin-top:3px}
+.rt{font:600 12.5px var(--mono);color:var(--lav);margin:12px 0 2px}
+.files{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0} .files a{font:600 12.5px var(--mono);border:1px solid var(--line);border-radius:8px;padding:5px 8px;text-decoration:none}
+.drop{display:block;border:1.5px dashed var(--line);border-radius:12px;padding:14px;margin-top:10px;text-align:center;color:var(--dim);cursor:pointer} .drop input{display:block;margin:8px auto 0;max-width:100%}
+.vhead{display:flex;flex-wrap:wrap;gap:12px;align-items:center} .pill.big{font-size:20px;padding:8px 18px}
+#boardwrap{background:radial-gradient(ellipse at 50% 55%,#14264a,#060b18 78%);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+#board2d,#board3d{display:block;width:100%;aspect-ratio:1.16;touch-action:none}
+#board2d rect{transition:fill .45s} #board2d .c{cursor:pointer} #board2d text{font:1.1px var(--mono);fill:#fff;pointer-events:none}
 </style>
 </head>
 <body>
 <header class="hero">
   <img src="assets/leanchip_banner.png" alt="LeanChip: 2D to 3D, verified in Lean. The real Sierrathon schematic and stack-up on the left, a 3D render of the board exported by KiCad on the right, the Lean turnstile between them.">
   <nav aria-label="Sections">
-    <a class="primary" href="#demo">Demo runs</a><a href="#board">3D board</a><a href="#breaks">Where it breaks</a>
+    <a class="primary" href="#tool">The tool</a><a href="#tests">Test cases</a><a href="#demo">Certified runs</a><a href="#board">3D export</a><a href="#breaks">Where it breaks</a>
     <a href="#math">The proofs</a><a href="#claude">Claude Code</a><a href="#run">Run it locally</a>
     <a href="https://github.com/hrahman12/SierraThon---LeanChip">GitHub</a>
   </nav>
 </header>
 <main>
 <h1>Does the 2D design really become the 3D board?</h1>
-<p class="lead">A PCB starts as flat documents: a schematic, a parts list, a stack-up drawing, footprints. It ends as a physical object. LeanChip uses the Lean 4 proof checker to prove that the first really turns into the second, for the Sierrathon RP2040 board and its exact 21-line parts list.</p>
-<div class="grid g3" style="margin-top:20px">
-  <div class="card teal"><div class="k">2D DESIGN</div><h3>What you draw</h3><div class="dim">Schematic pins and nets, BOM part numbers, footprints and courtyards, the 4-layer stack-up.</div></div>
-  <div class="card lav"><div class="k">LEAN ⊢</div><h3>What gets proved</h3><div class="dim">Right part on every footprint, every pin on the right net, every 3D body inside its courtyard, no two parts able to collide, everything on the board.</div></div>
-  <div class="card red"><div class="k">3D BOARD</div><h3>What you build</h3><div class="dim">A KiCad STEP assembly with real part models: 49 bodies on a 52 × 45 mm hexagon, 59.5 mil thick.</div></div>
-</div>
-<p style="margin-top:18px">You feed it a board file. It answers <span class="pill GREEN">GREEN</span> proved, <span class="pill YELLOW">YELLOW</span> buildable but needs an action, or <span class="pill RED">RED</span> not the design you meant. The answer only counts when the Lean kernel has certified it.</p>
+<p class="lead">Pick a build, tweak it, and Lean answers for every component: <span class="pill GREEN">GREEN</span> proved, <span class="pill YELLOW">YELLOW</span> buildable but needs an action, <span class="pill RED">RED</span> not the design you meant. The checker behind this page is the compiled Lean code, the same one the command line runs.</p>
 
-<h2 id="demo"><span class="t">⊢</span>Demo runs</h2>
-<p class="dim">These are real results, produced by <code>leancheck</code> on real KiCad files in this repository. Pick a board.</p>
+<h2 id="tool"><span class="t">⊢</span>The tool</h2>
+<div class="tool">
+ <div class="col">
+  <section class="pane"><div class="ph">1 · CHOOSE A BUILD</div>
+   <div class="tabs" role="tablist"><button id="tabAI" aria-selected="true">Claude proposes</button><button id="tabUp" aria-selected="false">Upload a design</button></div>
+   <div id="paneAI">
+    <p class="dim sm">Claude suggests ways to build the board. Lean rates each one. Lean's findings go back to Claude for the next round.</p>
+    <div id="rounds"></div>
+    <button class="btn" id="askClaude">Ask Claude for a new round</button> <span class="dim sm" id="askNote"></span>
+   </div>
+   <div id="paneUp" hidden>
+    <p class="dim sm">The design Sierrathon supplied is built in. You can also drop a KiCad board file.</p>
+    <button class="btn primary" id="useSierra">Use the Sierrathon files</button>
+    <div class="files"><a href="files/Sierrathon_Schematic.pdf" target="_blank" rel="noopener">Sierrathon_Schematic.pdf</a><a href="files/Sierrathon_BOM.xlsx">Sierrathon_BOM.xlsx</a><a href="files/Sierrathon_StackUp.png" target="_blank" rel="noopener">Stack-up drawing</a></div>
+    <img src="files/schematic_page1.png" alt="Page 1 of the supplied Sierrathon schematic" style="width:100%;border-radius:10px;border:1px solid var(--line);background:#fff" loading="lazy">
+    <label class="drop" for="upfile">Drop a <code>.kicad_pcb</code>, or the Sierrathon PDF or BOM<input type="file" id="upfile" accept=".kicad_pcb,.pdf,.xlsx"></label>
+    <div class="dim sm" id="upNote"></div>
+   </div>
+  </section>
+  <section class="pane"><div class="ph">2 · TWEAK IT</div>
+   <div class="row2"><button class="btn" id="reset">Reset to the supplied design</button><button class="btn primary" id="fixAll">Fix what Lean flagged</button></div>
+   <details open><summary>Values from the supplied files</summary><div id="knobs"></div></details>
+   <details><summary>Decoupling capacitors (click to leave one off)</summary><div id="decaps"></div></details>
+   <details><summary>Footprint for each BOM row</summary><div id="lines"></div></details>
+   <details><summary>Assembly mistakes to inject</summary><div id="faults"></div></details>
+  </section>
+ </div>
+ <section class="pane" id="verdict"><div class="ph">3 · LEAN'S VERDICT</div>
+  <div class="vhead"><span class="pill big" id="vpill">…</span><span id="vcounts" class="mono"></span></div>
+  <div class="dim sm" id="vsrc"></div>
+  <div class="tabs" style="margin:10px 0 6px"><button id="v2d" aria-selected="true">2D design</button><button id="v3d" aria-selected="false">3D board</button></div>
+  <div id="boardwrap"><svg id="board2d" role="img" aria-label="Board with each component coloured by Lean's verdict"></svg><canvas id="board3d" hidden></canvas></div>
+  <div class="card sm" id="compinfo">Click a component to see what Lean found.</div>
+  <div class="tablewrap" style="margin-top:10px"><table id="vrows"><thead><tr><th>Check</th><th>Result</th><th>Detail</th></tr></thead><tbody></tbody></table></div>
+  <details class="sm" style="margin-top:8px"><summary>How this was checked</summary><div class="dim">The page turns your choices into a board description and sends it to <code>leanchip</code>, a binary compiled from <code>LeanVsDFM/Check.lean</code>. It runs <code>reportK</code>, the function the theorems are about. A component's colour is the worst finding that names it; <code>comp_le_overall</code> proves no component is worse than the overall verdict, and <code>bodies_never_collide</code> proves that when the fit check passes no two bodies overlap. For a kernel certificate of one board, run <code>leancheck</code> locally.</div></details>
+ </section>
+</div>
+
+<h2 id="tests"><span class="t">⊢</span>Test cases</h2>
+<p class="dim">Each expected verdict was written down first. The Lean checker then ran. <button class="btn" id="rerun">Run them again now</button> <span id="testnote" class="mono"></span></p>
+<div class="tablewrap"><table id="testtable"><thead><tr><th>Case</th><th>Expected</th><th>Lean says</th><th>Result</th></tr></thead><tbody></tbody></table></div>
+
+<h2 id="demo"><span class="t">⊢</span>Kernel-certified runs</h2>
+<p class="dim">Real KiCad files in the repository, checked by <code>leancheck</code> and certified by the Lean kernel. Pick a board.</p>
 <div class="tabs" id="runtabs" role="tablist" aria-label="Boards"></div>
 <div id="runhead" class="card" style="margin-bottom:12px"></div>
 <div class="tablewrap"><table id="runtable"><thead><tr><th>Section</th><th>Check</th><th>Result</th><th>Detail</th></tr></thead><tbody></tbody></table></div>
-
-<h3 style="margin-top:34px">Many ways to build it, each one rated</h3>
-<p class="dim">A proposer suggests footprint choices for the same parts. Proposers are untrusted: some here are scripts, and the ones marked AI were written by Claude with a reason for each. They get things wrong. Each proposal becomes a real board file, and Lean rates it. Click a build.</p>
+<h3 style="margin-top:34px">51 scripted and AI builds, each one certified</h3>
 <div class="chips" id="chips"></div>
 <div id="chipinfo" class="card mono dim">Loading builds…</div>
 
@@ -170,6 +230,165 @@ ul{padding-left:20px;max-width:820px} li{margin:4px 0}
 <footer>LeanChip · Sierrathon 2026 · Hanah Rahman · built with Lean 4, KiCad 7, OpenCascade and Claude Code</footer>
 </main>
 
+<script type="module">
+// ---------- the tool: choices -> text -> Lean checker -> colours. No verdict logic here. ----------
+import { defaultState, cloneState, buildText, applyProposal, sha256Hex } from './tool_core.js';
+const $ = (s) => document.querySelector(s), el = (t, a = {}, h = '') => { const e = document.createElement(t); Object.assign(e, a); if (h) e.innerHTML = h; return e; };
+const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const j = (u) => fetch(u).then((r) => r.json());
+const COL = { GREEN: '#1f9d55', YELLOW: '#d69e2e', RED: '#e5484d' };
+const [tool, props, tests, recorded] = await Promise.all([j('data/tool.json'), j('data/proposals.json'), j('data/tests.json'), j('data/recorded.json')]);
+let state = defaultState(tool), live = null, last = null, seq = 0, upload = null, picked = null;
+
+async function lean(text) {            // the live Lean binary; recorded Lean output if it cannot be reached
+  if (live !== false) try {
+    const t0 = performance.now(), r = await fetch('api/check', { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: text });
+    const d = await r.json(); if (d && d.overall) { live = true; d._src = `checked just now by the Lean binary (${Math.round(performance.now() - t0)} ms round trip)`; return d; }
+    if (r.status === 400 && d.error) throw new Error(d.error);
+    live = false;
+  } catch (e) { if (live === true) throw e; live = false; }
+  const d = recorded[await sha256Hex(text)];
+  if (d) return { ...d, _src: 'recorded output of the Lean binary (the live checker is not reachable from this page)' };
+  return null;
+}
+const textNow = () => upload ? upload.text(state) : buildText(tool, state);
+async function check() {
+  const me = ++seq; $('#vsrc').textContent = 'checking…';
+  for (const r of document.querySelectorAll('#board2d rect.b')) r.setAttribute('fill', '#5b6779');
+  let d; try { d = await lean(textNow()); } catch (e) { $('#vsrc').textContent = 'Checker error: ' + e.message; return; }
+  if (me !== seq) return;
+  if (!d) { $('#vpill').className = 'pill big'; $('#vpill').textContent = '?'; $('#vcounts').textContent = ''; $('#vsrc').textContent = 'This combination has no recorded result and the live Lean checker is not reachable here. Open leanchip.vercel.app or run the site locally.'; return; }
+  last = d; show(d);
+}
+function show(d) {
+  $('#vpill').className = 'pill big ' + d.overall; $('#vpill').textContent = d.overall;
+  $('#vcounts').textContent = `${d.counts.green} green · ${d.counts.yellow} yellow · ${d.counts.red} red components`;
+  $('#vsrc').textContent = d._src + (d.collision_free ? ' · no two bodies can collide' : '');
+  $('#vrows tbody').innerHTML = d.rows.map((r) => `<tr><td><span class="dim mono" style="font-size:12px">${esc(r.section)}</span><br>${esc(r.check)}</td><td><span class="pill ${r.color}">${r.color}</span></td><td class="dim">${esc(r.detail)}</td></tr>`).join('');
+  draw2d(d); if (!$('#board3d').hidden) draw3d(d);
+  info(picked && d.components.find((c) => c.ref === picked) ? picked : null);
+}
+function info(ref) {
+  picked = ref; const d = last; if (!d) return;
+  if (!ref) { $('#compinfo').innerHTML = (d.board.notes.length ? `<b>Bare board</b> <span class="pill ${d.board.color}">${d.board.color}</span><br>${d.board.notes.map(esc).join('<br>')}<br>` : '') + '<span class="dim">Click a component to see what Lean found.</span>'; return; }
+  const c = d.components.find((x) => x.ref === ref);
+  $('#compinfo').innerHTML = `<b>${esc(c.ref)}</b> <span class="pill ${c.color}">${c.color}</span> <span class="dim mono" style="font-size:12.5px">${esc(c.lib)}${c.fitted ? '' : ' · not fitted'}</span><br>` + (c.notes.length ? c.notes.map(esc).join('<br>') : '<span class="dim">Proved: right package, every pin on its net, body inside its courtyard, no overlap, on the board.</span>');
+}
+function draw2d(d) {
+  const mm = (v) => v / 1e6, xs = d.outline.map((p) => p[0]), ys = d.outline.map((p) => p[1]);
+  const x0 = mm(Math.min(...xs)) - 2, y0 = mm(Math.min(...ys)) - 2, w = mm(Math.max(...xs)) - x0 + 2, h = mm(Math.max(...ys)) - y0 + 2;
+  const svg = $('#board2d'); svg.setAttribute('viewBox', `${x0} ${y0} ${w} ${h}`);
+  let g = `<polygon points="${d.outline.map((p) => mm(p[0]) + ',' + mm(p[1])).join(' ')}" fill="#12305a" stroke="${COL[d.board.color]}" stroke-width=".35"/>`;
+  for (const c of d.components) { if (!c.court) continue;
+    const b = c.body || c.court, [cx0, cy0, cx1, cy1] = c.court.map(mm), [bx0, by0, bx1, by1] = b.map(mm);
+    g += `<g class="c" data-ref="${esc(c.ref)}"><title>${esc(c.ref)}: ${c.color}</title><rect x="${cx0}" y="${cy0}" width="${cx1 - cx0}" height="${cy1 - cy0}" fill="none" stroke="${COL[c.color]}" stroke-width=".09" stroke-dasharray=".3 .2"/>` +
+      `<rect class="b" x="${bx0}" y="${by0}" width="${bx1 - bx0}" height="${by1 - by0}" rx=".15" fill="#5b6779" data-fill="${COL[c.color]}" opacity="${c.fitted ? 1 : .35}" stroke="${picked === c.ref ? '#fff' : 'none'}" stroke-width=".18"/>` +
+      ((bx1 - bx0) > 2.6 ? `<text x="${(bx0 + bx1) / 2}" y="${(by0 + by1) / 2 + .4}" text-anchor="middle">${esc(c.ref)}</text>` : '') + '</g>'; }
+  svg.innerHTML = g;
+  requestAnimationFrame(() => setTimeout(() => svg.querySelectorAll('rect.b').forEach((r) => r.setAttribute('fill', r.dataset.fill)), 120));   // colours land at the end of the build
+  svg.querySelectorAll('.c').forEach((n) => n.onclick = () => { info(n.dataset.ref); draw2d(last); });
+}
+let three = null;
+async function draw3d(d) {
+  const cv = $('#board3d');
+  try {
+    if (!three) { const T = await import('three'), { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
+      const r = new T.WebGLRenderer({ canvas: cv, antialias: true, alpha: true }), sc = new T.Scene(), cam = new T.PerspectiveCamera(30, 1.16, 1, 2000), ctl = new OrbitControls(cam, cv);
+      sc.add(new T.HemisphereLight(0xffffff, 0x1a2540, 1.6)); const k = new T.DirectionalLight(0xffffff, 2); k.position.set(40, 90, 60); sc.add(k);
+      cam.position.set(-30, 62, 62); ctl.enableDamping = true; const grp = new T.Group(); sc.add(grp);
+      const fit = () => { const w = cv.clientWidth, h = cv.clientHeight; r.setPixelRatio(Math.min(devicePixelRatio, 2)); r.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); };
+      new ResizeObserver(fit).observe(cv); fit(); r.setAnimationLoop(() => { ctl.update(); r.render(sc, cam); }); three = { T, grp }; }
+    const { T, grp } = three; grp.clear(); const mm = (v) => v / 1e6, th = mm(d.envelope.thickness_nm);
+    const cxm = d.outline.reduce((a, p) => a + mm(p[0]), 0) / d.outline.length, cym = d.outline.reduce((a, p) => a + mm(p[1]), 0) / d.outline.length;
+    const sh = new T.Shape(d.outline.map((p) => new T.Vector2(mm(p[0]) - cxm, -(mm(p[1]) - cym))));
+    const pcb = new T.Mesh(new T.ExtrudeGeometry(sh, { depth: th, bevelEnabled: false }), new T.MeshStandardMaterial({ color: 0x1f5a45, roughness: .7 })); pcb.rotation.x = -Math.PI / 2; pcb.position.y = -th; grp.add(pcb);
+    for (const c of d.components) { if (!c.court) continue; const b = (c.body || c.court).map(mm), hh = c.body ? Math.max(mm(c.h), .15) : .08;
+      const m = new T.Mesh(new T.BoxGeometry(b[2] - b[0], hh, b[3] - b[1]), new T.MeshStandardMaterial({ color: COL[c.color], roughness: .5, transparent: !c.fitted, opacity: c.fitted ? 1 : .3 }));
+      m.position.set((b[0] + b[2]) / 2 - cxm, hh / 2, (b[1] + b[3]) / 2 - cym); grp.add(m); }
+  } catch (e) { cv.hidden = true; $('#board2d').hidden = false; $('#v3d').disabled = true; }
+}
+$('#v2d').onclick = () => { $('#board2d').hidden = false; $('#board3d').hidden = true; $('#v2d').setAttribute('aria-selected', true); $('#v3d').setAttribute('aria-selected', false); };
+$('#v3d').onclick = () => { $('#board2d').hidden = true; $('#board3d').hidden = false; $('#v3d').setAttribute('aria-selected', true); $('#v2d').setAttribute('aria-selected', false); if (last) draw3d(last); };
+
+// ----- step 2: the knobs -----
+function controls() {
+  const sel = (opts, cur, on, id) => { const s = el('select', { id }); opts.forEach(([v, t]) => s.add(new Option(t, v, false, String(v) === String(cur)))); s.onchange = () => on(s.value); return s; };
+  const K = $('#knobs'); K.innerHTML = '';
+  for (const k of tool.knobs) { const row = el('div', { className: 'knob' }, `<label for="k_${k.key}">${esc(k.label)}<small>${esc(k.source)}</small></label>`);
+    row.append(sel(k.options, state.knobs[k.key], (v) => { state.knobs[k.key] = k.options.find((o) => String(o[0]) === v)[0]; check(); }, 'k_' + k.key)); K.append(row); }
+  const L = $('#lines'); L.innerHTML = upload ? '<p class="dim sm">An uploaded board keeps its own footprints.</p>' : '';
+  if (!upload) for (const l of tool.lines) { const row = el('div', { className: 'knob' }, `<label for="l_${l.line}">Row ${l.line} · ${esc(l.value)}<small>${esc(l.refs.join(' '))}</small></label>`);
+    row.append(sel(l.options.map((o, i) => [i, o.id + (o.kind === 'preferred' ? '' : ' · ' + o.kind)]), state.lines[l.line], (v) => { state.lines[l.line] = +v; check(); }, 'l_' + l.line)); L.append(row); }
+  const F = $('#faults'); F.innerHTML = upload ? '<p class="dim sm">Not available for an uploaded board.</p>' : '';
+  if (!upload) for (const f of tool.faults) { const id = 'f_' + f.id, lab = el('label', { className: 'sm', style: 'display:block;padding:4px 0' }, `<input type="checkbox" id="${id}" ${state.faults.includes(f.id) ? 'checked' : ''}> ${esc(f.label)}`);
+    lab.querySelector('input').onchange = (e) => { state.faults = e.target.checked ? [...state.faults, f.id] : state.faults.filter((x) => x !== f.id); check(); }; F.append(lab); }
+  const C = $('#decaps'); C.innerHTML = '';
+  for (const r of tool.rails) { C.append(el('div', { className: 'rt' }, `${esc(r.net)} · needs: ${esc(r.why)}`));
+    for (const c of r.caps) { const b = el('button', { className: 'cap', id: 'c_' + c.ref, textContent: `${c.ref} ${c.nF >= 1000 ? c.nF / 1000 + ' µF' : c.nF + ' nF'}` }); b.setAttribute('aria-pressed', state.dni.includes(c.ref));
+      b.onclick = () => { state.dni = state.dni.includes(c.ref) ? state.dni.filter((x) => x !== c.ref) : [...state.dni, c.ref]; b.setAttribute('aria-pressed', state.dni.includes(c.ref)); check(); }; C.append(b); } }
+}
+const load = (s, up = null) => { state = s; upload = up; controls(); check(); };
+$('#reset').onclick = () => { mark(null); load(defaultState(tool), upload); };
+$('#fixAll').onclick = () => { mark(null); const s = defaultState(tool); Object.assign(s.knobs, { ledQty: 7, driveUA: 8000, cuInstructions: state.knobs.cuStackup === 60 ? 5 : state.knobs.cuStackup }); if (state.knobs.cuStackup !== 60) s.knobs.cuStackup = state.knobs.cuStackup; load(s, upload); };
+
+// ----- step 1: Claude's proposals, and upload -----
+const mark = (id) => document.querySelectorAll('.prop').forEach((b) => b.setAttribute('aria-pressed', b.dataset.id === id));
+async function rounds() {
+  const R = $('#rounds'); R.innerHTML = '';
+  for (const rd of props.rounds) { R.append(el('div', { className: 'rt' }, `Round ${rd.round} · ${esc(rd.title)}`));
+    for (const p of rd.proposals) { const b = el('button', { className: 'prop' }, `<span class="pill" data-v>…</span> ${esc(p.name)}<small>${esc(p.rationale)}</small>`); b.dataset.id = p.id; b.setAttribute('aria-pressed', false);
+      let s; try { s = applyProposal(tool, p); } catch (e) { b.querySelector('[data-v]').textContent = 'rejected: ' + e.message; R.append(b); continue; }
+      b.onclick = () => { mark(p.id); load(cloneState(s)); document.querySelector('#verdict').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }; R.append(b);
+      lean(buildText(tool, s)).then((d) => { const v = b.querySelector('[data-v]'); if (d) { v.className = 'pill ' + d.overall; v.textContent = `${d.overall} · ${d.counts.red} red, ${d.counts.yellow} yellow`; p._lean = d; } else v.textContent = 'needs the live checker'; }); } }
+}
+$('#askClaude').onclick = async () => {
+  const b = $('#askClaude'), note = $('#askNote'); b.disabled = true; note.textContent = 'Claude is reading Lean\'s findings…';
+  try {
+    const prev = props.rounds[props.rounds.length - 1];
+    const feedback = prev.proposals.map((p) => ({ name: p.name, changes: { lines: p.lines || {}, knobs: p.knobs || {}, dni: p.dni || [] }, verdict: p._lean ? p._lean.overall : 'unknown', findings: p._lean ? p._lean.rows.filter((r) => r.color !== 'GREEN').map((r) => `${r.color}: ${r.check}: ${r.detail}`) : [] }));
+    const menu = { lines: tool.lines.map((l) => ({ row: l.line, parts: l.refs, value: l.value, footprints: l.options.map((o) => o.id) })), knobs: tool.knobs.map((k) => ({ key: k.key, what: k.label, values: k.options.map((o) => o[0]) })), decoupling: tool.rails.map((r) => ({ rail: r.net, caps: r.caps.map((c) => c.ref) })) };
+    const r = await fetch('api/propose', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ menu, feedback, round: prev.round + 1 }) });
+    const d = await r.json(); if (!r.ok || !d.proposals) throw new Error(d.error || 'no proposals');
+    props.rounds.push({ round: prev.round + 1, title: 'Live from Claude, after Lean\'s findings on round ' + prev.round, proposals: d.proposals.map((p, i) => ({ ...p, id: `live${prev.round + 1}-${i}` })) });
+    await rounds(); note.textContent = 'New round added. Lean has rated it.';
+  } catch (e) { note.textContent = 'Live proposals are off on this deployment (' + e.message + '). The rounds above are real recorded ones.'; }
+  b.disabled = false;
+};
+$('#tabAI').onclick = () => { $('#paneAI').hidden = false; $('#paneUp').hidden = true; $('#tabAI').setAttribute('aria-selected', true); $('#tabUp').setAttribute('aria-selected', false); };
+$('#tabUp').onclick = () => { $('#paneAI').hidden = true; $('#paneUp').hidden = false; $('#tabUp').setAttribute('aria-selected', true); $('#tabAI').setAttribute('aria-selected', false); };
+$('#useSierra').onclick = () => { mark(null); $('#upNote').textContent = 'Loaded: the supplied schematic (39 nets, 54 parts), BOM and stack-up, on our placed board.'; load(defaultState(tool)); };
+const KNOWN = { '5ea766dbad13a9056ede6f61209510168a3f14011f0de9dbdb423a5a05102659': 'Sierrathon_Schematic.pdf', '39ba15d28d5883e5c12c9deb57445fd459c35ad13e80c90ac27a29e955ae53a8': 'Sierrathon_BOM.xlsx' };
+$('#upfile').onchange = async (e) => {
+  const f = e.target.files[0], note = $('#upNote'); if (!f) return;
+  try {
+    if (/\.kicad_pcb$/i.test(f.name)) {
+      const { parseKicadPcb, toProtocol } = await import('./kicad_parse.js'); const models = await j('data/models.json');
+      const d = parseKicadPcb(await f.text(), models);
+      const up = { text: (s) => { const k = {}; for (const kn of tool.knobs) { if (kn.sets) String(s.knobs[kn.key]).split('/').forEach((x, i) => k[kn.sets[i]] = x); else k[kn.key] = s.knobs[kn.key]; } return toProtocol(d, k, s.dni); } };
+      note.textContent = `Read ${f.name}: ${d.n} footprints. Lean is checking it against the Sierrathon schematic and BOM.`; mark(null); load(defaultState(tool), up);
+    } else {
+      const h = [...new Uint8Array(await crypto.subtle.digest('SHA-256', await f.arrayBuffer()))].map((b) => b.toString(16).padStart(2, '0')).join('');
+      if (KNOWN[h]) { note.textContent = `Recognised ${KNOWN[h]} (same file Sierrathon supplied). Loading its design.`; mark(null); load(defaultState(tool)); }
+      else note.textContent = 'This tool is for the Sierrathon board and its exact parts. That file is not the supplied schematic or BOM, so there is nothing to check it against. Upload a .kicad_pcb of this board instead.';
+    }
+  } catch (err) { note.textContent = 'Could not read that file: ' + err.message; }
+};
+
+// ----- test cases -----
+function testTable(live) {
+  $('#testtable tbody').innerHTML = tests.tests.map((t) => `<tr><td><b>${esc(t.name)}</b><br><span class="dim sm">${esc(t.why)}</span></td><td>${t.checks.map((c) => `<span class="pill ${c.expected}">${esc(c.what === 'overall' ? 'overall' : c.what)}</span>`).join(' ')}</td><td><span class="pill ${t.overall}">${t.overall}</span></td><td><b style="color:${t.pass ? '#3ddc84' : '#ff8a80'}">${t.pass ? 'PASS' : 'FAIL'}</b></td></tr>`).join('');
+  $('#testnote').textContent = `${tests.tests.filter((t) => t.pass).length}/${tests.tests.length} pass` + (live ? ' (just re-run on the live Lean checker)' : '');
+}
+$('#rerun').onclick = async () => {
+  $('#testnote').textContent = 'running…';
+  for (const t of tests.tests) { const d = await lean(buildText(tool, applyProposal(tool, t.build))); if (!d) { $('#testnote').textContent = 'The live checker is not reachable here; showing the recorded run.'; return; }
+    const comp = Object.fromEntries(d.components.map((c) => [c.ref, c.color]));
+    for (const c of t.checks) c.actual = c.what === 'overall' ? d.overall : comp[c.what] || (d.rows.find((r) => r.check.includes(c.what)) || {}).color;
+    t.overall = d.overall; t.pass = t.checks.every((c) => c.expected === c.actual); }
+  testTable(live === true);
+};
+controls(); testTable(false); rounds(); check();
+</script>
 <script type="module">
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));

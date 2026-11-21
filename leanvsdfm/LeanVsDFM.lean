@@ -7,3 +7,4 @@ import LeanVsDFM.PartsVerifier
 import LeanVsDFM.Verify
 import LeanVsDFM.Report
 import LeanVsDFM.Fit3D
+import LeanVsDFM.Check

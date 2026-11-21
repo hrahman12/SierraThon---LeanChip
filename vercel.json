@@ -3,5 +3,9 @@
   "framework": null,
   "buildCommand": null,
   "outputDirectory": "site",
-  "cleanUrls": true
+  "cleanUrls": true,
+  "functions": {
+    "api/check.js": { "includeFiles": "api/_bin/**", "maxDuration": 10 },
+    "api/propose.js": { "maxDuration": 60 }
+  }
 }

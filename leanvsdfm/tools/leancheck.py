@@ -72,9 +72,9 @@ def _outline(board):
     return loop
 
 
-def board_term(path):
-    """The board as Lean terms: footprints with pads, parts with 3D data, and the outline (nm)."""
-    q = json.dumps
+def board_data(path):
+    """The board as plain data (nm): footprints with pads, parts with 3D data, and the outline.
+    Everything Lean is given comes from here (the Lean terms, and the text the `leanchip` binary reads)."""
     bbox = json.load(open(os.path.join(ROOT, "models3d", "bbox.json")))["models"]
     b = pcbnew.LoadBoard(path)
     fps, parts = [], []
@@ -90,11 +90,10 @@ def board_term(path):
             if not p.GetNumber():
                 continue
             d, s = p.GetPos0(), p.GetSize()  # footprint-local (rotation-invariant)
-            pads.append(f"⟨{q(p.GetNumber())}, {q(p.GetNetname())}, {int(d.x)}, {int(d.y)}, {int(s.x)}, {int(s.y)}⟩")
+            pads.append({"number": p.GetNumber(), "net": p.GetNetname(), "x": int(d.x), "y": int(d.y), "w": int(s.x), "h": int(s.y)})
         ref = fp.GetReference()
-        fps.append(f"⟨{q(ref)}, {q(str(fp.GetFPID().GetLibItemName()))}, "
-                   f"{int(fp.GetOrientationDegrees())}, [{', '.join(pads)}]⟩")
-        model, height = "none", 0
+        fps.append({"ref": ref, "lib": str(fp.GetFPID().GetLibItemName()), "rot": int(fp.GetOrientationDegrees()), "pads": pads})
+        model, height = None, 0
         ms = list(fp.Models())
         if ms:
             m = ms[0]
@@ -103,17 +102,53 @@ def board_term(path):
                                                  m.m_Rotation.z)) and all(abs(v - 1) < 1e-9 for v in (m.m_Scale.x, m.m_Scale.y, m.m_Scale.z))
             if name in bbox and plain:
                 mn, mx = bbox[name]["min"], bbox[name]["max"]
-                model, height = f"(some {_nm_box(mn[0], mn[1], mx[0], mx[1])})", mx[2]
+                model, height = [int(mn[0]), int(mn[1]), int(mx[0]), int(mx[1])], mx[2]
         o = fp.GetPosition()
         rot = fp.GetOrientationDegrees()
         rot = int(round(rot)) if abs(rot - round(rot)) < 1e-6 else 1
-        parts.append(f"⟨{q(ref)}, {int(o.x)}, {int(o.y)}, {rot}, {_nm_box(*_courtyard(fp))}, "
-                     f"{_nm_box(min(px), min(py), max(px), max(py)) if px else _nm_box(o.x, o.y, o.x, o.y)}, {model}, {height}, "
-                     f"{min(drills) if drills else 0}⟩")
-    outline = "[" + ", ".join(f"({x}, {y})" for x, y in _outline(b)) + "]"
-    thickness = int(b.GetDesignSettings().GetBoardThickness())
+        parts.append({"ref": ref, "px": int(o.x), "py": int(o.y), "rot": rot, "court": [int(v) for v in _courtyard(fp)],
+                      "pads": [int(min(px)), int(min(py)), int(max(px)), int(max(py))] if px else [int(o.x), int(o.y), int(o.x), int(o.y)],
+                      "model": model, "height": height, "min_drill": min(drills) if drills else 0})
+    return {"fps": fps, "parts": parts, "outline": [[int(x), int(y)] for x, y in _outline(b)], "n": len(fps),
+            "thickness_nm": int(b.GetDesignSettings().GetBoardThickness())}
+
+
+def fp_lines(f):
+    """One footprint in the text form the `leanchip` binary reads (tab-separated)."""
+    out = ["\t".join(["F", f["ref"], f["lib"], str(f["rot"])])]
+    out += ["\t".join(["P", p["number"], p["net"], str(p["x"]), str(p["y"]), str(p["w"]), str(p["h"])]) for p in f["pads"]]
+    return out
+
+
+def part_line(t):
+    m = t["model"]
+    return "\t".join(["T", t["ref"], str(t["px"]), str(t["py"]), str(t["rot"]), *map(str, t["court"]), *map(str, t["pads"]),
+                      "1" if m else "0", *map(str, m or [0, 0, 0, 0]), str(t["height"]), str(t["min_drill"])])
+
+
+def protocol(d, knobs=None, dni=()):
+    """A whole board (and optional design-package knobs) as input for the `leanchip` binary."""
+    lines = [f"K\t{k}\t{v}" for k, v in (knobs or {}).items()] + [f"D\t{r}" for r in dni]
+    lines += [f"B\tthickness\t{d['thickness_nm']}"] + [f"O\t{x}\t{y}" for x, y in d["outline"]]
+    for f in d["fps"]:
+        lines += fp_lines(f)
+    lines += [part_line(t) for t in d["parts"]]
+    return "\n".join(lines) + "\n"
+
+
+def board_term(path):
+    """The board as Lean terms: footprints with pads, parts with 3D data, and the outline (nm)."""
+    q = json.dumps
+    d = board_data(path)
+    box = lambda v: f"⟨{v[0]}, {v[1]}, {v[2]}, {v[3]}⟩"
+    fps = [f"⟨{q(f['ref'])}, {q(f['lib'])}, {f['rot']}, [" +
+           ", ".join(f"⟨{q(p['number'])}, {q(p['net'])}, {p['x']}, {p['y']}, {p['w']}, {p['h']}⟩" for p in f["pads"]) + "]⟩"
+           for f in d["fps"]]
+    parts = [f"⟨{q(t['ref'])}, {t['px']}, {t['py']}, {t['rot']}, {box(t['court'])}, {box(t['pads'])}, "
+             f"{'(some ' + box(t['model']) + ')' if t['model'] else 'none'}, {t['height']}, {t['min_drill']}⟩" for t in d["parts"]]
+    outline = "[" + ", ".join(f"({x}, {y})" for x, y in d["outline"]) + "]"
     return {"fps": "[" + ",\n  ".join(fps) + "]", "parts": "[" + ",\n  ".join(parts) + "]", "outline": outline,
-            "n": len(fps), "thickness_nm": thickness}
+            "n": d["n"], "thickness_nm": d["thickness_nm"], "data": d}
 
 
 def lean(src):

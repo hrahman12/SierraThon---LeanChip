@@ -1,0 +1,316 @@
+{
+ "tests": [
+  {
+   "name": "Sierrathon package as supplied",
+   "why": "Buildable, but the BOM, the stack-up note and the LED drive need an action, and four parts are library stand-ins.",
+   "build": {},
+   "expect": {
+    "overall": "YELLOW",
+    "components": {
+     "U1": "GREEN",
+     "U3": "GREEN",
+     "D5": "YELLOW",
+     "J1": "YELLOW"
+    },
+    "rows": {
+     "BOM quantities": "YELLOW",
+     "No two courtyards": "GREEN"
+    }
+   }
+  },
+  {
+   "name": "Package problems fixed",
+   "why": "Only the four stand-in footprints stay yellow.",
+   "build": {
+    "knobs": {
+     "ledQty": 7,
+     "driveUA": 8000,
+     "cuInstructions": 5
+    }
+   },
+   "expect": {
+    "overall": "YELLOW",
+    "components": {
+     "D5": "GREEN",
+     "R12": "GREEN",
+     "J1": "YELLOW",
+     "SW1": "YELLOW"
+    },
+    "rows": {
+     "BOM quantities": "GREEN",
+     "LED current": "GREEN",
+     "Inner copper": "GREEN"
+    }
+   }
+  },
+  {
+   "name": "LED D5 backwards",
+   "why": "Cathode is no longer on GND.",
+   "build": {
+    "faults": [
+     "led_reversed"
+    ]
+   },
+   "expect": {
+    "overall": "RED",
+    "components": {
+     "D5": "RED",
+     "D4": "YELLOW"
+    },
+    "rows": {
+     "LED polarity": "RED"
+    }
+   }
+  },
+  {
+   "name": "Flash on the narrow SOIC",
+   "why": "The W25Q128JVSIQ is a 208 mil part.",
+   "build": {
+    "lines": {
+     "19": "SOIC-8_3.9x4.9mm_P1.27mm"
+    }
+   },
+   "expect": {
+    "overall": "RED",
+    "components": {
+     "U3": "RED"
+    },
+    "rows": {
+     "Footprint package": "RED"
+    }
+   }
+  },
+  {
+   "name": "Flash data pins swapped",
+   "why": "Schematic and board disagree on two nets.",
+   "build": {
+    "faults": [
+     "flash_pins_swapped"
+    ]
+   },
+   "expect": {
+    "overall": "RED",
+    "components": {
+     "U3": "RED"
+    },
+    "rows": {
+     "right net": "RED"
+    }
+   }
+  },
+  {
+   "name": "0603 footprints on the 0402 capacitors",
+   "why": "Wrong package, and the bigger courtyards collide.",
+   "build": {
+    "lines": {
+     "3": "C_0603_1608Metric"
+    }
+   },
+   "expect": {
+    "overall": "RED",
+    "components": {
+     "C4": "RED"
+    },
+    "rows": {
+     "Footprint package": "RED",
+     "No two courtyards": "RED"
+    }
+   }
+  },
+  {
+   "name": "Thermal-via QFN",
+   "why": "Its vias are below the 8 mil minimum drill.",
+   "build": {
+    "lines": {
+     "17": "QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm_ThermalVias"
+    }
+   },
+   "expect": {
+    "overall": "RED",
+    "components": {
+     "U1": "RED"
+    },
+    "rows": {
+     "at least 8 mil": "RED"
+    }
+   }
+  },
+  {
+   "name": "Hand-solder crystal",
+   "why": "Its courtyard overlaps four resistors.",
+   "build": {
+    "lines": {
+     "21": "Crystal_SMD_3225-4Pin_3.2x2.5mm_HandSoldering"
+    }
+   },
+   "expect": {
+    "overall": "RED",
+    "components": {
+     "Y1": "RED",
+     "R7": "RED"
+    },
+    "rows": {
+     "No two courtyards": "RED"
+    }
+   }
+  },
+  {
+   "name": "Decoupling: one bulk capacitor left off",
+   "why": "C3 off: +3.3V still meets the datasheet minimum.",
+   "build": {
+    "dni": [
+     "C3"
+    ]
+   },
+   "expect": {
+    "overall": "YELLOW",
+    "components": {
+     "C3": "YELLOW"
+    },
+    "rows": {
+     "Decoupling on +3.3V": "YELLOW"
+    }
+   }
+  },
+  {
+   "name": "Decoupling: both 2.2 µF left off",
+   "why": "C3 and C14 off: below the minimum.",
+   "build": {
+    "dni": [
+     "C3",
+     "C14"
+    ]
+   },
+   "expect": {
+    "overall": "RED",
+    "components": {
+     "C3": "RED",
+     "C14": "RED"
+    },
+    "rows": {
+     "Decoupling on +3.3V": "RED"
+    }
+   }
+  },
+  {
+   "name": "Decoupling: a 100 nF left off",
+   "why": "One supply pin loses its capacitor.",
+   "build": {
+    "dni": [
+     "C8"
+    ]
+   },
+   "expect": {
+    "overall": "RED",
+    "components": {
+     "C8": "RED"
+    },
+    "rows": {
+     "Decoupling on +3.3V": "RED"
+    }
+   }
+  },
+  {
+   "name": "Decoupling: core regulator capacitor left off",
+   "why": "C17 is the 1.1 V regulator's output capacitor.",
+   "build": {
+    "dni": [
+     "C17"
+    ]
+   },
+   "expect": {
+    "overall": "RED",
+    "components": {
+     "C17": "RED"
+    },
+    "rows": {
+     "Decoupling on +1.1V": "RED"
+    }
+   }
+  },
+  {
+   "name": "68 Ω LED resistors",
+   "why": "24 mA per LED is over every pad setting.",
+   "build": {
+    "knobs": {
+     "ledOhm": 68
+    }
+   },
+   "expect": {
+    "overall": "RED",
+    "components": {
+     "R12": "RED"
+    },
+    "rows": {
+     "LED current": "RED"
+    }
+   }
+  },
+  {
+   "name": "Pairs widened to 6 / 6 mil",
+   "why": "What a single global 6 mil rule forces; no longer the 90 Ω geometry.",
+   "build": {
+    "knobs": {
+     "pair": "600/600"
+    }
+   },
+   "expect": {
+    "overall": "RED",
+    "rows": {
+     "90 Ω pairs": "RED"
+    }
+   }
+  },
+  {
+   "name": "22 pF crystal capacitors",
+   "why": "Load is 13.5 pF, the crystal wants 10 pF.",
+   "build": {
+    "knobs": {
+     "crystalC": 220
+    }
+   },
+   "expect": {
+    "overall": "RED",
+    "components": {
+     "Y1": "RED"
+    },
+    "rows": {
+     "Crystal load": "RED"
+    }
+   }
+  },
+  {
+   "name": "245 mA on the regulator",
+   "why": "173 °C junction temperature.",
+   "build": {
+    "knobs": {
+     "loadmA": 245
+    }
+   },
+   "expect": {
+    "overall": "RED",
+    "components": {
+     "U2": "RED"
+    },
+    "rows": {
+     "junction temperature": "RED"
+    }
+   }
+  },
+  {
+   "name": "6 oz inner copper",
+   "why": "Board grows past 62 mil + 10 %.",
+   "build": {
+    "knobs": {
+     "cuStackup": 60
+    }
+   },
+   "expect": {
+    "overall": "RED",
+    "rows": {
+     "Stack-up thickness": "RED"
+    }
+   }
+  }
+ ]
+}

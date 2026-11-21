@@ -110,7 +110,7 @@
    },
    {
     "section": "Specs",
-    "check": "LED current within the RP2040 default 4 mA drive",
+    "check": "LED current within the RP2040 pad drive (4 mA setting)",
     "color": "YELLOW",
     "detail": "330 \u03a9 gives up to 4.945 mA: GPIO17\u201323 must be set to 8 mA drive (or 430 \u03a9)"
    },
@@ -131,6 +131,42 @@
     "check": "QSPI clock within W25Q128 limit",
     "color": "GREEN",
     "detail": "62.5 \u2264 133 MHz"
+   },
+   {
+    "section": "Specs",
+    "check": "Crystal load capacitors suit the crystal",
+    "color": "GREEN",
+    "detail": "15.0 pF gives a 10.0 pF load"
+   },
+   {
+    "section": "Specs",
+    "check": "USB-C Rd pull-downs inside the Type-C window",
+    "color": "GREEN",
+    "detail": "5100 \u03a9"
+   },
+   {
+    "section": "Decoupling",
+    "check": "Decoupling on VBUS (1 on the schematic)",
+    "color": "GREEN",
+    "detail": "all fitted, 1000 nF"
+   },
+   {
+    "section": "Decoupling",
+    "check": "Decoupling on +3.3V (10 on the schematic)",
+    "color": "GREEN",
+    "detail": "all fitted, 6100 nF"
+   },
+   {
+    "section": "Decoupling",
+    "check": "Decoupling on +1.1V (3 on the schematic)",
+    "color": "GREEN",
+    "detail": "all fitted, 2400 nF"
+   },
+   {
+    "section": "Decoupling",
+    "check": "Decoupling on ADC_AVDD (1 on the schematic)",
+    "color": "GREEN",
+    "detail": "all fitted, 2200 nF"
    }
   ],
   "certified": true,
@@ -259,7 +295,7 @@
    },
    {
     "section": "Specs",
-    "check": "LED current within the RP2040 default 4 mA drive",
+    "check": "LED current within the RP2040 pad drive (4 mA setting)",
     "color": "YELLOW",
     "detail": "330 \u03a9 gives up to 4.945 mA: GPIO17\u201323 must be set to 8 mA drive (or 430 \u03a9)"
    },
@@ -280,6 +316,42 @@
     "check": "QSPI clock within W25Q128 limit",
     "color": "GREEN",
     "detail": "62.5 \u2264 133 MHz"
+   },
+   {
+    "section": "Specs",
+    "check": "Crystal load capacitors suit the crystal",
+    "color": "GREEN",
+    "detail": "15.0 pF gives a 10.0 pF load"
+   },
+   {
+    "section": "Specs",
+    "check": "USB-C Rd pull-downs inside the Type-C window",
+    "color": "GREEN",
+    "detail": "5100 \u03a9"
+   },
+   {
+    "section": "Decoupling",
+    "check": "Decoupling on VBUS (1 on the schematic)",
+    "color": "GREEN",
+    "detail": "all fitted, 1000 nF"
+   },
+   {
+    "section": "Decoupling",
+    "check": "Decoupling on +3.3V (10 on the schematic)",
+    "color": "GREEN",
+    "detail": "all fitted, 6100 nF"
+   },
+   {
+    "section": "Decoupling",
+    "check": "Decoupling on +1.1V (3 on the schematic)",
+    "color": "GREEN",
+    "detail": "all fitted, 2400 nF"
+   },
+   {
+    "section": "Decoupling",
+    "check": "Decoupling on ADC_AVDD (1 on the schematic)",
+    "color": "GREEN",
+    "detail": "all fitted, 2200 nF"
    }
   ],
   "certified": true,
@@ -413,7 +485,7 @@
    },
    {
     "section": "Specs",
-    "check": "LED current within the RP2040 default 4 mA drive",
+    "check": "LED current within the RP2040 pad drive (4 mA setting)",
     "color": "YELLOW",
     "detail": "330 \u03a9 gives up to 4.945 mA: GPIO17\u201323 must be set to 8 mA drive (or 430 \u03a9)"
    },
@@ -434,6 +506,42 @@
     "check": "QSPI clock within W25Q128 limit",
     "color": "GREEN",
     "detail": "62.5 \u2264 133 MHz"
+   },
+   {
+    "section": "Specs",
+    "check": "Crystal load capacitors suit the crystal",
+    "color": "GREEN",
+    "detail": "15.0 pF gives a 10.0 pF load"
+   },
+   {
+    "section": "Specs",
+    "check": "USB-C Rd pull-downs inside the Type-C window",
+    "color": "GREEN",
+    "detail": "5100 \u03a9"
+   },
+   {
+    "section": "Decoupling",
+    "check": "Decoupling on VBUS (1 on the schematic)",
+    "color": "GREEN",
+    "detail": "all fitted, 1000 nF"
+   },
+   {
+    "section": "Decoupling",
+    "check": "Decoupling on +3.3V (10 on the schematic)",
+    "color": "GREEN",
+    "detail": "all fitted, 6100 nF"
+   },
+   {
+    "section": "Decoupling",
+    "check": "Decoupling on +1.1V (3 on the schematic)",
+    "color": "GREEN",
+    "detail": "all fitted, 2400 nF"
+   },
+   {
+    "section": "Decoupling",
+    "check": "Decoupling on ADC_AVDD (1 on the schematic)",
+    "color": "GREEN",
+    "detail": "all fitted, 2200 nF"
    }
   ],
   "certified": true,
@@ -563,7 +671,7 @@
    },
    {
     "section": "Specs",
-    "check": "LED current within the RP2040 default 4 mA drive",
+    "check": "LED current within the RP2040 pad drive (4 mA setting)",
     "color": "YELLOW",
     "detail": "330 \u03a9 gives up to 4.945 mA: GPIO17\u201323 must be set to 8 mA drive (or 430 \u03a9)"
    },
@@ -584,6 +692,42 @@
     "check": "QSPI clock within W25Q128 limit",
     "color": "GREEN",
     "detail": "62.5 \u2264 133 MHz"
+   },
+   {
+    "section": "Specs",
+    "check": "Crystal load capacitors suit the crystal",
+    "color": "GREEN",
+    "detail": "15.0 pF gives a 10.0 pF load"
+   },
+   {
+    "section": "Specs",
+    "check": "USB-C Rd pull-downs inside the Type-C window",
+    "color": "GREEN",
+    "detail": "5100 \u03a9"
+   },
+   {
+    "section": "Decoupling",
+    "check": "Decoupling on VBUS (1 on the schematic)",
+    "color": "GREEN",
+    "detail": "all fitted, 1000 nF"
+   },
+   {
+    "section": "Decoupling",
+    "check": "Decoupling on +3.3V (10 on the schematic)",
+    "color": "GREEN",
+    "detail": "all fitted, 6100 nF"
+   },
+   {
+    "section": "Decoupling",
+    "check": "Decoupling on +1.1V (3 on the schematic)",
+    "color": "GREEN",
+    "detail": "all fitted, 2400 nF"
+   },
+   {
+    "section": "Decoupling",
+    "check": "Decoupling on ADC_AVDD (1 on the schematic)",
+    "color": "GREEN",
+    "detail": "all fitted, 2200 nF"
    }
   ],
   "certified": true,
@@ -715,7 +859,7 @@
    },
    {
     "section": "Specs",
-    "check": "LED current within the RP2040 default 4 mA drive",
+    "check": "LED current within the RP2040 pad drive (4 mA setting)",
     "color": "YELLOW",
     "detail": "330 \u03a9 gives up to 4.945 mA: GPIO17\u201323 must be set to 8 mA drive (or 430 \u03a9)"
    },
@@ -736,6 +880,42 @@
     "check": "QSPI clock within W25Q128 limit",
     "color": "GREEN",
     "detail": "62.5 \u2264 133 MHz"
+   },
+   {
+    "section": "Specs",
+    "check": "Crystal load capacitors suit the crystal",
+    "color": "GREEN",
+    "detail": "15.0 pF gives a 10.0 pF load"
+   },
+   {
+    "section": "Specs",
+    "check": "USB-C Rd pull-downs inside the Type-C window",
+    "color": "GREEN",
+    "detail": "5100 \u03a9"
+   },
+   {
+    "section": "Decoupling",
+    "check": "Decoupling on VBUS (1 on the schematic)",
+    "color": "GREEN",
+    "detail": "all fitted, 1000 nF"
+   },
+   {
+    "section": "Decoupling",
+    "check": "Decoupling on +3.3V (10 on the schematic)",
+    "color": "GREEN",
+    "detail": "all fitted, 6100 nF"
+   },
+   {
+    "section": "Decoupling",
+    "check": "Decoupling on +1.1V (3 on the schematic)",
+    "color": "GREEN",
+    "detail": "all fitted, 2400 nF"
+   },
+   {
+    "section": "Decoupling",
+    "check": "Decoupling on ADC_AVDD (1 on the schematic)",
+    "color": "GREEN",
+    "detail": "all fitted, 2200 nF"
    }
   ],
   "certified": true,

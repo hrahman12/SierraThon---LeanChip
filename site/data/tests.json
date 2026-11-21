@@ -1,0 +1,623 @@
+{
+ "about": "Written by leanvsdfm/tools/tool_runs.mjs from the compiled Lean checker.",
+ "supplied": "YELLOW (36 green, 18 yellow, 0 red)",
+ "passed": 17,
+ "total": 17,
+ "tests": [
+  {
+   "name": "Sierrathon package as supplied",
+   "why": "Buildable, but the BOM, the stack-up note and the LED drive need an action, and four parts are library stand-ins.",
+   "build": {},
+   "checks": [
+    {
+     "what": "overall",
+     "expected": "YELLOW",
+     "actual": "YELLOW"
+    },
+    {
+     "what": "U1",
+     "expected": "GREEN",
+     "actual": "GREEN"
+    },
+    {
+     "what": "U3",
+     "expected": "GREEN",
+     "actual": "GREEN"
+    },
+    {
+     "what": "D5",
+     "expected": "YELLOW",
+     "actual": "YELLOW"
+    },
+    {
+     "what": "J1",
+     "expected": "YELLOW",
+     "actual": "YELLOW"
+    },
+    {
+     "what": "BOM quantities",
+     "expected": "YELLOW",
+     "actual": "YELLOW"
+    },
+    {
+     "what": "No two courtyards",
+     "expected": "GREEN",
+     "actual": "GREEN"
+    }
+   ],
+   "pass": true,
+   "overall": "YELLOW",
+   "counts": {
+    "green": 36,
+    "yellow": 18,
+    "red": 0
+   }
+  },
+  {
+   "name": "Package problems fixed",
+   "why": "Only the four stand-in footprints stay yellow.",
+   "build": {
+    "knobs": {
+     "ledQty": 7,
+     "driveUA": 8000,
+     "cuInstructions": 5
+    }
+   },
+   "checks": [
+    {
+     "what": "overall",
+     "expected": "YELLOW",
+     "actual": "YELLOW"
+    },
+    {
+     "what": "D5",
+     "expected": "GREEN",
+     "actual": "GREEN"
+    },
+    {
+     "what": "R12",
+     "expected": "GREEN",
+     "actual": "GREEN"
+    },
+    {
+     "what": "J1",
+     "expected": "YELLOW",
+     "actual": "YELLOW"
+    },
+    {
+     "what": "SW1",
+     "expected": "YELLOW",
+     "actual": "YELLOW"
+    },
+    {
+     "what": "BOM quantities",
+     "expected": "GREEN",
+     "actual": "GREEN"
+    },
+    {
+     "what": "LED current",
+     "expected": "GREEN",
+     "actual": "GREEN"
+    },
+    {
+     "what": "Inner copper",
+     "expected": "GREEN",
+     "actual": "GREEN"
+    }
+   ],
+   "pass": true,
+   "overall": "YELLOW",
+   "counts": {
+    "green": 50,
+    "yellow": 4,
+    "red": 0
+   }
+  },
+  {
+   "name": "LED D5 backwards",
+   "why": "Cathode is no longer on GND.",
+   "build": {
+    "faults": [
+     "led_reversed"
+    ]
+   },
+   "checks": [
+    {
+     "what": "overall",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "D5",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "D4",
+     "expected": "YELLOW",
+     "actual": "YELLOW"
+    },
+    {
+     "what": "LED polarity",
+     "expected": "RED",
+     "actual": "RED"
+    }
+   ],
+   "pass": true,
+   "overall": "RED",
+   "counts": {
+    "green": 36,
+    "yellow": 17,
+    "red": 1
+   }
+  },
+  {
+   "name": "Flash on the narrow SOIC",
+   "why": "The W25Q128JVSIQ is a 208 mil part.",
+   "build": {
+    "lines": {
+     "19": "SOIC-8_3.9x4.9mm_P1.27mm"
+    }
+   },
+   "checks": [
+    {
+     "what": "overall",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "U3",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "Footprint package",
+     "expected": "RED",
+     "actual": "RED"
+    }
+   ],
+   "pass": true,
+   "overall": "RED",
+   "counts": {
+    "green": 35,
+    "yellow": 18,
+    "red": 1
+   }
+  },
+  {
+   "name": "Flash data pins swapped",
+   "why": "Schematic and board disagree on two nets.",
+   "build": {
+    "faults": [
+     "flash_pins_swapped"
+    ]
+   },
+   "checks": [
+    {
+     "what": "overall",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "U3",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "right net",
+     "expected": "RED",
+     "actual": "RED"
+    }
+   ],
+   "pass": true,
+   "overall": "RED",
+   "counts": {
+    "green": 35,
+    "yellow": 18,
+    "red": 1
+   }
+  },
+  {
+   "name": "0603 footprints on the 0402 capacitors",
+   "why": "Wrong package, and the bigger courtyards collide.",
+   "build": {
+    "lines": {
+     "3": "C_0603_1608Metric"
+    }
+   },
+   "checks": [
+    {
+     "what": "overall",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "C4",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "Footprint package",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "No two courtyards",
+     "expected": "RED",
+     "actual": "RED"
+    }
+   ],
+   "pass": true,
+   "overall": "RED",
+   "counts": {
+    "green": 26,
+    "yellow": 18,
+    "red": 10
+   }
+  },
+  {
+   "name": "Thermal-via QFN",
+   "why": "Its vias are below the 8 mil minimum drill.",
+   "build": {
+    "lines": {
+     "17": "QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm_ThermalVias"
+    }
+   },
+   "checks": [
+    {
+     "what": "overall",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "U1",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "at least 8 mil",
+     "expected": "RED",
+     "actual": "RED"
+    }
+   ],
+   "pass": true,
+   "overall": "RED",
+   "counts": {
+    "green": 35,
+    "yellow": 18,
+    "red": 1
+   }
+  },
+  {
+   "name": "Hand-solder crystal",
+   "why": "Its courtyard overlaps four resistors.",
+   "build": {
+    "lines": {
+     "21": "Crystal_SMD_3225-4Pin_3.2x2.5mm_HandSoldering"
+    }
+   },
+   "checks": [
+    {
+     "what": "overall",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "Y1",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "R7",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "No two courtyards",
+     "expected": "RED",
+     "actual": "RED"
+    }
+   ],
+   "pass": true,
+   "overall": "RED",
+   "counts": {
+    "green": 34,
+    "yellow": 15,
+    "red": 5
+   }
+  },
+  {
+   "name": "Decoupling: one bulk capacitor left off",
+   "why": "C3 off: +3.3V still meets the datasheet minimum.",
+   "build": {
+    "dni": [
+     "C3"
+    ]
+   },
+   "checks": [
+    {
+     "what": "overall",
+     "expected": "YELLOW",
+     "actual": "YELLOW"
+    },
+    {
+     "what": "C3",
+     "expected": "YELLOW",
+     "actual": "YELLOW"
+    },
+    {
+     "what": "Decoupling on +3.3V",
+     "expected": "YELLOW",
+     "actual": "YELLOW"
+    }
+   ],
+   "pass": true,
+   "overall": "YELLOW",
+   "counts": {
+    "green": 35,
+    "yellow": 19,
+    "red": 0
+   }
+  },
+  {
+   "name": "Decoupling: both 2.2 µF left off",
+   "why": "C3 and C14 off: below the minimum.",
+   "build": {
+    "dni": [
+     "C3",
+     "C14"
+    ]
+   },
+   "checks": [
+    {
+     "what": "overall",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "C3",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "C14",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "Decoupling on +3.3V",
+     "expected": "RED",
+     "actual": "RED"
+    }
+   ],
+   "pass": true,
+   "overall": "RED",
+   "counts": {
+    "green": 34,
+    "yellow": 18,
+    "red": 2
+   }
+  },
+  {
+   "name": "Decoupling: a 100 nF left off",
+   "why": "One supply pin loses its capacitor.",
+   "build": {
+    "dni": [
+     "C8"
+    ]
+   },
+   "checks": [
+    {
+     "what": "overall",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "C8",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "Decoupling on +3.3V",
+     "expected": "RED",
+     "actual": "RED"
+    }
+   ],
+   "pass": true,
+   "overall": "RED",
+   "counts": {
+    "green": 35,
+    "yellow": 18,
+    "red": 1
+   }
+  },
+  {
+   "name": "Decoupling: core regulator capacitor left off",
+   "why": "C17 is the 1.1 V regulator's output capacitor.",
+   "build": {
+    "dni": [
+     "C17"
+    ]
+   },
+   "checks": [
+    {
+     "what": "overall",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "C17",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "Decoupling on +1.1V",
+     "expected": "RED",
+     "actual": "RED"
+    }
+   ],
+   "pass": true,
+   "overall": "RED",
+   "counts": {
+    "green": 35,
+    "yellow": 18,
+    "red": 1
+   }
+  },
+  {
+   "name": "68 Ω LED resistors",
+   "why": "24 mA per LED is over every pad setting.",
+   "build": {
+    "knobs": {
+     "ledOhm": 68
+    }
+   },
+   "checks": [
+    {
+     "what": "overall",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "R12",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "LED current",
+     "expected": "RED",
+     "actual": "RED"
+    }
+   ],
+   "pass": true,
+   "overall": "RED",
+   "counts": {
+    "green": 36,
+    "yellow": 4,
+    "red": 14
+   }
+  },
+  {
+   "name": "Pairs widened to 6 / 6 mil",
+   "why": "What a single global 6 mil rule forces; no longer the 90 Ω geometry.",
+   "build": {
+    "knobs": {
+     "pair": "600/600"
+    }
+   },
+   "checks": [
+    {
+     "what": "overall",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "90 Ω pairs",
+     "expected": "RED",
+     "actual": "RED"
+    }
+   ],
+   "pass": true,
+   "overall": "RED",
+   "counts": {
+    "green": 36,
+    "yellow": 18,
+    "red": 0
+   }
+  },
+  {
+   "name": "22 pF crystal capacitors",
+   "why": "Load is 13.5 pF, the crystal wants 10 pF.",
+   "build": {
+    "knobs": {
+     "crystalC": 220
+    }
+   },
+   "checks": [
+    {
+     "what": "overall",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "Y1",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "Crystal load",
+     "expected": "RED",
+     "actual": "RED"
+    }
+   ],
+   "pass": true,
+   "overall": "RED",
+   "counts": {
+    "green": 33,
+    "yellow": 18,
+    "red": 3
+   }
+  },
+  {
+   "name": "245 mA on the regulator",
+   "why": "173 °C junction temperature.",
+   "build": {
+    "knobs": {
+     "loadmA": 245
+    }
+   },
+   "checks": [
+    {
+     "what": "overall",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "U2",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "junction temperature",
+     "expected": "RED",
+     "actual": "RED"
+    }
+   ],
+   "pass": true,
+   "overall": "RED",
+   "counts": {
+    "green": 35,
+    "yellow": 18,
+    "red": 1
+   }
+  },
+  {
+   "name": "6 oz inner copper",
+   "why": "Board grows past 62 mil + 10 %.",
+   "build": {
+    "knobs": {
+     "cuStackup": 60
+    }
+   },
+   "checks": [
+    {
+     "what": "overall",
+     "expected": "RED",
+     "actual": "RED"
+    },
+    {
+     "what": "Stack-up thickness",
+     "expected": "RED",
+     "actual": "RED"
+    }
+   ],
+   "pass": true,
+   "overall": "RED",
+   "counts": {
+    "green": 36,
+    "yellow": 18,
+    "red": 0
+   }
+  }
+ ]
+}

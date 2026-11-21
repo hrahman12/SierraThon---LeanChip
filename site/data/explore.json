@@ -689,7 +689,7 @@
     "Footprint package matches the BOM part number: C14: footprint C_0603_1608Metric, part needs C_0805_2012Metric; C17: footprint C_0603_1608Metric, part needs C_0805_2012Metric; C3: footprint C_0603_1608Metric, part needs C_0805_2012Metric; C5: footprint C_0603_1608Metric, part needs C_0805_2012Metric",
     "No two courtyards overlap, so no two bodies can collide: R13 and Y1: courtyards overlap; R14 and Y1: courtyards overlap; R16 and Y1: courtyards overlap; R17 and Y1: courtyards overlap; R5 and R6: courtyards overlap; R7 and Y1: courtyards overlap"
    ],
-   "pad_area_mm2": 233.186,
+   "pad_area_mm2": 233.187,
    "changed": []
   },
   {
@@ -758,58 +758,6 @@
     "No two courtyards overlap, so no two bodies can collide: C12 and R6: courtyards overlap; C6 and R16: courtyards overlap; R12 and R13: courtyards overlap; R12 and Y1: courtyards overlap; R13 and R14: courtyards overlap; R13 and R18: courtyards overlap; \u2026 (+10)"
    ],
    "pad_area_mm2": 237.064,
-   "changed": []
-  },
-  {
-   "id": 48,
-   "strategy": "random",
-   "changed_line": null,
-   "verdict": "RED",
-   "name": null,
-   "rationale": null,
-   "board_verdict": "RED",
-   "certified": true,
-   "collisions": 9,
-   "reasons": [
-    "Footprint package matches the BOM part number: R12: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R13: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R14: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R15: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R16: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R17: footprint R_0603_1608Metric, part needs R_0402_1005Metric; \u2026 (+1)",
-    "No two courtyards overlap, so no two bodies can collide: C6 and R16: courtyards overlap; R12 and R13: courtyards overlap; R13 and R14: courtyards overlap; R13 and R18: courtyards overlap; R14 and R16: courtyards overlap; R14 and R18: courtyards overlap; \u2026 (+3)",
-    "Every drilled hole is at least 8 mil: U1: drill below 8 mil"
-   ],
-   "pad_area_mm2": 238.991,
-   "changed": []
-  },
-  {
-   "id": 49,
-   "strategy": "random",
-   "changed_line": null,
-   "verdict": "RED",
-   "name": null,
-   "rationale": null,
-   "board_verdict": "RED",
-   "certified": true,
-   "collisions": 5,
-   "reasons": [
-    "Footprint package matches the BOM part number: R5: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R6: footprint R_0603_1608Metric, part needs R_0402_1005Metric; U1: footprint QFN-56-1EP_7x7mm_P0.4mm_EP5.6x5.6mm, part needs QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm; U2: footprint SOT-23-6, part needs SOT-23-5; U3: footprint SOIC-8_7.5x5.85mm_P1.27mm, part needs SOIC-8_5.23x5.23mm_P1.27mm",
-    "No two courtyards overlap, so no two bodies can collide: C12 and R6: courtyards overlap; MH3 and U3: courtyards overlap; R5 and R6: courtyards overlap; R8 and U3: courtyards overlap; SW1 and U3: courtyards overlap"
-   ],
-   "pad_area_mm2": 261.864,
-   "changed": []
-  },
-  {
-   "id": 50,
-   "strategy": "random",
-   "changed_line": null,
-   "verdict": "RED",
-   "name": null,
-   "rationale": null,
-   "board_verdict": "RED",
-   "certified": true,
-   "collisions": 1,
-   "reasons": [
-    "No two courtyards overlap, so no two bodies can collide: R5 and R6: courtyards overlap",
-    "Every drilled hole is at least 8 mil: U1: drill below 8 mil"
-   ],
-   "pad_area_mm2": 234.354,
    "changed": []
   }
  ],
