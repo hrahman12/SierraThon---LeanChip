@@ -1,0 +1,1481 @@
+{
+  "universalNetlistSchemaVersion": 3,
+  "metadata": {
+    "generatedAt": "2026-11-21T18:21:01.546Z",
+    "netlistHash": "sha256:06f20189de1feb60d2037612ba4380a070a6b2a62f4b20c4d0247bf0c484b71f",
+    "origin": {
+      "type": "native"
+    }
+  },
+  "nets": {
+    "VBUS": {
+      "J1": [
+        "A4",
+        "B4",
+        "A9",
+        "B9"
+      ],
+      "U4": [
+        "5"
+      ],
+      "U2": [
+        "1",
+        "3"
+      ],
+      "C1": [
+        "1"
+      ]
+    },
+    "+3.3V": {
+      "U2": [
+        "5"
+      ],
+      "C2": [
+        "1"
+      ],
+      "R4": [
+        "1"
+      ],
+      "U1": [
+        "1",
+        "10",
+        "22",
+        "33",
+        "42",
+        "49",
+        "48",
+        "44"
+      ],
+      "U3": [
+        "8"
+      ],
+      "C3": [
+        "1"
+      ],
+      "C4": [
+        "1"
+      ],
+      "R9": [
+        "1"
+      ],
+      "R10": [
+        "1"
+      ],
+      "R19": [
+        "1"
+      ],
+      "C8": [
+        "1"
+      ],
+      "C9": [
+        "1"
+      ],
+      "C10": [
+        "1"
+      ],
+      "C11": [
+        "1"
+      ],
+      "C12": [
+        "1"
+      ],
+      "C13": [
+        "1"
+      ],
+      "C14": [
+        "1"
+      ]
+    },
+    "+1.1V": {
+      "U1": [
+        "45",
+        "23",
+        "50"
+      ],
+      "C15": [
+        "1"
+      ],
+      "C16": [
+        "1"
+      ],
+      "C17": [
+        "1"
+      ]
+    },
+    "GND": {
+      "J1": [
+        "A1",
+        "B1",
+        "A12",
+        "B12",
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "R1": [
+        "2"
+      ],
+      "R2": [
+        "2"
+      ],
+      "U4": [
+        "2"
+      ],
+      "U2": [
+        "2"
+      ],
+      "C1": [
+        "2"
+      ],
+      "C2": [
+        "2"
+      ],
+      "C3": [
+        "2"
+      ],
+      "C4": [
+        "2"
+      ],
+      "U3": [
+        "4"
+      ],
+      "C5": [
+        "2"
+      ],
+      "Y1": [
+        "2",
+        "4"
+      ],
+      "C6": [
+        "1"
+      ],
+      "C7": [
+        "1"
+      ],
+      "SW1": [
+        "3",
+        "4"
+      ],
+      "SW2": [
+        "3",
+        "4"
+      ],
+      "SW3": [
+        "3",
+        "4"
+      ],
+      "U1": [
+        "19",
+        "57"
+      ],
+      "D3": [
+        "1"
+      ],
+      "D4": [
+        "1"
+      ],
+      "D5": [
+        "1"
+      ],
+      "D6": [
+        "1"
+      ],
+      "D7": [
+        "1"
+      ],
+      "D8": [
+        "1"
+      ],
+      "D9": [
+        "1"
+      ],
+      "C8": [
+        "2"
+      ],
+      "C9": [
+        "2"
+      ],
+      "C10": [
+        "2"
+      ],
+      "C11": [
+        "2"
+      ],
+      "C12": [
+        "2"
+      ],
+      "C13": [
+        "2"
+      ],
+      "C14": [
+        "2"
+      ],
+      "C15": [
+        "2"
+      ],
+      "C16": [
+        "2"
+      ],
+      "C17": [
+        "2"
+      ]
+    },
+    "CC1": {
+      "J1": [
+        "A5"
+      ],
+      "R1": [
+        "1"
+      ]
+    },
+    "CC2": {
+      "J1": [
+        "B5"
+      ],
+      "R2": [
+        "1"
+      ]
+    },
+    "D_P": {
+      "J1": [
+        "A6",
+        "B6"
+      ],
+      "U4": [
+        "1"
+      ]
+    },
+    "D_N": {
+      "J1": [
+        "A7",
+        "B7"
+      ],
+      "U4": [
+        "3"
+      ]
+    },
+    "USB_P": {
+      "U4": [
+        "6"
+      ],
+      "R6": [
+        "1"
+      ]
+    },
+    "USB_N": {
+      "U4": [
+        "4"
+      ],
+      "R5": [
+        "1"
+      ]
+    },
+    "USBR_P": {
+      "R6": [
+        "2"
+      ],
+      "U1": [
+        "47"
+      ]
+    },
+    "USBR_N": {
+      "R5": [
+        "2"
+      ],
+      "U1": [
+        "46"
+      ]
+    },
+    "ADC_AVDD": {
+      "R4": [
+        "2"
+      ],
+      "C5": [
+        "1"
+      ],
+      "U1": [
+        "43"
+      ]
+    },
+    "XIN": {
+      "U1": [
+        "20"
+      ],
+      "Y1": [
+        "1"
+      ],
+      "C6": [
+        "2"
+      ]
+    },
+    "XOUT": {
+      "U1": [
+        "21"
+      ],
+      "R7": [
+        "2"
+      ]
+    },
+    "XOUT_XTAL": {
+      "Y1": [
+        "3"
+      ],
+      "C7": [
+        "2"
+      ],
+      "R7": [
+        "1"
+      ]
+    },
+    "RESET": {
+      "R10": [
+        "2"
+      ],
+      "SW2": [
+        "1",
+        "2"
+      ],
+      "U1": [
+        "26"
+      ]
+    },
+    "BOOT": {
+      "SW1": [
+        "1",
+        "2"
+      ],
+      "R8": [
+        "1"
+      ]
+    },
+    "QSPI_CS": {
+      "R8": [
+        "2"
+      ],
+      "R9": [
+        "2"
+      ],
+      "U3": [
+        "1"
+      ],
+      "U1": [
+        "56"
+      ]
+    },
+    "QSPI_CLK": {
+      "U3": [
+        "6"
+      ],
+      "U1": [
+        "52"
+      ]
+    },
+    "QSPI_D0": {
+      "U3": [
+        "5"
+      ],
+      "U1": [
+        "53"
+      ]
+    },
+    "QSPI_D1": {
+      "U3": [
+        "2"
+      ],
+      "U1": [
+        "55"
+      ]
+    },
+    "QSPI_D2": {
+      "U3": [
+        "3"
+      ],
+      "U1": [
+        "54"
+      ]
+    },
+    "QSPI_D3": {
+      "U3": [
+        "7"
+      ],
+      "U1": [
+        "51"
+      ]
+    },
+    "SW": {
+      "U1": [
+        "36"
+      ],
+      "R19": [
+        "2"
+      ],
+      "SW3": [
+        "1",
+        "2"
+      ]
+    },
+    "Led1": {
+      "U1": [
+        "28"
+      ],
+      "R12": [
+        "1"
+      ]
+    },
+    "LED1_A": {
+      "R12": [
+        "2"
+      ],
+      "D3": [
+        "2"
+      ]
+    },
+    "Led2": {
+      "U1": [
+        "29"
+      ],
+      "R13": [
+        "1"
+      ]
+    },
+    "LED2_A": {
+      "R13": [
+        "2"
+      ],
+      "D4": [
+        "2"
+      ]
+    },
+    "Led3": {
+      "U1": [
+        "30"
+      ],
+      "R14": [
+        "1"
+      ]
+    },
+    "LED3_A": {
+      "R14": [
+        "2"
+      ],
+      "D5": [
+        "2"
+      ]
+    },
+    "Led4": {
+      "U1": [
+        "31"
+      ],
+      "R15": [
+        "1"
+      ]
+    },
+    "LED4_A": {
+      "R15": [
+        "2"
+      ],
+      "D6": [
+        "2"
+      ]
+    },
+    "Led5": {
+      "U1": [
+        "32"
+      ],
+      "R16": [
+        "1"
+      ]
+    },
+    "LED5_A": {
+      "R16": [
+        "2"
+      ],
+      "D7": [
+        "2"
+      ]
+    },
+    "Led6": {
+      "U1": [
+        "34"
+      ],
+      "R17": [
+        "1"
+      ]
+    },
+    "LED6_A": {
+      "R17": [
+        "2"
+      ],
+      "D8": [
+        "2"
+      ]
+    },
+    "Led7": {
+      "U1": [
+        "35"
+      ],
+      "R18": [
+        "1"
+      ]
+    },
+    "LED7_A": {
+      "R18": [
+        "2"
+      ],
+      "D9": [
+        "2"
+      ]
+    }
+  },
+  "components": {
+    "C1": {
+      "mpn": "GCM188R71C105KA64D",
+      "manufacturer": "Murata Electronics",
+      "description": "CAP CER 1UF 16V X7R 0603",
+      "value": "1uF",
+      "pins": {
+        "1": "VBUS",
+        "2": "GND"
+      }
+    },
+    "C3": {
+      "mpn": "GCM21BR71C225KA64L",
+      "manufacturer": "Murata Electronics",
+      "description": "CAP CER 2.2UF 16V X7R 0805",
+      "value": "2.2uF",
+      "pins": {
+        "1": "+3.3V",
+        "2": "GND"
+      }
+    },
+    "C4": {
+      "mpn": "GCM155R71C104KA55D",
+      "manufacturer": "Murata Electronics",
+      "description": "CAP CER 0.1UF 16V X7R 0402",
+      "value": "0.1uF",
+      "pins": {
+        "1": "+3.3V",
+        "2": "GND"
+      }
+    },
+    "C6": {
+      "mpn": "GCM1555C1H150JA16D",
+      "manufacturer": "Murata Electronics",
+      "description": "CAP CER 15PF 50V C0G/NP0 0402",
+      "value": "15pF",
+      "pins": {
+        "1": "GND",
+        "2": "XIN"
+      }
+    },
+    "D3": {
+      "mpn": "QBLP601-R5",
+      "manufacturer": "QT Brightek (QTB)",
+      "description": "LED RED CLEAR 625NM 0603 SMD",
+      "value": "LED",
+      "pins": {
+        "1": {
+          "name": "K",
+          "net": "GND"
+        },
+        "2": {
+          "name": "A",
+          "net": "LED1_A"
+        }
+      }
+    },
+    "J1": {
+      "mpn": "UJ20-C-H-G-SMT-TR",
+      "manufacturer": "Same Sky (Formerly CUI Devices)",
+      "description": "CONN RCPT USB 2.0 TYPE C PCB RA",
+      "value": "USB-C",
+      "pins": {
+        "A4": {
+          "name": "VBUS",
+          "net": "VBUS"
+        },
+        "B4": {
+          "name": "VBUS1",
+          "net": "VBUS"
+        },
+        "A9": {
+          "name": "VBUS2",
+          "net": "VBUS"
+        },
+        "B9": {
+          "name": "VBUS3",
+          "net": "VBUS"
+        },
+        "A1": {
+          "name": "GND",
+          "net": "GND"
+        },
+        "B1": {
+          "name": "GND1",
+          "net": "GND"
+        },
+        "A12": {
+          "name": "GND2",
+          "net": "GND"
+        },
+        "B12": {
+          "name": "GND3",
+          "net": "GND"
+        },
+        "S1": {
+          "name": "SHELL1",
+          "net": "GND"
+        },
+        "S2": {
+          "name": "SHELL2",
+          "net": "GND"
+        },
+        "S3": {
+          "name": "SHELL3",
+          "net": "GND"
+        },
+        "S4": {
+          "name": "SHELL4",
+          "net": "GND"
+        },
+        "A5": {
+          "name": "CC1",
+          "net": "CC1"
+        },
+        "B5": {
+          "name": "CC2",
+          "net": "CC2"
+        },
+        "A6": {
+          "name": "DP1",
+          "net": "D_P"
+        },
+        "B6": {
+          "name": "DP2",
+          "net": "D_P"
+        },
+        "A7": {
+          "name": "DN1",
+          "net": "D_N"
+        },
+        "B7": {
+          "name": "DN2",
+          "net": "D_N"
+        },
+        "A8": {
+          "name": "SBU1",
+          "net": ""
+        },
+        "B8": {
+          "name": "SBU2",
+          "net": ""
+        }
+      }
+    },
+    "R1": {
+      "mpn": "RC0402JR-075K1L",
+      "manufacturer": "YAGEO",
+      "description": "RES 5.1K OHM 5% 1/16W 0402",
+      "value": "5.1K",
+      "pins": {
+        "1": "CC1",
+        "2": "GND"
+      }
+    },
+    "R4": {
+      "mpn": "RC0603JR-07200RL",
+      "manufacturer": "YAGEO",
+      "description": "RES 200 OHM 5% 1/10W 0603",
+      "value": "200",
+      "pins": {
+        "1": "+3.3V",
+        "2": "ADC_AVDD"
+      }
+    },
+    "R5": {
+      "mpn": "RC0402FR-0727RL",
+      "manufacturer": "YAGEO",
+      "description": "RES 27 OHM 1% 1/16W 0402",
+      "value": "27",
+      "pins": {
+        "1": "USB_N",
+        "2": "USBR_N"
+      }
+    },
+    "R7": {
+      "mpn": "RC0402FR-071KL",
+      "manufacturer": "YAGEO",
+      "description": "RES 1K OHM 1% 1/16W 0402",
+      "value": "1K",
+      "pins": {
+        "1": "XOUT_XTAL",
+        "2": "XOUT"
+      }
+    },
+    "R9": {
+      "mpn": "RC0402JR-0710KL",
+      "manufacturer": "YAGEO",
+      "description": "RES 10K OHM 5% 1/16W 0402",
+      "value": "10K",
+      "pins": {
+        "1": "+3.3V",
+        "2": "QSPI_CS"
+      }
+    },
+    "R12": {
+      "mpn": "AF0402JR-07330RL",
+      "manufacturer": "YAGEO",
+      "description": "RES SMD 330 OHM 5% 1/16W 0402",
+      "value": "330",
+      "pins": {
+        "1": "Led1",
+        "2": "LED1_A"
+      }
+    },
+    "SW1": {
+      "mpn": "PTS526SM15SMTR2 LFS",
+      "manufacturer": "C&K",
+      "description": "SWITCH TACTILE SPST-NO 0.05A 12V",
+      "value": "BOOT",
+      "pins": {
+        "1": "BOOT",
+        "2": "BOOT",
+        "3": "GND",
+        "4": "GND"
+      }
+    },
+    "SW3": {
+      "mpn": "D6R90 F2 LFS",
+      "manufacturer": "C&K",
+      "description": "SWITCH PUSH SPST-NO 0.1A 32V",
+      "value": "SWITCH",
+      "pins": {
+        "1": "SW",
+        "2": "SW",
+        "3": "GND",
+        "4": "GND"
+      }
+    },
+    "U1": {
+      "mpn": "SC0914(13)",
+      "manufacturer": "Raspberry Pi",
+      "description": "IC MCU 32BIT EXT MEM 56QFN",
+      "value": "RP2040",
+      "pins": {
+        "1": {
+          "name": "IOVDD",
+          "net": "+3.3V"
+        },
+        "10": {
+          "name": "IOVDD",
+          "net": "+3.3V"
+        },
+        "22": {
+          "name": "IOVDD",
+          "net": "+3.3V"
+        },
+        "33": {
+          "name": "IOVDD",
+          "net": "+3.3V"
+        },
+        "42": {
+          "name": "IOVDD",
+          "net": "+3.3V"
+        },
+        "49": {
+          "name": "IOVDD",
+          "net": "+3.3V"
+        },
+        "19": {
+          "name": "TESTEN",
+          "net": "GND"
+        },
+        "20": {
+          "name": "XIN",
+          "net": "XIN"
+        },
+        "21": {
+          "name": "XOUT",
+          "net": "XOUT"
+        },
+        "23": {
+          "name": "DVDD",
+          "net": "+1.1V"
+        },
+        "50": {
+          "name": "DVDD",
+          "net": "+1.1V"
+        },
+        "24": {
+          "name": "SWCLK",
+          "net": ""
+        },
+        "25": {
+          "name": "SWDIO",
+          "net": ""
+        },
+        "26": {
+          "name": "RUN",
+          "net": "RESET"
+        },
+        "43": {
+          "name": "ADC_AVDD",
+          "net": "ADC_AVDD"
+        },
+        "44": {
+          "name": "VREG_VIN",
+          "net": "+3.3V"
+        },
+        "45": {
+          "name": "VREG_VOUT",
+          "net": "+1.1V"
+        },
+        "46": {
+          "name": "USB_DM",
+          "net": "USBR_N"
+        },
+        "47": {
+          "name": "USB_DP",
+          "net": "USBR_P"
+        },
+        "48": {
+          "name": "USB_VDD",
+          "net": "+3.3V"
+        },
+        "51": {
+          "name": "QSPI_SD3",
+          "net": "QSPI_D3"
+        },
+        "52": {
+          "name": "QSPI_SCLK",
+          "net": "QSPI_CLK"
+        },
+        "53": {
+          "name": "QSPI_SD0",
+          "net": "QSPI_D0"
+        },
+        "54": {
+          "name": "QSPI_SD2",
+          "net": "QSPI_D2"
+        },
+        "55": {
+          "name": "QSPI_SD1",
+          "net": "QSPI_D1"
+        },
+        "56": {
+          "name": "QSPI_SS_N",
+          "net": "QSPI_CS"
+        },
+        "57": {
+          "name": "GND",
+          "net": "GND"
+        },
+        "2": {
+          "name": "GPIO0",
+          "net": ""
+        },
+        "3": {
+          "name": "GPIO1",
+          "net": ""
+        },
+        "4": {
+          "name": "GPIO2",
+          "net": ""
+        },
+        "5": {
+          "name": "GPIO3",
+          "net": ""
+        },
+        "6": {
+          "name": "GPIO4",
+          "net": ""
+        },
+        "7": {
+          "name": "GPIO5",
+          "net": ""
+        },
+        "8": {
+          "name": "GPIO6",
+          "net": ""
+        },
+        "9": {
+          "name": "GPIO7",
+          "net": ""
+        },
+        "11": {
+          "name": "GPIO8",
+          "net": ""
+        },
+        "12": {
+          "name": "GPIO9",
+          "net": ""
+        },
+        "13": {
+          "name": "GPIO10",
+          "net": ""
+        },
+        "14": {
+          "name": "GPIO11",
+          "net": ""
+        },
+        "15": {
+          "name": "GPIO12",
+          "net": ""
+        },
+        "16": {
+          "name": "GPIO13",
+          "net": ""
+        },
+        "17": {
+          "name": "GPIO14",
+          "net": ""
+        },
+        "18": {
+          "name": "GPIO15",
+          "net": ""
+        },
+        "27": {
+          "name": "GPIO16",
+          "net": ""
+        },
+        "28": {
+          "name": "GPIO17",
+          "net": "Led1"
+        },
+        "29": {
+          "name": "GPIO18",
+          "net": "Led2"
+        },
+        "30": {
+          "name": "GPIO19",
+          "net": "Led3"
+        },
+        "31": {
+          "name": "GPIO20",
+          "net": "Led4"
+        },
+        "32": {
+          "name": "GPIO21",
+          "net": "Led5"
+        },
+        "34": {
+          "name": "GPIO22",
+          "net": "Led6"
+        },
+        "35": {
+          "name": "GPIO23",
+          "net": "Led7"
+        },
+        "36": {
+          "name": "GPIO24",
+          "net": "SW"
+        },
+        "37": {
+          "name": "GPIO25",
+          "net": ""
+        },
+        "38": {
+          "name": "GPIO26/ADC0",
+          "net": ""
+        },
+        "39": {
+          "name": "GPIO27/ADC1",
+          "net": ""
+        },
+        "40": {
+          "name": "GPIO28/ADC2",
+          "net": ""
+        },
+        "41": {
+          "name": "GPIO29/ADC3",
+          "net": ""
+        }
+      }
+    },
+    "U2": {
+      "mpn": "AP2112K-3.3TRG1",
+      "manufacturer": "Diodes Incorporated",
+      "description": "IC REG LINEAR 3.3V 600MA SOT-25",
+      "value": "AP2112",
+      "pins": {
+        "1": {
+          "name": "VIN",
+          "net": "VBUS"
+        },
+        "2": {
+          "name": "GND",
+          "net": "GND"
+        },
+        "3": {
+          "name": "EN",
+          "net": "VBUS"
+        },
+        "4": {
+          "name": "NC",
+          "net": ""
+        },
+        "5": {
+          "name": "VOUT",
+          "net": "+3.3V"
+        }
+      }
+    },
+    "U3": {
+      "mpn": "W25Q128JVSIQ TR",
+      "manufacturer": "Winbond Electronics",
+      "description": "IC FLASH 128MBIT SPI/QUAD 8SOIC",
+      "value": "W25Q128JVSIQ",
+      "pins": {
+        "1": {
+          "name": "/CS",
+          "net": "QSPI_CS"
+        },
+        "2": {
+          "name": "DO/D1",
+          "net": "QSPI_D1"
+        },
+        "3": {
+          "name": "/WP/D2",
+          "net": "QSPI_D2"
+        },
+        "4": {
+          "name": "GND",
+          "net": "GND"
+        },
+        "5": {
+          "name": "DI/D0",
+          "net": "QSPI_D0"
+        },
+        "6": {
+          "name": "CLK",
+          "net": "QSPI_CLK"
+        },
+        "7": {
+          "name": "/RESET/D3",
+          "net": "QSPI_D3"
+        },
+        "8": {
+          "name": "VCC",
+          "net": "+3.3V"
+        }
+      }
+    },
+    "U4": {
+      "mpn": "USBLC6-2SC6",
+      "manufacturer": "STMicroelectronics",
+      "description": "TVS DIODE 5.25VWM 17VC SOT23-6",
+      "value": "USBLC6-2SC6",
+      "pins": {
+        "1": {
+          "name": "I/O1A",
+          "net": "D_P"
+        },
+        "2": {
+          "name": "GND",
+          "net": "GND"
+        },
+        "3": {
+          "name": "I/O2A",
+          "net": "D_N"
+        },
+        "4": {
+          "name": "I/O2B",
+          "net": "USB_N"
+        },
+        "5": {
+          "name": "VBUS",
+          "net": "VBUS"
+        },
+        "6": {
+          "name": "I/O1B",
+          "net": "USB_P"
+        }
+      }
+    },
+    "Y1": {
+      "mpn": "ABM8-272-T3",
+      "manufacturer": "Abracon LLC",
+      "description": "CRYSTAL 12.0000MHZ 10PF SMD",
+      "value": "CRYSTAL14",
+      "pins": {
+        "1": "XIN",
+        "2": "GND",
+        "3": "XOUT_XTAL",
+        "4": "GND"
+      }
+    },
+    "C2": {
+      "mpn": "GCM188R71C105KA64D",
+      "manufacturer": "Murata Electronics",
+      "description": "CAP CER 1UF 16V X7R 0603",
+      "value": "1uF",
+      "pins": {
+        "1": "+3.3V",
+        "2": "GND"
+      }
+    },
+    "C5": {
+      "mpn": "GCM21BR71C225KA64L",
+      "manufacturer": "Murata Electronics",
+      "description": "CAP CER 2.2UF 16V X7R 0805",
+      "value": "2.2uF",
+      "pins": {
+        "1": "ADC_AVDD",
+        "2": "GND"
+      }
+    },
+    "C14": {
+      "mpn": "GCM21BR71C225KA64L",
+      "manufacturer": "Murata Electronics",
+      "description": "CAP CER 2.2UF 16V X7R 0805",
+      "value": "2.2uF",
+      "pins": {
+        "1": "+3.3V",
+        "2": "GND"
+      }
+    },
+    "C17": {
+      "mpn": "GCM21BR71C225KA64L",
+      "manufacturer": "Murata Electronics",
+      "description": "CAP CER 2.2UF 16V X7R 0805",
+      "value": "2.2uF",
+      "pins": {
+        "1": "+1.1V",
+        "2": "GND"
+      }
+    },
+    "C7": {
+      "mpn": "GCM1555C1H150JA16D",
+      "manufacturer": "Murata Electronics",
+      "description": "CAP CER 15PF 50V C0G/NP0 0402",
+      "value": "15pF",
+      "pins": {
+        "1": "GND",
+        "2": "XOUT_XTAL"
+      }
+    },
+    "R2": {
+      "mpn": "RC0402JR-075K1L",
+      "manufacturer": "YAGEO",
+      "description": "RES 5.1K OHM 5% 1/16W 0402",
+      "value": "5.1K",
+      "pins": {
+        "1": "CC2",
+        "2": "GND"
+      }
+    },
+    "R6": {
+      "mpn": "RC0402FR-0727RL",
+      "manufacturer": "YAGEO",
+      "description": "RES 27 OHM 1% 1/16W 0402",
+      "value": "27",
+      "pins": {
+        "1": "USB_P",
+        "2": "USBR_P"
+      }
+    },
+    "R8": {
+      "mpn": "RC0402FR-071KL",
+      "manufacturer": "YAGEO",
+      "description": "RES 1K OHM 1% 1/16W 0402",
+      "value": "1K",
+      "pins": {
+        "1": "BOOT",
+        "2": "QSPI_CS"
+      }
+    },
+    "R10": {
+      "mpn": "RC0402JR-0710KL",
+      "manufacturer": "YAGEO",
+      "description": "RES 10K OHM 5% 1/16W 0402",
+      "value": "10K",
+      "pins": {
+        "1": "+3.3V",
+        "2": "RESET"
+      }
+    },
+    "R19": {
+      "mpn": "RC0402JR-0710KL",
+      "manufacturer": "YAGEO",
+      "description": "RES 10K OHM 5% 1/16W 0402",
+      "value": "10K",
+      "pins": {
+        "1": "+3.3V",
+        "2": "SW"
+      }
+    },
+    "SW2": {
+      "mpn": "PTS526SM15SMTR2 LFS",
+      "manufacturer": "C&K",
+      "description": "SWITCH TACTILE SPST-NO 0.05A 12V",
+      "value": "RESET",
+      "pins": {
+        "1": "RESET",
+        "2": "RESET",
+        "3": "GND",
+        "4": "GND"
+      }
+    },
+    "C8": {
+      "mpn": "GCM155R71C104KA55D",
+      "manufacturer": "Murata Electronics",
+      "description": "CAP CER 0.1UF 16V X7R 0402",
+      "value": "0.1uF",
+      "pins": {
+        "1": "+3.3V",
+        "2": "GND"
+      }
+    },
+    "C9": {
+      "mpn": "GCM155R71C104KA55D",
+      "manufacturer": "Murata Electronics",
+      "description": "CAP CER 0.1UF 16V X7R 0402",
+      "value": "0.1uF",
+      "pins": {
+        "1": "+3.3V",
+        "2": "GND"
+      }
+    },
+    "C10": {
+      "mpn": "GCM155R71C104KA55D",
+      "manufacturer": "Murata Electronics",
+      "description": "CAP CER 0.1UF 16V X7R 0402",
+      "value": "0.1uF",
+      "pins": {
+        "1": "+3.3V",
+        "2": "GND"
+      }
+    },
+    "C11": {
+      "mpn": "GCM155R71C104KA55D",
+      "manufacturer": "Murata Electronics",
+      "description": "CAP CER 0.1UF 16V X7R 0402",
+      "value": "0.1uF",
+      "pins": {
+        "1": "+3.3V",
+        "2": "GND"
+      }
+    },
+    "C12": {
+      "mpn": "GCM155R71C104KA55D",
+      "manufacturer": "Murata Electronics",
+      "description": "CAP CER 0.1UF 16V X7R 0402",
+      "value": "0.1uF",
+      "pins": {
+        "1": "+3.3V",
+        "2": "GND"
+      }
+    },
+    "C13": {
+      "mpn": "GCM155R71C104KA55D",
+      "manufacturer": "Murata Electronics",
+      "description": "CAP CER 0.1UF 16V X7R 0402",
+      "value": "0.1uF",
+      "pins": {
+        "1": "+3.3V",
+        "2": "GND"
+      }
+    },
+    "C15": {
+      "mpn": "GCM155R71C104KA55D",
+      "manufacturer": "Murata Electronics",
+      "description": "CAP CER 0.1UF 16V X7R 0402",
+      "value": "0.1uF",
+      "pins": {
+        "1": "+1.1V",
+        "2": "GND"
+      }
+    },
+    "C16": {
+      "mpn": "GCM155R71C104KA55D",
+      "manufacturer": "Murata Electronics",
+      "description": "CAP CER 0.1UF 16V X7R 0402",
+      "value": "0.1uF",
+      "pins": {
+        "1": "+1.1V",
+        "2": "GND"
+      }
+    },
+    "D4": {
+      "mpn": "QBLP601-R5",
+      "manufacturer": "QT Brightek (QTB)",
+      "description": "LED RED CLEAR 625NM 0603 SMD",
+      "value": "LED",
+      "pins": {
+        "1": {
+          "name": "K",
+          "net": "GND"
+        },
+        "2": {
+          "name": "A",
+          "net": "LED2_A"
+        }
+      }
+    },
+    "D5": {
+      "mpn": "QBLP601-R5",
+      "manufacturer": "QT Brightek (QTB)",
+      "description": "LED RED CLEAR 625NM 0603 SMD",
+      "value": "LED",
+      "pins": {
+        "1": {
+          "name": "K",
+          "net": "GND"
+        },
+        "2": {
+          "name": "A",
+          "net": "LED3_A"
+        }
+      }
+    },
+    "D6": {
+      "mpn": "QBLP601-R5",
+      "manufacturer": "QT Brightek (QTB)",
+      "description": "LED RED CLEAR 625NM 0603 SMD",
+      "value": "LED",
+      "pins": {
+        "1": {
+          "name": "K",
+          "net": "GND"
+        },
+        "2": {
+          "name": "A",
+          "net": "LED4_A"
+        }
+      }
+    },
+    "D7": {
+      "mpn": "QBLP601-R5",
+      "manufacturer": "QT Brightek (QTB)",
+      "description": "LED RED CLEAR 625NM 0603 SMD",
+      "value": "LED",
+      "pins": {
+        "1": {
+          "name": "K",
+          "net": "GND"
+        },
+        "2": {
+          "name": "A",
+          "net": "LED5_A"
+        }
+      }
+    },
+    "D8": {
+      "mpn": "QBLP601-R5",
+      "manufacturer": "QT Brightek (QTB)",
+      "description": "LED RED CLEAR 625NM 0603 SMD",
+      "value": "LED",
+      "pins": {
+        "1": {
+          "name": "K",
+          "net": "GND"
+        },
+        "2": {
+          "name": "A",
+          "net": "LED6_A"
+        }
+      }
+    },
+    "D9": {
+      "mpn": "QBLP601-R5",
+      "manufacturer": "QT Brightek (QTB)",
+      "description": "LED RED CLEAR 625NM 0603 SMD",
+      "value": "LED",
+      "pins": {
+        "1": {
+          "name": "K",
+          "net": "GND"
+        },
+        "2": {
+          "name": "A",
+          "net": "LED7_A"
+        }
+      }
+    },
+    "R13": {
+      "mpn": "AF0402JR-07330RL",
+      "manufacturer": "YAGEO",
+      "description": "RES SMD 330 OHM 5% 1/16W 0402",
+      "value": "330",
+      "pins": {
+        "1": "Led2",
+        "2": "LED2_A"
+      }
+    },
+    "R14": {
+      "mpn": "AF0402JR-07330RL",
+      "manufacturer": "YAGEO",
+      "description": "RES SMD 330 OHM 5% 1/16W 0402",
+      "value": "330",
+      "pins": {
+        "1": "Led3",
+        "2": "LED3_A"
+      }
+    },
+    "R15": {
+      "mpn": "AF0402JR-07330RL",
+      "manufacturer": "YAGEO",
+      "description": "RES SMD 330 OHM 5% 1/16W 0402",
+      "value": "330",
+      "pins": {
+        "1": "Led4",
+        "2": "LED4_A"
+      }
+    },
+    "R16": {
+      "mpn": "AF0402JR-07330RL",
+      "manufacturer": "YAGEO",
+      "description": "RES SMD 330 OHM 5% 1/16W 0402",
+      "value": "330",
+      "pins": {
+        "1": "Led5",
+        "2": "LED5_A"
+      }
+    },
+    "R17": {
+      "mpn": "AF0402JR-07330RL",
+      "manufacturer": "YAGEO",
+      "description": "RES SMD 330 OHM 5% 1/16W 0402",
+      "value": "330",
+      "pins": {
+        "1": "Led6",
+        "2": "LED6_A"
+      }
+    },
+    "R18": {
+      "mpn": "AF0402JR-07330RL",
+      "manufacturer": "YAGEO",
+      "description": "RES SMD 330 OHM 5% 1/16W 0402",
+      "value": "330",
+      "pins": {
+        "1": "Led7",
+        "2": "LED7_A"
+      }
+    },
+    "MH1": {
+      "value": "Mounting Hole",
+      "description": "Mounting Hole (DNI)",
+      "dns": true,
+      "pins": {}
+    },
+    "MH2": {
+      "value": "Mounting Hole",
+      "description": "Mounting Hole (DNI)",
+      "dns": true,
+      "pins": {}
+    },
+    "MH3": {
+      "value": "Mounting Hole",
+      "description": "Mounting Hole (DNI)",
+      "dns": true,
+      "pins": {}
+    },
+    "MH4": {
+      "value": "Mounting Hole",
+      "description": "Mounting Hole (DNI)",
+      "dns": true,
+      "pins": {}
+    }
+  }
+}
