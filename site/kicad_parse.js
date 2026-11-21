@@ -217,14 +217,81 @@ function strokeWidth(node) {
 
 const SHAPE_KIND = { line: 'segment', rect: 'rect', circle: 'circle', arc: 'arc', poly: 'poly', curve: 'bezier' };
 
-/** Circumcentre of three points, rounded (KiCad's CalcArcCenter without its error-rounding step). */
-function arcCenter(s, m, e) {
-  const ax = s[0], ay = s[1], bx = m[0], by = m[1], cx = e[0], cy = e[1];
-  const d = 2 * (ax * (by - cy) + bx * (cy - ay) + cx * (ay - by));
-  if (d === 0) return [kiround((ax + cx) / 2), kiround((ay + cy) / 2)];
-  const a2 = ax * ax + ay * ay, b2 = bx * bx + by * by, c2 = cx * cx + cy * cy;
-  return [kiround((a2 * (by - cy) + b2 * (cy - ay) + c2 * (ay - by)) / d),
-          kiround((a2 * (cx - bx) + b2 * (ax - cx) + c2 * (bx - ax)) / d)];
+/** EDA_ANGLE( VECTOR2D ): direction of a vector in degrees, exact on the axes and diagonals. */
+function vecAngle(x, y) {
+  if (x === 0 && y === 0) return 0;
+  if (y === 0) return x >= 0 ? 0.0 : -180.0;
+  if (x === 0) return y >= 0 ? 90.0 : -90.0;
+  if (x === y) return x >= 0 ? 45.0 : -135.0;
+  if (x === -y) return x >= 0 ? -45.0 : 135.0;
+  return Math.atan2(y, x) / DEG2RAD;
+}
+
+/**
+ * KiCad's CalcArcCenter (libs/kimath/src/trigo.cpp): the centre of the arc through start, mid, end.
+ * It is written out operation by operation, including the step that snaps the centre to a
+ * multiple of 100 nm or 10 nm when that lies inside the propagated rounding error.
+ */
+function calcArcCenter(s, m, e) {
+  const EPS = Number.EPSILON;
+  let center;
+  let yDelta21 = m[1] - s[1], xDelta21 = m[0] - s[0], yDelta32 = e[1] - m[1], xDelta32 = e[0] - m[0];
+  if ((xDelta21 === 0 && yDelta32 === 0) || (yDelta21 === 0 && xDelta32 === 0)) {
+    center = [(s[0] + e[0]) / 2.0, (s[1] + e[1]) / 2.0];
+  } else {
+    if (xDelta21 === 0) xDelta21 = EPS;
+    if (xDelta32 === 0) xDelta32 = -EPS;
+    let aSlope = yDelta21 / xDelta21, bSlope = yDelta32 / xDelta32;
+    const norm = (x, y) => Math.sqrt(x * x + y * y);
+    const daSlope = aSlope * norm(0.5 / yDelta21, 0.5 / xDelta21);
+    const dbSlope = bSlope * norm(0.5 / yDelta32, 0.5 / xDelta32);
+    let done = false;
+    if (aSlope === bSlope) {
+      if (s[0] === e[0] && s[1] === e[1]) {                 // a full circle
+        center = [(s[0] + m[0]) / 2.0, (s[1] + m[1]) / 2.0];
+        done = true;
+      } else {
+        aSlope += EPS;
+        bSlope -= EPS;
+      }
+    }
+    if (!done) {
+      if (aSlope === 0) aSlope = EPS;
+      const R = Math.SQRT1_2;
+      const abSlopeStartEndY = aSlope * bSlope * (s[1] - e[1]);
+      const dabSlopeStartEndY = abSlopeStartEndY * Math.sqrt((daSlope / aSlope * daSlope / aSlope)
+        + (dbSlope / bSlope * dbSlope / bSlope) + (R / (s[1] - e[1]) * R / (s[1] - e[1])));
+      const bSlopeStartMidX = bSlope * (s[0] + m[0]);
+      const dbSlopeStartMidX = bSlopeStartMidX * Math.sqrt((dbSlope / bSlope * dbSlope / bSlope)
+        + (R / (s[0] + m[0]) * R / (s[0] + m[0])));
+      const aSlopeMidEndX = aSlope * (m[0] + e[0]);
+      const daSlopeMidEndX = aSlopeMidEndX * Math.sqrt((daSlope / aSlope * daSlope / aSlope)
+        + (R / (m[0] + e[0]) * R / (m[0] + e[0])));
+      const twiceBASlopeDiff = 2 * (bSlope - aSlope);
+      const dtwiceBASlopeDiff = 2 * Math.sqrt(dbSlope * dbSlope + daSlope * daSlope);
+      const centerNumeratorX = abSlopeStartEndY + bSlopeStartMidX - aSlopeMidEndX;
+      const dCenterNumeratorX = Math.sqrt(dabSlopeStartEndY * dabSlopeStartEndY
+        + dbSlopeStartMidX * dbSlopeStartMidX + daSlopeMidEndX * daSlopeMidEndX);
+      const centerX = (abSlopeStartEndY + bSlopeStartMidX - aSlopeMidEndX) / twiceBASlopeDiff;
+      const dCenterX = centerX * Math.sqrt((dCenterNumeratorX / centerNumeratorX * dCenterNumeratorX / centerNumeratorX)
+        + (dtwiceBASlopeDiff / twiceBASlopeDiff * dtwiceBASlopeDiff / twiceBASlopeDiff));
+      const centerNumeratorY = ((s[0] + m[0]) / 2.0 - centerX);
+      const dCenterNumeratorY = Math.sqrt(1.0 / 8.0 + dCenterX * dCenterX);
+      const centerFirstTerm = centerNumeratorY / aSlope;
+      const dcenterFirstTermY = centerFirstTerm * Math.sqrt((dCenterNumeratorY / centerNumeratorY * dCenterNumeratorY / centerNumeratorY)
+        + (daSlope / aSlope * daSlope / aSlope));
+      const centerY = centerFirstTerm + (s[1] + m[1]) / 2.0;
+      const dCenterY = Math.sqrt(dcenterFirstTermY * dcenterFirstTermY + 1.0 / 8.0);
+      const r100x = Math.floor((centerX + 50.0) / 100.0) * 100.0, r100y = Math.floor((centerY + 50.0) / 100.0) * 100.0;
+      const r10x = Math.floor((centerX + 5.0) / 10.0) * 10.0, r10y = Math.floor((centerY + 5.0) / 10.0) * 10.0;
+      if (Math.abs(r100x - centerX) < dCenterX && Math.abs(r100y - centerY) < dCenterY) center = [r100x, r100y];
+      else if (Math.abs(r10x - centerX) < dCenterX && Math.abs(r10y - centerY) < dCenterY) center = [r10x, r10y];
+      else center = [centerX, centerY];
+    }
+  }
+  const lim = 2147483647 / 2.0, lo = -2147483648 / 2.0;
+  const clamp = (v) => (v < lo ? lo : v > lim ? lim : v);
+  return [kiround(clamp(center[0])), kiround(clamp(center[1]))];
 }
 
 /**
@@ -247,21 +314,20 @@ function readShape(node, prefix, warnings, where) {
     if (end) g.end = xy(end);
   } else if (type === 'arc') {
     if (mid && start && end) {
-      g.start = xy(start); g.end = xy(end); g.center = arcCenter(g.start, xy(mid), g.end);
+      g.start = xy(start); g.end = xy(end); g.center = calcArcCenter(g.start, xy(mid), g.end);
     } else if (start && end) {                     // KiCad 5: (start = centre) (end = arc start) (angle a)
       g.center = xy(start); g.start = xy(end);
       const ang = kid(node, 'angle');
       g.end = add(g.center, rotate(sub(g.start, g.center), ang ? -parseFloat(ang[1]) : 0));
     }
-    if (warnings) warnings.push(`${where}: arc read on a best-effort basis (its centre may be off by a few nm)`);
   } else if (type === 'poly' || type === 'bezier') {
     const pts = kid(node, 'pts');
     if (pts) g.pts = kids(pts, 'xy').map(xy);
     if (type === 'bezier') {
       if (g.pts.length === 4) { g.start = g.pts[0]; g.c1 = g.pts[1]; g.c2 = g.pts[2]; g.end = g.pts[3]; }
-      if (warnings) warnings.push(`${where}: curve read on a best-effort basis (control-point box)`);
-    } else if (pts && kids(pts, 'arc').length && warnings) {
-      warnings.push(`${where}: polygon with arc edges read on a best-effort basis (arc edges ignored)`);
+      g.approx = 'curve (control-point box)';
+    } else if (pts && kids(pts, 'arc').length) {
+      g.approx = 'polygon with arc edges (arc edges ignored)';
     }
   } else {
     if (start) g.start = xy(start);
@@ -293,14 +359,21 @@ function rectCorners(g) {
   return pts;
 }
 
-/** Points that enclose a placed arc: its ends plus every axis extreme it crosses (computeArcBBox). */
+/** Points that enclose a placed arc: its ends plus every axis extreme it crosses (EDA_SHAPE::computeArcBBox). */
 function arcPoints(g) {
   const pts = [g.start, g.end];
   if (g.filled) pts.push(g.center);
   const r = shapeRadius(g);
-  const ang = (p) => norm360(Math.atan2(p[1] - g.center[1], p[0] - g.center[0]) / DEG2RAD);
-  let t1 = ang(g.start), t2 = ang(g.end);
-  if (t1 === t2 && (g.start[0] !== g.end[0] || g.start[1] !== g.end[1])) t2 = t1;     // degenerate
+  // CalcArcAngles
+  let t1 = vecAngle(g.start[0] - g.center[0], g.start[1] - g.center[1]);
+  let t2 = vecAngle(g.end[0] - g.center[0], g.end[1] - g.center[1]);
+  if (t2 === t1) t2 = t1 + 360.0;
+  if (t1 > t2) {
+    if (t2 < 0) t2 = norm360(t2);
+    else t1 = norm360(t1) - 360.0;
+  }
+  t1 = norm360(t1);
+  t2 = norm360(t2);
   const hit = (q) => (t2 > t1 ? t1 < q && t2 > q : t1 < q || t2 > q);
   if (hit(0)) pts.push([g.center[0] + r, g.center[1]]);
   if (hit(90)) pts.push([g.center[0], g.center[1] + r]);
@@ -401,7 +474,11 @@ function readPad(node, fp, nets, warnings) {
         for (const p of c) {
           if (!Array.isArray(p) || !p[0].startsWith('gr_')) continue;
           const g = readShape(p, 'gr_', warnings, where);
-          if (g) pad.primitives.push(g);
+          if (!g) continue;
+          pad.primitives.push(g);
+          if (warnings && (g.approx || g.type === 'arc' || (g.type === 'circle' && (g.width > 0 || !g.filled)))) {
+            warnings.push(`${where}: custom pad ${g.approx || g.type} primitive read on a best-effort basis`);
+          }
         }
         break;
       case 'net': {
@@ -531,7 +608,7 @@ function footprintBox(fp) {
 }
 
 /** leancheck._courtyard: the courtyard rectangle from the graphics' real geometry. */
-function courtyard(fp) {
+function courtyard(fp, warnings) {
   const xs = [], ys = [];
   for (const g of fp.shapes) {
     if (g.layer !== 'F.CrtYd' && g.layer !== 'B.CrtYd') continue;
@@ -546,10 +623,15 @@ function courtyard(fp) {
       const bb = shapeBox(g), w = Math.floor(g.width / 2);
       xs.push(bb.x0 + w, bb.x1 - w);
       ys.push(bb.y0 + w, bb.y1 - w);
+      if (g.approx && warnings) warnings.push(`${fp.ref}: courtyard ${g.approx} read on a best-effort basis`);
     }
   }
   if (!xs.length) {
     const bb = footprintBox(fp);
+    if (warnings) {
+      warnings.push(`${fp.ref}: no courtyard drawn, so the footprint's bounding box is used (as leancheck does)`);
+      for (const g of fp.shapes) if (g.approx) warnings.push(`${fp.ref}: ${g.approx} read on a best-effort basis`);
+    }
     return [bb.x0, bb.y0, bb.x1, bb.y1];
   }
   return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)];
@@ -642,7 +724,7 @@ export function parseKicadPcb(text, models, warnings) {
     const near = Math.round(fp.orient);
     const rot = Math.abs(fp.orient - near) < 1e-6 ? nz(near) : 1;
     parts.push({
-      ref: fp.ref, px: fp.pos[0], py: fp.pos[1], rot, court: courtyard(fp),
+      ref: fp.ref, px: fp.pos[0], py: fp.pos[1], rot, court: courtyard(fp, warnings),
       pads: px.length ? [Math.min(...px), Math.min(...py), Math.max(...px), Math.max(...py)]
                       : [fp.pos[0], fp.pos[1], fp.pos[0], fp.pos[1]],
       model, height, min_drill: drills.length ? Math.min(...drills) : 0,
