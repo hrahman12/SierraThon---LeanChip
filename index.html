@@ -8,12 +8,9 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1a33'/%3E%3Cpath d='M11 8v16M11 16h11' stroke='%23b9a7ff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="vendor/katex/katex.min.css">
-<script defer src="vendor/katex/katex.min.js"></script>
-<script defer src="vendor/katex/contrib/auto-render.min.js"></script>
 <script type="importmap">{"imports":{"three":"./vendor/three/build/three.module.js","three/addons/":"./vendor/three/examples/jsm/"}}</script>
 <style>
-:root{--bg:#060b18;--bg2:#0b1a33;--card:#0f1c36;--line:#22314f;--ink:#f3efe6;--dim:#a9b6c6;--lav:#b9a7ff;--teal:#2dd4bf;--amber:#f5a524;
+:root{--bg:#060b18;--bg2:#0b1a33;--card:#0f1c36;--line:#22314f;--ink:#f3efe6;--dim:#a9b6c6;--lav:#b9a7ff;--teal:#2dd4bf;
   --good:#1f9d55;--warn:#d69e2e;--crit:#e5484d;--mono:'JetBrains Mono',Consolas,monospace;--sans:'Space Grotesk','Segoe UI',Arial,sans-serif}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -23,55 +20,25 @@ a{color:var(--lav)}
 main{max-width:1120px;margin:0 auto;padding:0 20px 80px}
 header.hero{max-width:1320px;margin:0 auto;padding:18px 20px 0}
 header.hero img{width:100%;border-radius:14px;display:block}
-nav{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 0}
-nav a{font:600 14px var(--mono);text-decoration:none;color:var(--ink);border:1px solid var(--line);padding:8px 14px;border-radius:999px;background:var(--card)}
-nav a.primary{background:var(--lav);color:#12122a;border-color:var(--lav)}
 h1{font-size:clamp(28px,4.4vw,44px);line-height:1.15;margin:34px 0 10px;text-wrap:balance}
-h2{font-size:clamp(23px,3vw,30px);margin:64px 0 8px;text-wrap:balance}
+h2{font-size:clamp(23px,3vw,30px);margin:36px 0 8px;text-wrap:balance}
 h2 .t{color:var(--lav);font-family:var(--mono);margin-right:8px}
-h3{font-size:19px;margin:0 0 6px}
 p.lead{font-size:19px;color:var(--dim);max-width:820px;margin:0 0 6px}
 p{max-width:820px}
-.grid{display:grid;gap:16px}
-.g3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
-.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
-.card.teal{border-color:rgba(45,212,191,.5)} .card.lav{border-color:rgba(185,167,255,.7)} .card.red{border-color:rgba(255,107,94,.5)}
-.k{font:600 13px var(--mono);letter-spacing:.02em} .teal .k{color:var(--teal)} .lav .k{color:var(--lav)} .red .k{color:#ff8a80}
 .dim{color:var(--dim)} .mono{font-family:var(--mono);font-size:14px}
 code{font-family:var(--mono);font-size:.88em;color:var(--lav);background:rgba(185,167,255,.09);padding:1px 5px;border-radius:5px}
-pre{font:13.5px/1.55 var(--mono);background:#050a15;border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow-x:auto;color:#dfe6ee;margin:10px 0}
-pre .p{color:var(--teal)}
 .pill{display:inline-block;font:700 12px var(--mono);padding:3px 10px;border-radius:999px;color:#fff;white-space:nowrap}
 .GREEN{background:var(--good)} .YELLOW{background:var(--warn);color:#1b1300} .RED{background:var(--crit)}
 .tabs{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
 .tabs button{font:600 13.5px var(--mono);background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 12px;cursor:pointer}
 .tabs button[aria-selected=true]{border-color:var(--lav);box-shadow:0 0 0 1px var(--lav) inset}
-.tabs button:focus-visible,.chip:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.tabs button:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
 table{width:100%;border-collapse:collapse}
 td,th{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:15px}
 th{color:var(--dim);font:600 12.5px var(--mono)}
 .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--card)}
-#viewer{width:100%;aspect-ratio:16/10;max-height:620px;border-radius:14px;border:1px solid var(--line);background:radial-gradient(ellipse at 50% 60%,#14264a,#060b18 75%);display:block;touch-action:none}
-.viewbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
-.chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:12px 0}
-.chip{height:38px;border-radius:8px;border:0;cursor:pointer;font:700 12px var(--mono);color:#fff}
-.chip[aria-pressed=true]{box-shadow:0 0 0 3px var(--ink)}
-figure{margin:14px 0} figure img{width:100%;border-radius:12px;border:1px solid var(--line);background:#fff;display:block}
-figcaption{color:var(--dim);font-size:14.5px;margin-top:6px}
-.gal{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
-.gal img{background:#1a1a19}
-.f{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
-.f .katex-display{margin:.2em 0;overflow-x:auto;overflow-y:hidden}
-.f>div{min-width:0;overflow-x:auto}
-@media (max-width:760px){.f{grid-template-columns:minmax(0,1fr)}}
-.flow{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;margin:16px 0}
-.flow .step{flex:1 1 150px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:15px}
-.flow .step b{display:block;font-family:var(--mono);font-size:13px;color:var(--teal);margin-bottom:4px}
-.flow .step.l b{color:var(--lav)} .flow .step.r b{color:#ff8a80}
-.note{border-left:3px solid var(--amber);padding:8px 14px;background:rgba(245,165,36,.07);border-radius:0 10px 10px 0;max-width:860px}
-footer{color:var(--dim);font-size:14px;margin-top:70px;border-top:1px solid var(--line);padding-top:18px}
-ul{padding-left:20px;max-width:820px} li{margin:4px 0}
+footer{color:var(--dim);font-size:14px;margin-top:40px;border-top:1px solid var(--line);padding-top:18px}
 
 .tool{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:16px;align-items:start}
 @media (max-width:900px){.tool{grid-template-columns:minmax(0,1fr)}}
@@ -105,18 +72,13 @@ select{width:100%;font:14px var(--sans);background:var(--bg);color:var(--ink);bo
 <body>
 <header class="hero">
   <img src="assets/leanchip_banner.png" alt="LeanChip: 2D to 3D, verified in Lean. The real Sierrathon schematic and stack-up on the left, a 3D render of the board exported by KiCad on the right, the Lean turnstile between them.">
-  <nav aria-label="Sections">
-    <a class="primary" href="#tool">The tool</a><a href="#tests">Test cases</a><a href="#demo">Certified runs</a><a href="#board">3D export</a><a href="#breaks">Where it breaks</a>
-    <a href="#math">The proofs</a><a href="#claude">Claude Code</a><a href="#run-local">Run it locally</a>
-    <a href="https://github.com/hrahman12/SierraThon---LeanChip">GitHub</a>
-  </nav>
 </header>
 <main>
 <h1>Does the 2D design really become the 3D board?</h1>
 <p class="lead">Pick a build, tweak it, and Lean answers for every component: <span class="pill GREEN">GREEN</span> proved, <span class="pill YELLOW">YELLOW</span> buildable but needs an action, <span class="pill RED">RED</span> not the design you meant. This static edition includes 79 builds evaluated with the compiled Lean checker.</p>
 
 <h2 id="tool"><span class="t" id="run">⊢</span>The tool</h2>
-<div class="tool">
+<div class="tool" id="breaks">
  <div class="col">
   <section class="pane"><div class="ph">1 · CHOOSE A BUILD</div>
    <div class="tabs" role="tablist"><button id="tabAI" aria-selected="true">Claude proposes</button><button id="tabUp" aria-selected="false">Upload a design</button></div>
@@ -154,83 +116,6 @@ select{width:100%;font:14px var(--sans);background:var(--bg);color:var(--ink);bo
  </section>
 </div>
 
-<h2 id="tests"><span class="t">⊢</span>Test cases</h2>
-<p class="dim">Each expected verdict was written down first. The Lean checker then ran. <button class="btn" id="rerun">Check recorded results</button> <span id="testnote" class="mono"></span></p>
-<div class="tablewrap"><table id="testtable"><thead><tr><th>Case</th><th>Expected</th><th>Lean says</th><th>Result</th></tr></thead><tbody></tbody></table></div>
-
-<h2 id="demo"><span class="t">⊢</span>Kernel-certified runs</h2>
-<p class="dim">Real KiCad files in the repository, checked by <code>leancheck</code> and certified by the Lean kernel. Pick a board.</p>
-<div class="tabs" id="runtabs" role="tablist" aria-label="Boards"></div>
-<div id="runhead" class="card" style="margin-bottom:12px"></div>
-<div class="tablewrap"><table id="runtable"><thead><tr><th>Section</th><th>Check</th><th>Result</th><th>Detail</th></tr></thead><tbody></tbody></table></div>
-<h3 style="margin-top:34px">51 scripted and AI builds, each one certified</h3>
-<div class="chips" id="chips"></div>
-<div id="chipinfo" class="card mono dim">Loading builds…</div>
-
-<h2 id="board"><span class="t">⊢</span>The 3D board</h2>
-<p class="dim">This is the STEP file KiCad exported from our placed board, with KiCad's own 3D part models and the manufacturer model for the flash chip. Drag to rotate, scroll or pinch to zoom.</p>
-<div class="viewbar">
-  <div class="tabs" style="margin:0"><button id="mReal" aria-selected="true">Real colours</button><button id="mVerdict" aria-selected="false">Colour by Lean verdict</button></div>
-  <span class="dim mono" id="viewnote"></span>
-</div>
-<canvas id="viewer" aria-label="Interactive 3D model of the board"></canvas>
-<p class="dim" style="font-size:15px">Lean computes where each part's body lands from its placement, rotation and measured size. KiCad's exporter places the same models on its own. The two agree on all 49 body outlines to under 0.05 µm; heights differ by a fixed 50 µm. That comparison is a test, not a proof. The USB-C connector has no 3D model in KiCad's library, so it is missing here and shows as yellow in the report.</p>
-
-<h2 id="how"><span class="t">⊢</span>How it works</h2>
-<div class="flow">
-  <div class="step"><b>1 · READ</b>KiCad's own API reads the board: every footprint, pad, net, courtyard, in exact nanometres.</div>
-  <div class="step"><b>2 · MEASURE</b>OpenCascade measures each 3D part model.</div>
-  <div class="step l"><b>3 · CHECK</b>Lean compares the board with the schematic, the BOM and the measured bodies.</div>
-  <div class="step l"><b>4 · CERTIFY</b>The findings are compiled as a theorem. The kernel accepts it or the report says "not certified".</div>
-  <div class="step r"><b>5 · FIX</b>Verified fixers search standard part values for one that meets the spec, with a proof that it does.</div>
-</div>
-<div class="grid g2">
-  <div class="card"><h3>What a DFM check looks at</h3><div class="dim">Fabrication geometry: trace width and spacing, drill sizes, annular rings, solder mask. It tells you the copper can be made. A footprint for the wrong part, with clean geometry, passes.</div></div>
-  <div class="card lav"><h3>What Lean looks at here</h3><div class="dim">Intent: is each footprint the package of its exact part number, is every pin on the net the schematic says, do the real bodies fit, do the documents agree with each other. We did not run a commercial DFM tool; this is a comparison of what each kind of check examines.</div></div>
-</div>
-
-<h2 id="breaks"><span class="t">⊢</span>Where the supplied package breaks</h2>
-<p class="dim">Four problems in the official Sierrathon files, marked on the files themselves. Each one is a Lean theorem.</p>
-<figure><img src="assets/break_schematic.png" alt="The official schematic with callouts on the seven LEDs, their 330 ohm resistors, and the USB differential pairs" loading="lazy"><figcaption>Schematic: 7 LEDs drawn but the BOM says 8; 330 Ω needs the 8 mA pin setting; the USB pairs need 5/4 mil geometry.</figcaption></figure>
-<div class="gal">
-  <figure><img src="assets/break_stackup.png" alt="The official stack-up with callouts on the inner copper weight and the impedance rows" loading="lazy"><figcaption>Stack-up: inner copper drawn as 0.5 oz, instructions say 1 oz.</figcaption></figure>
-  <figure><img src="assets/break_bom.png" alt="The BOM rows with row 5 highlighted: quantity 8 but seven designators" loading="lazy"><figcaption>BOM: row 5 says quantity 8 and lists 7 designators.</figcaption></figure>
-</div>
-
-<h2 id="math"><span class="t">⊢</span>The proofs, as formulas</h2>
-<p class="dim">Each line is a theorem the Lean kernel has checked. The name on the right is the theorem in <code>leanvsdfm/LeanVsDFM/</code>.</p>
-<div id="formulas"></div>
-
-<h2 id="figs"><span class="t">⊢</span>Figures</h2>
-<div class="gal" id="gallery"></div>
-
-<h2 id="claude"><span class="t">⊢</span>With Claude Code</h2>
-<p class="dim">The repository ships slash commands and a skill, so you can ask in plain words. The commands and outputs below are real: they were run while this project was built with Claude Code.</p>
-<div class="grid g2" style="margin-bottom:14px">
-  <div class="card"><code>/leancheck [board]</code><div class="dim">Verdict for a board, row by row.</div></div>
-  <div class="card"><code>/explore [n]</code><div class="dim">Propose n builds and let Lean rate them.</div></div>
-  <div class="card"><code>/verify</code><div class="dim">Rebuild every proof and audit the axioms.</div></div>
-  <div class="card"><code>/board3d</code><div class="dim">Export STEP and test it against Lean's placement.</div></div>
-</div>
-<div id="transcripts"></div>
-
-<h2 id="run-local"><span class="t">⊢</span>Run it locally</h2>
-<p class="dim">You need Lean 4 (through elan) and KiCad 7 with its Python module. On Windows, use WSL with Ubuntu 24.04.</p>
-<pre><span class="p">$</span> sudo apt install kicad kicad-footprints
-<span class="p">$</span> curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh
-<span class="p">$</span> git clone https://github.com/hrahman12/SierraThon---LeanChip && cd SierraThon---LeanChip/leanvsdfm
-<span class="p">$</span> lake build                                              # checks every proof
-<span class="p">$</span> python3 tools/leancheck.py pcb/sierrathon.kicad_pcb     # green / yellow / red
-<span class="p">$</span> python3 tools/leancheck.py pcb/fault_led_reversed.kicad_pcb --html report.html</pre>
-
-<h2 id="limits"><span class="t">⊢</span>What this does not do yet</h2>
-<ul>
-  <li><b>Fabrication check.</b> The supplied board has 124 unconnected items in KiCad 9.0.2 DRC. Run <code>check_drc.py</code> with the board file to gate on routing and DRC.</li>
-  <li><b>Four parts use library stand-ins</b> (USB-C J1, switches SW1 to SW3). Their manufacturer footprints and 3D models are needed; the report keeps them yellow until then.</li>
-  <li><b>3D fit checks.</b> Lean proves separation for measured bounding boxes. OpenCascade checks shared solid volume in the STEP assembly. The current export covers 49 bodies and is missing J1.</li>
-  <li><b>Schematic provenance.</b> The 39-net transcription is tied to the supplied schematic PDF and BOM by SHA-256. An independent connectivity check requires the native design or its exported netlist.</li>
-  <li><b>Electrical inputs.</b> The Raspberry Pi SDK specifies the pad-drive settings. The thermal, load and parasitic estimates in the Lean model still need board-level verification.</li>
-</ul>
 <footer>LeanChip · Sierrathon 2026 · Hanah Rahman · built with Lean 4, KiCad 7, OpenCascade and Claude Code</footer>
 </main>
 
@@ -241,7 +126,7 @@ const $ = (s) => document.querySelector(s), el = (t, a = {}, h = '') => { const 
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const j = (u) => fetch(u).then((r) => r.json());
 const COL = { GREEN: '#1f9d55', YELLOW: '#d69e2e', RED: '#e5484d' };
-const [tool, props, tests, recorded] = await Promise.all([j('data/tool.json'), j('data/proposals.json'), j('data/tests.json'), j('data/recorded.json')]);
+const [tool, props, recorded] = await Promise.all([j('data/tool.json'), j('data/proposals.json'), j('data/recorded.json')]);
 let state = defaultState(tool), live = false, last = null, seq = 0, upload = null, picked = null;
 let boardProtocol;
 
@@ -406,149 +291,7 @@ $('#upfile').onchange = async (e) => {
   } catch (err) { note.textContent = 'Could not read that file: ' + err.message; }
 };
 
-// ----- test cases -----
-function testTable(live) {
-  $('#testtable tbody').innerHTML = tests.tests.map((t) => {
-    const acceptance = t.checks.find((c) => c.what === 'accepted');
-    const colors = t.checks.filter((c) => c.what !== 'accepted');
-    return `<tr><td><b>${esc(t.name)}</b><br><span class="dim sm">${esc(t.why)}</span></td><td>${colors.map((c) => `<span class="pill ${c.expected}">${esc(c.what)}</span>`).join(' ')}</td><td><span class="pill ${t.overall}">${t.overall}</span> ${acceptance?.actual === true ? 'Accepted' : 'Blocked'}</td><td><b style="color:${t.pass ? '#3ddc84' : '#ff8a80'}">${t.pass ? 'Matches expectation' : 'Mismatch'}</b></td></tr>`;
-  }).join('');
-  $('#testnote').textContent = `${tests.tests.filter((t) => t.pass).length}/${tests.tests.length} tests matched` + (live ? ' (just re-run on the live Lean checker)' : '');
-}
-$('#rerun').onclick = async () => {
-  $('#testnote').textContent = 'running…';
-  for (const t of tests.tests) { const d = await lean(buildText(tool, applyProposal(tool, t.build))); if (!d) { $('#testnote').textContent = 'The live checker is not reachable here; showing the recorded run.'; return; }
-    const comp = Object.fromEntries(d.components.map((c) => [c.ref, c.color]));
-    for (const c of t.checks) {
-      if (c.what === 'accepted') c.actual = d.accepted;
-      else if (c.what === 'overall') c.actual = d.overall;
-      else c.actual = comp[c.what] || d.rows.find((r) => r.check.includes(c.what))?.color;
-    }
-    t.overall = d.overall; t.pass = t.checks.every((c) => c.expected === c.actual); }
-  testTable(live === true);
-};
-controls(); testTable(false); rounds(); check();
-</script>
-<script type="module">
-const $ = (s) => document.querySelector(s);
-const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const j = (u) => fetch(u).then((r) => r.json());
-
-// ---------- demo runs ----------
-const runs = await j('data/runs.json');
-const tabs = $('#runtabs');
-function showRun(i) {
-  const r = runs[i];
-  [...tabs.children].forEach((b, k) => b.setAttribute('aria-selected', k === i));
-  $('#runhead').innerHTML = `<span class="pill ${r.overall}">${r.overall}</span> &nbsp;<b>${esc(r.title)}</b>
-    <div class="dim" style="margin-top:6px">${esc(r.about)}</div>
-    <div class="mono dim" style="margin-top:8px">${esc(r.file)} · ${r.certified ? 'certified by the Lean kernel' : 'NOT certified'}
-    · height ${r.envelope.total_height_mm} mm${r.no_collision_theorem ? ' · theorem: no two modeled bodies overlap' : ''}</div>`;
-  $('#runtable tbody').innerHTML = r.rows.map((x) => `<tr><td class="dim">${esc(x.section)}</td><td>${esc(x.check)}</td>
-    <td><span class="pill ${x.color}">${x.color}</span></td><td class="dim">${esc(x.detail)}</td></tr>`).join('');
-}
-runs.forEach((r, i) => { const b = document.createElement('button'); b.role = 'tab'; b.innerHTML = `${esc(r.title)} <span class="pill ${r.overall}" style="margin-left:6px">${r.overall}</span>`; b.onclick = () => showRun(i); tabs.appendChild(b); });
-showRun(0);
-
-// ---------- explorer ----------
-const ex = await j('data/explore.json');
-const chips = $('#chips');
-const label = { ai: 'Proposed by Claude', preferred: 'Preferred land pattern for every part', hand: 'Hand-solder variants everywhere', naive: 'First footprint whose name matches the BOM text',
-  'one-variant': 'Our build with one BOM line switched to its variant footprint', 'one-wrong': 'Our build with one BOM line switched to a wrong-size package', random: 'Random choice per BOM line' };
-function showBuild(i) {
-  const b = ex.builds[i];
-  [...chips.children].forEach((c, k) => c.setAttribute('aria-pressed', k === i));
-  $('#chipinfo').innerHTML = `<span class="pill ${b.board_verdict}">${b.board_verdict}</span> &nbsp;<b style="color:var(--ink)">Build #${b.id}</b> · ${esc(label[b.strategy] || b.strategy)}
-    ${b.changed_line ? ' (BOM line ' + b.changed_line + ')' : ''}${b.name ? '<br><span style="color:var(--ink)">' + esc(b.name) + ':</span> ' + esc(b.rationale) : ''}<br>${b.certified ? 'certified by the Lean kernel' : 'NOT certified'} · courtyard collisions: ${b.collisions}
-    ${b.reasons.length ? '<br><br>' + b.reasons.map(esc).join('<br>') : '<br><br>No red finding on the board or its 3D fit.'}`;
-}
-ex.builds.forEach((b, i) => { const c = document.createElement('button'); c.className = 'chip ' + b.board_verdict; c.textContent = b.strategy === 'ai' ? 'AI' : b.id; c.title = b.strategy; c.setAttribute('aria-label', `Build ${b.id}: ${b.board_verdict}`); c.onclick = () => showBuild(i); chips.appendChild(c); });
-showBuild(0);
-
-// ---------- formulas ----------
-const F = [
-  ['\\text{fitOk}(ps)\\;\\Longrightarrow\\;\\forall\\,p\\neq q:\\ \\text{body}(p)\\cap\\text{body}(q)=\\varnothing', 'If the checker accepts a board, no two part bodies overlap.', 'Fit3D.bodies_never_collide'],
-  ['a\\subseteq A,\\ b\\subseteq B,\\ A\\cap B=\\varnothing\\;\\Longrightarrow\\;a\\cap b=\\varnothing', 'Bodies inside separated courtyards are separated.', 'Fit3D.sep_of_inside'],
-  ['\\binom{x}{y}_{\\text{board}}=\\binom{p_x}{p_y}+R_\\theta\\binom{m_x}{-m_y},\\quad\\theta\\in\\{0^\\circ,90^\\circ,180^\\circ,270^\\circ\\}', 'Where a 3D body lands on the board.', 'Fit3D.bodyBox'],
-  ['(b-a)\\times(c-a)\\ \\text{has one sign for every edge}\\ (a,b)', 'A point is inside the convex board outline.', 'Fit3D.pointIn'],
-  ['\\text{fit3d}(\\text{outline},\\text{parts})=[\\,]', 'Our board: every body in its courtyard, no overlaps, all on the board, drills at least 8 mil.', 'Verify.our_board_fits'],
-  ['\\text{electrical}(\\text{verify}(\\text{board}))=[\\,]', 'Our board: right package, pins and nets, polarity and land pattern for every part.', 'Verify.our_board_electrically_clean'],
-  ['0.5+1.5+4.348+0.6+45.6+0.6+4.348+1.5+0.5=59.496\\ \\text{mil}\\in 62\\pm10\\%', 'Stack-up thickness.', 'Specs.stackup_within_tolerance'],
-  ['0.9\\cdot 90\\le 89.7\\le 1.1\\cdot 90\\ \\Omega', 'The fab-simulated differential impedance is in tolerance.', 'Breaks.break4_impedance_in_tolerance'],
-  ['\\{\\,r:\\ \\text{qty}(r)\\neq|\\text{refdes}(r)|\\,\\}=\\{5\\}', 'Exactly one BOM row disagrees with itself: row 5.', 'Breaks.break1_only_row5'],
-  ['I_{\\max}=\\frac{V_{DD,\\max}-V_{f,\\min}}{0.95\\,R}=\\frac{3.35-1.8}{313.5\\ \\Omega}=4.945\\ \\text{mA}>4\\ \\text{mA}', 'LED current exceeds the default pin drive, fits 8 mA.', 'Breaks.break3_default_drive_fails'],
-  ['T_j=T_a+\\theta_{JA}\\,(V_{BUS,\\max}-V_{out,\\min})\\,I=50+250\\cdot2.0\\cdot0.112=106^\\circ\\text{C}<125^\\circ\\text{C}', 'Regulator junction temperature.', 'Specs.ldo_junction_ok'],
-  ['C_L=\\frac{C_6C_7}{C_6+C_7}+C_s=7.5+C_s\\in[9.5,\\,12.5]\\ \\text{pF}\\quad\\forall\\,C_s\\in[2,5]', 'Crystal load capacitance.', 'Specs.crystal_load_window'],
-  ['313\\le\\frac{1}{2\\pi RC}\\le 424\\ \\text{Hz}\\quad\\forall R,C\\ \\text{in tolerance},\\ \\pi\\in(3.141,3.142)', 'ADC supply filter corner.', 'Specs.adc_filter_corner'],
-  ['\\text{find?}\\ p\\ l=\\text{some}\\ a\\;\\Longrightarrow\\;p(a)\\wedge a\\in l', 'Whatever a fixer returns meets the spec.', 'Fixers.find?_sound'],
-  ['\\forall r\\in\\text{rows}:\\ \\text{rank}(r)\\le\\text{rank}(\\text{overall})', 'The overall colour is the worst row.', 'Report.overall_is_worst'],
-];
-$('#formulas').innerHTML = F.map(([tex, say, thm]) => `<div class="f"><div>$$${tex}$$</div><div>${esc(say)}<br><code>${esc(thm)}</code></div></div>`).join('');
-const tex = () => window.renderMathInElement ? renderMathInElement($('#formulas'), { delimiters: [{ left: '$$', right: '$$', display: true }] }) : setTimeout(tex, 120);
-tex();
-
-// ---------- figures ----------
-const figs = [['11_pcb_3d_verdicts', 'What Lean checks: measured bodies inside courtyards on the outline'], ['13_fit_margins', 'Slack between each body and its courtyard'],
-  ['01_design_space_3d', 'Every proposed build, certified by Lean'], ['03_choice_heatmap', 'Every build × every BOM line'], ['04_proposer_strategies', 'Which proposers suggest good builds'],
-  ['06_ldo_thermal_3d', 'Regulator junction temperature surface'], ['05_led_current', 'LED current against resistor value'], ['08_crystal_surface_3d', 'Crystal load surface'],
-  ['07_crystal_load', 'Crystal load against stray capacitance'], ['09_adc_filter', 'ADC filter corner over the tolerance box'], ['10_stackup', 'Stack-up thickness, both readings'], ['12_lean_proofs', 'Theorems per module']];
-$('#gallery').innerHTML = figs.map(([f, c]) => `<figure><a href="assets/viz/${f}.png"><img src="assets/viz/${f}.png" alt="${esc(c)}" loading="lazy"></a><figcaption>${esc(c)}</figcaption></figure>`).join('');
-
-// ---------- transcripts ----------
-const T = await j('data/transcripts.json');
-$('#transcripts').innerHTML = T.map((t) => `<div class="card" style="margin-bottom:12px"><div><b>You:</b> ${esc(t.prompt)}</div>
-  <pre><span class="p">$</span> ${esc(t.command)}\n${esc(t.output)}</pre><div class="dim mono">exit code ${t.exit_code}${t.note ? ' · ' + esc(t.note) : ''}</div></div>`).join('');
-
-</script>
-<script type="module">
-// ---------- 3D viewer (separate module: the rest of the page works even if WebGL does not) ----------
-const $ = (s) => document.querySelector(s);
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-const canvas = $('#viewer');
-try {
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.15;
-  const scene = new THREE.Scene();
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x1a2540, 1.25));
-  const key = new THREE.DirectionalLight(0xffffff, 2.2); key.position.set(40, 90, 60); scene.add(key);
-  const rim = new THREE.DirectionalLight(0xb9a7ff, 1.3); rim.position.set(-70, 40, -50); scene.add(rim);
-  const cam = new THREE.PerspectiveCamera(28, 1.6, 1, 2000);
-  const ctl = new OrbitControls(cam, canvas); ctl.enableDamping = true;
-  const REAL = [[/PCB/, 0x1f7a55, 0.75, 0.0], [/^R_/, 0x23262d, 0.55, 0.1], [/^C_/, 0xb59a6a, 0.6, 0.0], [/^LED_/, 0xff6b5e, 0.35, 0.0], [/QFN|SOIC|SOT|UL_/, 0x16181d, 0.5, 0.1], [/Crystal/, 0xc9d3dc, 0.3, 0.8], [/SW_/, 0xaeb7c2, 0.35, 0.7]];
-  const meshes = [];
-  new GLTFLoader().load('assets/sierrathon.glb', (g) => {
-    g.scene.traverse((o) => { if (!o.isMesh) return; let n = o, name = ''; while (n) { if (n.name && REAL.some((p) => p[0].test(n.name))) { name = n.name; break; } n = n.parent; } meshes.push([o, name]); });
-    scene.add(g.scene);
-    const box = new THREE.Box3().setFromObject(g.scene), c = box.getCenter(new THREE.Vector3()), s = box.getSize(new THREE.Vector3());
-    ctl.target.copy(c); cam.position.set(c.x - 0.75 * s.x, c.y + 1.25 * s.x, c.z + 1.45 * s.x); paint('real');
-  });
-  function paint(mode) {
-    for (const [o, name] of meshes) {
-      let col = 0x8a94a3, rough = 0.6, metal = 0.1;
-      const preset = REAL.find(([pattern]) => pattern.test(name));
-      if (preset) [, col, rough, metal] = preset;
-      const color = new THREE.Color(col);
-      if (mode === 'verdict' && !/PCB/.test(name)) {
-        color.lerp(new THREE.Color(/^SW_/.test(name) ? 0xf2bc62 : 0x54b789), 0.16);
-      }
-      if (!o.userData.displayMaterial) {
-        o.userData.displayMaterial = new THREE.MeshStandardMaterial({ roughness: rough, metalness: metal });
-      }
-      o.material = o.userData.displayMaterial;
-      o.material.color.copy(color);
-    }
-    $('#mReal').setAttribute('aria-selected', mode === 'real'); $('#mVerdict').setAttribute('aria-selected', mode !== 'real');
-    $('#viewnote').textContent = mode === 'real' ? '' : 'Green and amber tints show the recorded package findings.';
-  }
-  $('#mReal').onclick = () => paint('real'); $('#mVerdict').onclick = () => paint('verdict');
-  const fit = () => { const w = canvas.clientWidth, h = canvas.clientHeight; renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); renderer.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); };
-  new ResizeObserver(fit).observe(canvas); fit();
-  renderer.setAnimationLoop(() => { ctl.update(); renderer.render(scene, cam); });
-} catch (e) {
-  canvas.replaceWith(Object.assign(document.createElement('img'), { src: 'assets/board3d_render.png', alt: '3D render of the board', style: 'width:100%;border-radius:14px' }));
-}
+controls(); rounds(); check();
 </script>
 </body>
 </html>
