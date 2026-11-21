@@ -19,25 +19,45 @@ geometry passes it. This verifier compares the board against what the parts *are
 namespace LeanVsDFM.Parts
 open LeanVsDFM.Pcb LeanVsDFM.Package
 
-/-- Footprint that implements each MPN's package. Parts without a footprint in KiCad's library
-need the manufacturer's (`MFR:` entries), so a library stand-in is reported. -/
-def footprintFor : List (String × String) := [
-  ("GCM188R71C105KA64D", "C_0603_1608Metric"), ("GCM21BR71C225KA64L", "C_0805_2012Metric"),
-  ("GCM155R71C104KA55D", "C_0402_1005Metric"), ("GCM1555C1H150JA16D", "C_0402_1005Metric"),
-  ("QBLP601-R5", "LED_0603_1608Metric"), ("UJ20-C-H-G-SMT-TR", "MFR:UJ20-C-H-G-SMT-TR"),
-  ("", "MountingHole_4.3mm_M4"),
-  ("RC0402JR-075K1L", "R_0402_1005Metric"), ("RC0603JR-07200RL", "R_0603_1608Metric"),
-  ("RC0402FR-0727RL", "R_0402_1005Metric"), ("RC0402FR-071KL", "R_0402_1005Metric"),
-  ("RC0402JR-0710KL", "R_0402_1005Metric"), ("AF0402JR-07330RL", "R_0402_1005Metric"),
-  ("PTS526SM15SMTR2 LFS", "MFR:PTS526SM15SMTR2"), ("D6R90 F2 LFS", "MFR:D6R90F2LFS"),
-  ("SC0914(13)", "QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm"), ("AP2112K-3.3TRG1", "SOT-23-5"),
-  ("W25Q128JVSIQ TR", "SOIC-8_5.23x5.23mm_P1.27mm"), ("USBLC6-2SC6", "SOT-23-6"),
-  ("ABM8-272-T3", "Crystal_SMD_3225-4Pin_3.2x2.5mm")]
+/-- How good a footprint is for a part: the preferred land pattern (IPC nominal or the
+manufacturer's), or a legitimate variant (e.g. KiCad hand-solder pads) that is buildable but
+not preferred for reflow assembly. -/
+inductive Grade where
+  | preferred | variant
+  deriving Repr, DecidableEq
+
+/-- Allowed footprints for each MPN. Anything not listed is the wrong package. Parts without a
+footprint in KiCad's library need the manufacturer's (`MFR:` entries). -/
+def footprintOptions : List (String × String × Grade) := [
+  ("GCM188R71C105KA64D", "C_0603_1608Metric", .preferred), ("GCM188R71C105KA64D", "C_0603_1608Metric_Pad1.08x0.95mm_HandSolder", .variant),
+  ("GCM21BR71C225KA64L", "C_0805_2012Metric", .preferred), ("GCM21BR71C225KA64L", "C_0805_2012Metric_Pad1.18x1.45mm_HandSolder", .variant),
+  ("GCM155R71C104KA55D", "C_0402_1005Metric", .preferred), ("GCM155R71C104KA55D", "C_0402_1005Metric_Pad0.74x0.62mm_HandSolder", .variant),
+  ("GCM1555C1H150JA16D", "C_0402_1005Metric", .preferred), ("GCM1555C1H150JA16D", "C_0402_1005Metric_Pad0.74x0.62mm_HandSolder", .variant),
+  ("QBLP601-R5", "LED_0603_1608Metric", .preferred), ("QBLP601-R5", "LED_0603_1608Metric_Pad1.05x0.95mm_HandSolder", .variant),
+  ("UJ20-C-H-G-SMT-TR", "MFR:UJ20-C-H-G-SMT-TR", .preferred),
+  ("", "MountingHole_4.3mm_M4", .preferred),
+  ("RC0402JR-075K1L", "R_0402_1005Metric", .preferred), ("RC0402JR-075K1L", "R_0402_1005Metric_Pad0.72x0.64mm_HandSolder", .variant),
+  ("RC0603JR-07200RL", "R_0603_1608Metric", .preferred), ("RC0603JR-07200RL", "R_0603_1608Metric_Pad0.98x0.95mm_HandSolder", .variant),
+  ("RC0402FR-0727RL", "R_0402_1005Metric", .preferred), ("RC0402FR-0727RL", "R_0402_1005Metric_Pad0.72x0.64mm_HandSolder", .variant),
+  ("RC0402FR-071KL", "R_0402_1005Metric", .preferred), ("RC0402FR-071KL", "R_0402_1005Metric_Pad0.72x0.64mm_HandSolder", .variant),
+  ("RC0402JR-0710KL", "R_0402_1005Metric", .preferred), ("RC0402JR-0710KL", "R_0402_1005Metric_Pad0.72x0.64mm_HandSolder", .variant),
+  ("AF0402JR-07330RL", "R_0402_1005Metric", .preferred), ("AF0402JR-07330RL", "R_0402_1005Metric_Pad0.72x0.64mm_HandSolder", .variant),
+  ("PTS526SM15SMTR2 LFS", "MFR:PTS526SM15SMTR2", .preferred), ("D6R90 F2 LFS", "MFR:D6R90F2LFS", .preferred),
+  ("SC0914(13)", "QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm", .preferred),
+  ("SC0914(13)", "QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm_ThermalVias", .preferred),
+  ("AP2112K-3.3TRG1", "SOT-23-5", .preferred), ("AP2112K-3.3TRG1", "SOT-23-5_HandSoldering", .variant),
+  ("W25Q128JVSIQ TR", "SOIC-8_5.23x5.23mm_P1.27mm", .preferred), ("W25Q128JVSIQ TR", "SOIC-8_5.275x5.275mm_P1.27mm", .variant),
+  ("USBLC6-2SC6", "SOT-23-6", .preferred), ("USBLC6-2SC6", "SOT-23-6_Handsoldering", .variant),
+  ("ABM8-272-T3", "Crystal_SMD_3225-4Pin_3.2x2.5mm", .preferred), ("ABM8-272-T3", "Crystal_SMD_3225-4Pin_3.2x2.5mm_HandSoldering", .variant)]
 
 def mpnOf (ref : String) : Option String := (bom.find? (fun l => l.refdes.contains ref)).map (·.mpn)
 
+/-- The preferred footprint for a part (first preferred option). -/
 def expectedFootprint (ref : String) : Option String :=
-  mpnOf ref >>= fun m => (footprintFor.find? (·.1 == m)).map (·.2)
+  mpnOf ref >>= fun m => (footprintOptions.find? (fun (k, _, g) => k == m && g == .preferred)).map (·.2.1)
+
+def gradeOf (ref lib : String) : Option Grade :=
+  mpnOf ref >>= fun m => (footprintOptions.find? (fun (k, f, _) => k == m && f == lib)).map (·.2.2)
 
 /-- Schematic pin → footprint pad number (identity except where a footprint merges pins). -/
 def padFor (ref pin : String) : String :=
@@ -61,6 +81,7 @@ inductive Issue where
   | strayNet (ref pad net : String)
   | polarity (ref : String)
   | landPattern (ref pad : String)
+  | variantFootprint (ref lib : String)
   deriving Repr, DecidableEq
 
 def find (b : List Footprint) (r : String) : Option Footprint := b.find? (·.ref == r)
@@ -68,7 +89,11 @@ def find (b : List Footprint) (r : String) : Option Footprint := b.find? (·.ref
 def checkPackage (fp : Footprint) : List Issue :=
   match expectedFootprint fp.ref with
   | none => [.notOnBom fp.ref]
-  | some want => if fp.lib == want then [] else [.wrongPackage fp.ref fp.lib want]
+  | some want =>
+    match gradeOf fp.ref fp.lib with
+    | some .preferred => []
+    | some .variant => [.variantFootprint fp.ref fp.lib]
+    | none => [.wrongPackage fp.ref fp.lib want]
 
 def checkPins (b : List Footprint) : List Issue :=
   schematicPins.flatMap fun (r, p, n) =>
@@ -89,7 +114,7 @@ def checkPolarity (fp : Footprint) : List Issue :=
   else []
 
 def checkLand (fp : Footprint) : List Issue :=
-  if fp.ref == "U3" then
+  if fp.ref == "U3" && fp.lib == "SOIC-8_5.23x5.23mm_P1.27mm" then
     ulSoic208.filterMap fun (n, x, y, w, h) =>
       if fp.pads.any (fun pd => pd.number == n && pd.x == x && pd.y == y && pd.w == w && pd.h == h) then none
       else some (.landPattern "U3" n)
@@ -101,8 +126,8 @@ def verify (b : List Footprint) : List Issue :=
   b.flatMap checkPackage ++ checkPins b ++ b.flatMap checkStray ++ b.flatMap checkPolarity ++
   b.flatMap checkLand
 
-/-- Issues other than "needs the manufacturer footprint". -/
+/-- Issues other than "needs the manufacturer footprint" and "variant footprint". -/
 def electrical (is : List Issue) : List Issue :=
-  is.filter fun | .wrongPackage _ _ w => !w.startsWith "MFR:" | _ => true
+  is.filter fun | .wrongPackage _ _ w => !w.startsWith "MFR:" | .variantFootprint _ _ => false | _ => true
 
 end LeanVsDFM.Parts

@@ -1,0 +1,11 @@
+{
+  "_about": "Build ideas proposed by Claude (the AI assistant used to build this project), written before Lean rated them. Each changes some BOM lines of our preferred build. Lean's verdicts are in results.json.",
+  "proposals": [
+    {"name": "ai-1 keep it nominal", "rationale": "IPC-nominal land patterns everywhere and the manufacturer pattern for the flash: the safest choice for reflow assembly.", "changes": {}},
+    {"name": "ai-2 thermal vias under the RP2040", "rationale": "Use KiCad's thermal-via QFN footprint so the exposed pad can dump heat into the inner planes.", "changes": {"17": "QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm_ThermalVias"}},
+    {"name": "ai-3 hand-solder the big passives", "rationale": "The 0603 and 0805 parts are the ones a person would rework by hand, so give only those the longer hand-solder pads.", "changes": {"1": "C_0603_1608Metric_Pad1.08x0.95mm_HandSolder", "2": "C_0805_2012Metric_Pad1.18x1.45mm_HandSolder", "9": "R_0603_1608Metric_Pad0.98x0.95mm_HandSolder"}},
+    {"name": "ai-4 wider SOIC for the flash", "rationale": "KiCad's 5.275 mm SOIC-8 footprint also targets 208 mil bodies and has slightly longer pads.", "changes": {"19": "SOIC-8_5.275x5.275mm_P1.27mm"}},
+    {"name": "ai-5 hand-solder the crystal", "rationale": "The 3225 crystal has pads under the body; the hand-solder footprint exposes them for an iron.", "changes": {"21": "Crystal_SMD_3225-4Pin_3.2x2.5mm_HandSoldering"}},
+    {"name": "ai-6 hand-solder LEDs and regulator", "rationale": "LEDs are polarised and often replaced, and the regulator is the hottest part; longer pads make both easier to rework.", "changes": {"5": "LED_0603_1608Metric_Pad1.05x0.95mm_HandSolder", "18": "SOT-23-5_HandSoldering"}}
+  ]
+}

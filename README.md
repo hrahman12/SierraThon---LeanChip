@@ -1,260 +1,294 @@
-<p align="center"><img src="assets/leanchip_banner.png" alt="LeanChip: hunting zeros on Re(s) = 1/2. A hexagonal RP2040 board beside the critical strip of the Riemann zeta function, its first ten zeros glowing on the critical line, with Hardy's Z(t) drawn along the bottom." width="100%"></p>
+<p align="center"><img src="assets/leanchip_banner.png" alt="LeanChip: 2D to 3D, verified in Lean. The real Sierrathon schematic and stack-up on the left, a 3D render of the board exported by KiCad on the right, the Lean turnstile between them." width="100%"></p>
 
-<p align="center"><b>LeanChip turns the Sierrathon RP2040 board into a Riemann zeta zero-hunter, and uses Lean 4 to check the math around it.</b><br>
-Same schematic, same BOM, zero extra parts. It does <i>not</i> prove the Riemann Hypothesis, and this README is explicit about what is proven, what is only tested, and what is still open.</p>
+<p align="center"><b>Does the 2D design really become the 3D board? LeanChip proves it with the Lean 4 kernel,</b><br>
+for the Sierrathon RP2040 board and its exact 21-line parts list.</p>
 
 <p align="center">
-<img src="https://img.shields.io/badge/Lean_4-37_board_theorems-B9A7FF?style=for-the-badge&labelColor=0B1A33" alt="Lean 4: 37 board theorems">
+<img src="https://img.shields.io/badge/Lean_4.36-93_theorems-B9A7FF?style=for-the-badge&labelColor=0B1A33" alt="Lean 4.36: 93 theorems">
 <img src="https://img.shields.io/badge/sorry-0-2DD4BF?style=for-the-badge&labelColor=0B1A33" alt="0 sorry">
-<img src="https://img.shields.io/badge/RH-open_since_1859-FF6B5E?style=for-the-badge&labelColor=0B1A33" alt="RH: open since 1859">
-<img src="https://img.shields.io/badge/MCU-RP2040-F5A524?style=for-the-badge&labelColor=0B1A33" alt="RP2040">
+<img src="https://img.shields.io/badge/native__decide-0-2DD4BF?style=for-the-badge&labelColor=0B1A33" alt="0 native_decide">
+<img src="https://img.shields.io/badge/KiCad_7-STEP_export-FF6B5E?style=for-the-badge&labelColor=0B1A33" alt="KiCad 7 STEP export">
 </p>
 
-# LeanChip: a zeta zero-hunter on the Sierrathon board
+# LeanChip: 2D → 3D, verified in Lean
 
 *Built for Sierrathon 2026: design a manufacturable, cost-effective board from the provided RP2040 schematic and BOM.*
 
 ## The question
 
-The Riemann zeta function ζ(s) = Σ n<sup>−s</sup> has "trivial" zeros at −2, −4, −6, …. Every other zero found so far sits on the **critical line Re(s) = ½**. The Riemann Hypothesis says they *all* do. It has been open since 1859. Mathlib states it exactly like this ([`Mathlib/NumberTheory/LSeries/RiemannZeta.lean`](https://github.com/leanprover-community/mathlib4/blob/v4.15.0/Mathlib/NumberTheory/LSeries/RiemannZeta.lean)):
+A PCB starts as flat documents: a schematic, a parts list, a stack-up drawing, footprints. It ends as a physical object. **Does the first really turn into the second?**
+
+| 2D design | Lean ⊢ | 3D board |
+|---|---|---|
+| Schematic pins and nets, BOM part numbers, footprints and courtyards, the 4-layer stack-up | Right part on every footprint, every pin on the right net, every 3D body inside its courtyard, no two parts able to collide, everything on the board | A KiCad STEP assembly with real part models: 49 bodies on a 52 × 45 mm hexagon, 59.5 mil thick |
+
+You feed the tool a board file. It answers 🟢 **green** (proved), 🟡 **yellow** (buildable, needs an action) or 🔴 **red** (not the design you meant). The answer only counts when the Lean kernel has certified it.
+
+## See it run
+
+```
+$ python3 leanvsdfm/tools/leancheck.py leanvsdfm/pcb/sierrathon.kicad_pcb
+
+  Board
+     GREEN    Every schematic part is placed and on the BOM
+     GREEN    Footprint package matches the BOM part number
+     YELLOW   Manufacturer footprint used (not a library stand-in)      J1, SW1, SW2, SW3
+     GREEN    Every schematic pin is on the right net (schematic ↔ PCB)
+     GREEN    No connections that are not on the schematic
+     GREEN    LED polarity (cathode to GND)
+     GREEN    U3 land pattern = manufacturer (UltraLibrarian)
+     GREEN    Preferred land pattern (IPC nominal / manufacturer), not a variant
+  3D fit
+     GREEN    Every 3D body sits inside its own courtyard
+     GREEN    No two courtyards overlap, so no two bodies can collide
+     GREEN    Pads and bodies are on the board (inside the outline)
+     GREEN    Every drilled hole is at least 8 mil
+     YELLOW   Every part has a 3D body model                            J1
+  Package
+     YELLOW   BOM quantities match the designator lists                 row 5: qty 8 but 7 designators
+     YELLOW   Inner copper: stack-up agrees with instructions           0.5 oz vs 1 oz
+     GREEN    Stack-up thickness within 62 mil ± 10 %                   59.5 mil
+     GREEN    90 Ω pairs use the stack-up geometry (5/4 mil), all other nets ≥ 6 mil
+  Specs
+     YELLOW   LED current within the RP2040 default 4 mA drive          needs the 8 mA setting
+     GREEN    AP2112 junction temperature < 125 °C                      106 °C worst case
+     GREEN    USB clock exactly 48 MHz
+     GREEN    QSPI clock within W25Q128 limit
+
+  OVERALL  YELLOW    certified by the Lean kernel (decide +kernel)
+  3D envelope: board 1.5112 mm + tallest body 4.3 mm = 5.811 mm   | theorem: no two bodies overlap
+```
+
+Detail text is shortened here. The same run as an HTML report: [`leanvsdfm/reports/sierrathon.html`](leanvsdfm/reports/sierrathon.html) ([picture](leanvsdfm/reports/sierrathon.png)).
+
+## The 3D board
+
+<p align="center"><img src="assets/src/board3d_render.png" alt="3D render of the board: a green hexagon with the RP2040, flash, regulator, crystal, buttons, seven red LEDs and four mounting holes" width="78%"></p>
+
+This is a render of [`leanvsdfm/out3d/sierrathon.step`](leanvsdfm/out3d), the STEP file **KiCad exported from our placed board**, with KiCad's own 3D part models and the manufacturer's model for the flash chip. Nothing in it is drawn by hand.
+
+- **54 parts** placed in a 52 × 45 mm hexagon, zero courtyard overlaps, the four M4 holes included.
+- **49 measured bodies.** OpenCascade measures each 3D model; Lean places it from the footprint's position and rotation.
+- **Lean and KiCad agree.** KiCad's STEP exporter places the same models on its own. The two agree on all 49 body outlines to under 0.05 µm; heights differ by a fixed 50 µm. That comparison is a test (`tools/check_step_agreement.py`), not a proof.
+- **The real stack-up is in the KiCad file:** 59.496 mil, layer by layer, from the Sierrathon drawing.
+
+<p align="center"><img src="assets/viz/11_pcb_3d_verdicts.png" alt="What Lean checks: 49 measured bodies as boxes inside 54 courtyard rectangles on the hexagon outline; stand-in parts in yellow" width="80%"></p>
+
+## How it works
+
+```mermaid
+flowchart LR
+    A["2D design<br/>schematic · BOM · stack-up · footprints"] --> B["KiCad API reads the board<br/>exact nanometres"]
+    M["3D part models<br/>STEP files"] --> C["OpenCascade measures<br/>each body"]
+    B --> L{"Lean checks<br/>parts · pins · 3D fit · specs"}
+    C --> L
+    L -->|"all proved"| G["🟢 GREEN"]
+    L -->|"needs an action"| Y["🟡 YELLOW"]
+    L -->|"not the intended design"| R["🔴 RED"]
+    L --> K["Kernel certifies the findings<br/>as a theorem"]
+    R --> F["Fixer searches real options<br/>and proves the fix"]
+    F --> B
+    style L fill:#1A1F2B,stroke:#B9A7FF,color:#F3EFE6
+    style K fill:#1A1F2B,stroke:#B9A7FF,color:#F3EFE6
+```
+
+The heart of the 3D check is one theorem, proved once for every possible board ([`Fit3D.lean`](leanvsdfm/LeanVsDFM/Fit3D.lean)):
 
 ```lean
-def RiemannHypothesis : Prop :=
-  ∀ (s : ℂ) (_ : riemannZeta s = 0) (_ : ¬∃ n : ℕ, s = -2 * (n + 1)) (_ : s ≠ 1), s.re = 1 / 2
+/-- If the checker accepts a board, no two part bodies overlap. -/
+theorem bodies_never_collide (ps : List Part) (h : fitOk ps = true) : ps.Pairwise bodySep
 ```
 
-## What this project claims, and what it doesn't
+and then applied to our board, where the kernel checks the hypothesis ([`Verify.lean`](leanvsdfm/LeanVsDFM/Verify.lean)):
 
-| | Status |
-|---|---|
-| ✅ **Proven in Lean** | 37 theorems about the board itself: the real netlist's LED and button wiring, a fair random-number sampler, a glitch-proof button debouncer, LED drive limits |
-| 🔧 **In progress** | Lean lemmas over Mathlib's ζ: "a sign change of Z(t) means a zero on the critical line", ζ(s) ≠ 0 for Re(s) ≥ 1, the trivial zeros |
-| 🔧 **In progress** | RP2040 firmware that computes Hardy's Z(t) with the Riemann–Siegel formula and finds zeros by sign changes |
-| 🧪 **Tested, not proven** | Firmware zero locations will be *checked against* high-precision references (mpmath). That is numerical evidence, not a formal proof of the firmware |
-| ❌ **Not claimed** | A proof of RH. Finding zeros on the line is evidence, never a proof: RH is already verified numerically far beyond anything a microcontroller can reach (Platt & Trudgian, up to height 3·10¹²) |
+```lean
+theorem our_board_fits : Fit3D.fit3d PcbData.outline PcbData.parts = [] := by decide +kernel
 
-## Pipeline
-
-<p align="center"><img src="assets/pipeline.png" alt="Pipeline: the Sierrathon schematic and BOM become a golden netlist; generated Lean data feeds the Lean 4 kernel (37 board theorems, zeta lemmas in progress); the RP2040 zero-hunter computes Hardy Z(t) and finds zeros by sign changes, checked on the host against mpmath (in progress)." width="100%"></p>
-
-1. **Golden netlist.** The schematic PDF was transcribed into [`netlist/Sierrathon.netlist.json`](netlist/Sierrathon.netlist.json) (the [Universal Netlist](https://github.com/IntelligentElectron/universal-netlist) open format, SHA-256 checked). `universal-netlist run_erc` passes all 8 rules.
-2. **Lean data.** [`lean/gen_from_design.py`](lean/gen_from_design.py) turns the netlist and BOM into [`Design.lean`](lean/Sierrathon/Design.lean). Nothing about the circuit is retyped by hand.
-3. **Lean kernel.** Board facts are *computed* by walking that netlist (GPIO → resistor → LED → GND), then proved.
-4. **Zero-hunter** *(in progress).* The RP2040 evaluates Z(t), streams it over USB, and lights LEDs as zeros are found. The host re-checks every reported zero.
-
-## How the zero hunt works
-
-Hardy's function turns ζ on the critical line into a **real-valued** function:
-
-$$Z(t) = e^{i\theta(t)}\,\zeta\left(\tfrac12 + it\right), \qquad \theta(t) \approx \frac{t}{2}\log\frac{t}{2\pi} - \frac{t}{2} - \frac{\pi}{8} + \frac{1}{48t}$$
-
-Because |Z(t)| = |ζ(½ + it)| and Z is continuous and real, **every sign change of Z is a zero of ζ exactly on the critical line** (the intermediate value theorem). The Riemann–Siegel formula computes Z(t) with only about √(t/2π) terms, which is cheap enough for a microcontroller:
-
-$$Z(t) = 2\sum_{n=1}^{N} \frac{\cos(\theta(t) - t\log n)}{\sqrt{n}} + R(t), \qquad N = \left\lfloor \sqrt{t/2\pi} \right\rfloor$$
-
-```mermaid
-flowchart LR
-    A["t ← t + Δt"] --> B["θ(t), then the<br/>Riemann–Siegel sum"]
-    B --> C{"sign(Z) changed?"}
-    C -- no --> A
-    C -- yes --> D["bisect to locate<br/>the zero"]
-    D --> E["USB: t₀, Z, error bound"]
-    D --> F["LEDs: zero count"]
-    E --> G["host: compare<br/>with mpmath"]
-    style C fill:#1A1F2B,stroke:#B9A7FF,color:#F3EFE6
-    style G fill:#0E2A3A,stroke:#2DD4BF,color:#F3EFE6
+theorem our_board_bodies_never_collide : PcbData.parts.Pairwise Fit3D.bodySep :=
+  Fit3D.bodies_never_collide _ (by decide +kernel)
 ```
 
-The first zeros it should find (Im ρ, from mpmath at 20 digits):
+`leancheck` does the same for any board you give it: it writes `theorem certified : verify board = [the findings]` and asks the kernel. If the kernel says no, the report says **not certified**.
 
-| n | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
-|---|---|---|---|---|---|---|---|---|---|---|
-| t | 14.1347 | 21.0220 | 25.0109 | 30.4249 | 32.9351 | 37.5862 | 40.9187 | 43.3271 | 48.0052 | 49.7738 |
+### Lean and DFM look at different things
 
-## The board
-
-The schematic's own **"LED Placement"** box puts 6 LEDs around a centre one, so LeanChip is a hexagonal board. Every GPIO number below was **recovered from the netlist by Lean** (`led_gpio_map`), not copied from the schematic.
-
-```mermaid
-flowchart LR
-    subgraph ring["LED ring (from the schematic's placement box)"]
-        D3["D3 · GPIO17"]
-        D8["D8 · GPIO22"]
-        D7["D7 · GPIO21"]
-        D6["D6 · GPIO20"]
-        D5["D5 · GPIO19"]
-        D4["D4 · GPIO18"]
-        D9(("D9 · GPIO23"))
-    end
-    U1["RP2040"] -->|"330 Ω each, active-high"| ring
-    SW3["SW3 · GPIO24<br/>active-low, 10 k pull-up"] --> U1
-    J1["USB-C"] -->|"D_P/D_N → ESD → 27 Ω<br/>90 Ω diff pairs"| U1
-    style U1 fill:#1A1F2B,stroke:#B9A7FF,color:#F3EFE6
-    style D9 fill:#3A1414,stroke:#FF6B5E,color:#F3EFE6
-```
-
-**SW3** will start and pause the scan. It goes through the debouncer below, which is proved in [`Debounce.lean`](lean/Sierrathon/Debounce.lean): Lean checks all 1,024 possible 10 ms button traces and confirms it never counts more events than presses.
-
-```mermaid
-stateDiagram-v2
-    direction LR
-    [*] --> Idle
-    Idle --> Counting: pressed
-    Counting --> Counting: pressed, count < 5
-    Counting --> Fired: 5 ms stable → one event
-    Counting --> Idle: released (glitch ignored)
-    Fired --> Fired: still held (no auto-repeat)
-    Fired --> Idle: released
-```
-
-## Proofs
-
-<p align="center"><img src="assets/proof_modules.png" alt="37 Lean theorems today: Electrical 4, Dice 7, Debounce 6, Rng 4, Hardware 4, plus 12 dimmed ones kept from the earlier quantum-biology iteration." width="100%"></p>
-
-<details>
-<summary><b>The 25 board theorems ZetaChip builds on</b></summary>
-
-| Module | Theorem | What it says |
+| | A DFM check | Lean, here |
 |---|---|---|
-| **Hardware** | `every_led_driven_and_grounded` | GPIO → R → LED → GND for all 7 LEDs |
-| | `led_gpio_map` | the exact LED ↦ GPIO wiring |
-| | `led_gpios_distinct` | 7 LEDs on 7 different GPIOs |
-| | `button_wiring` | SW3 is GPIO24, active-low, pulled up, not an LED pin |
-| **Debounce** | `event_needs_press` | an event only fires on a pressed sample |
-| | `latched_silent` | holding the button never auto-repeats |
-| | `release_resets` | releasing clears the state |
-| | `short_glitch_ignored` | presses shorter than 5 ms never fire |
-| | `long_hold_fires_once` | a 1 s hold fires exactly once |
-| | `never_double_counts` | over all 1,024 traces, events ≤ presses |
-| **Electrical** | `led_current_max` | worst-case LED current = 4.945 mA |
-| | `default_drive_insufficient` | RP2040's default 4 mA pad drive is **not** enough… |
-| | `drive_8mA_sufficient` | …so firmware sets 8 mA |
-| | `all_leds_within_budget` | all 7 LEDs on ≤ 50 mA GPIO budget |
-| **Dice** | `pip_count` … `mask_table` | 7 theorems: LED patterns light exactly the intended LEDs, only on GPIO17–23 |
-| **Rng** | `roll_in_range`, `roll_uniform`, `reject_count`, `naive_is_biased` | rejection sampling is exactly uniform; naive `b % 6` is biased |
+| Looks at | Fabrication geometry: trace width and spacing, drills, annular rings, solder mask | Intent: the schematic, the BOM, the part numbers, the measured bodies |
+| A footprint for the wrong part, with clean geometry | passes | 🔴 wrong package |
+| A reversed LED | passes | 🔴 polarity and wrong net |
+| The mandated 5/4 mil USB pairs under one global 6 mil rule | flags them | 🟢 knows which nets are impedance nets |
+| Result | a list of warnings | a theorem the kernel has checked |
 
-The other 12 theorems (photon ceilings and 3-of-6 blinding in `Photonics.lean` and `Protocol.lean`) come from the earlier quantum-biology iteration. They still compile but ZetaChip doesn't use them.
+We did not run a commercial DFM tool on this board (it is not routed yet); this table compares what each kind of check examines.
 
-</details>
+## Demo boards
 
-### Zeta lemmas (next)
+Five real KiCad files in [`leanvsdfm/pcb/`](leanvsdfm/pcb): our board, and the same board with one realistic mistake each. Every verdict is certified.
 
-These build on results Mathlib **already proves**, so nothing about RH is assumed:
+| Board | Verdict | What Lean reports |
+|---|---|---|
+| `sierrathon.kicad_pcb` (ours) | 🟡 YELLOW | Board and 3D fit proved; 4 parts on library stand-ins, J1 has no 3D model, plus the package issues below |
+| `fault_led_reversed` | 🔴 RED | D5 pad 1 on `LED3_A`, schematic says `GND`; cathode not on GND |
+| `fault_narrow_flash` | 🔴 RED | U3 is `SOIC-8_3.9x4.9mm`; the W25Q128JVSIQ needs `SOIC-8_5.23x5.23mm` |
+| `fault_wrong_cap_size` | 🔴 RED | C4 is 0603 on an 0402 line **and** its courtyard now overlaps its neighbours |
+| `fault_flash_pins_swapped` | 🔴 RED | U3 pad 2 on `QSPI_D0`, schematic says `QSPI_D1` (and pad 5 the reverse) |
 
-| Mathlib result | What it gives the zero-hunter |
+## AI proposes, Lean decides
+
+Anything may propose a way to build the board: a script, or an AI. Proposers are untrusted. Each proposal becomes a real board file with the footprints swapped in place, and Lean rates it. **51 builds, all certified: 16 yellow, 35 red.**
+
+These six were written by Claude, with a reason for each, before Lean rated them ([`explore/ai_proposals.json`](leanvsdfm/explore/ai_proposals.json)):
+
+| AI proposal | Its reasoning | Lean | Why |
+|---|---|---|---|
+| Keep it nominal | IPC-nominal land patterns everywhere and the manufacturer pattern for the flash: the safest choice for reflow assembly. | 🟡 YELLOW | same as our build |
+| Thermal vias under the rp2040 | Use KiCad's thermal-via QFN footprint so the exposed pad can dump heat into the inner planes. | 🔴 RED | the footprint's 0.2 mm vias are below the 8 mil minimum drill |
+| Hand-solder the big passives | The 0603 and 0805 parts are the ones a person would rework by hand, so give only those the longer hand-solder pads. | 🟡 YELLOW | fits; reported as variant land patterns |
+| Wider soic for the flash | KiCad's 5.275 mm SOIC-8 footprint also targets 208 mil bodies and has slightly longer pads. | 🟡 YELLOW | fits; reported as a variant land pattern |
+| Hand-solder the crystal | The 3225 crystal has pads under the body; the hand-solder footprint exposes them for an iron. | 🔴 RED | its larger courtyard overlaps R7, R13, R14 and R17 |
+| Hand-solder leds and regulator | LEDs are polarised and often replaced, and the regulator is the hottest part; longer pads make both easier to rework. | 🟡 YELLOW | fits; reported as variant land patterns |
+
+Two plausible ideas were wrong, and Lean said exactly why.
+
+<p align="center"><img src="assets/viz/04_proposer_strategies.png" alt="Bar chart of verdicts per proposer: preferred 1 yellow; AI 4 yellow 2 red; one variant 11 yellow 2 red; one wrong 14 red; hand, naive 1 red each; random 15 red" width="49%"> <img src="assets/viz/03_choice_heatmap.png" alt="Heat map of every build against every BOM line, with Lean's verdict at the right" width="49%"></p>
+
+Changing **one** BOM line to its hand-solder variant stays yellow for most lines, but turns red for the 27 Ω USB resistors, the ESD chip and the crystal, because their larger courtyards collide on this compact board.
+
+## Where the supplied package breaks
+
+Four problems in the official Sierrathon files, marked on the files themselves. Each is a Lean theorem in [`Breaks.lean`](leanvsdfm/LeanVsDFM/Breaks.lean).
+
+<p align="center"><img src="assets/breaks/break_schematic.png" alt="The official schematic with callouts on the seven LEDs, their 330 ohm resistors and the USB differential pairs" width="100%"></p>
+<p align="center"><img src="assets/breaks/break_stackup.png" alt="The official stack-up with callouts on the inner copper weight and the impedance rows" width="49%"> <img src="assets/breaks/break_bom.png" alt="The BOM rows with row 5 highlighted: quantity 8 but seven designators" width="49%"></p>
+
+| # | Break | Lean catches it | Fix |
+|---|---|---|---|
+| 1 | BOM row 5 says **Qty 8**, lists **7** designators; the schematic draws 7 LEDs | `break1_only_row5`, `break1_schematic_has_7_leds` | set quantity to the designator count; only row 5 changes (`break1_fix_changes_only_row5`) |
+| 2 | Stack-up draws **0.5 oz** inner copper; instructions say **1 oz** | `break2_conflict` | ask the fab; both readings meet 62 mil ± 10 % (`break2_both_readings_buildable`) |
+| 3 | 330 Ω LEDs draw up to **4.945 mA**, above the RP2040's 4 mA default pin drive | `break3_default_drive_fails` | set GPIO17–23 to 8 mA (`break3_fixed_by_8mA`); BOM unchanged |
+| 4 | The mandated **5/4 mil** 90 Ω pairs fail a global **6 mil** rule | `break4_dfm_flags_mandated_geometry` | rule per net class (`break4_lean_accepts_pairs`, `break4_lean_still_enforces_6mil`) |
+
+## The proofs, as formulas
+
+Each formula is a theorem the Lean kernel has checked.
+
+**No two bodies overlap** (`Fit3D.bodies_never_collide`, with `Fit3D.sep_of_inside`):
+
+$$\text{fitOk}(ps)\ \Longrightarrow\ \forall\, p \neq q:\ \text{body}(p)\cap\text{body}(q)=\varnothing \qquad\qquad a\subseteq A,\ b\subseteq B,\ A\cap B=\varnothing\ \Longrightarrow\ a\cap b=\varnothing$$
+
+**Where a 3D body lands on the board** (`Fit3D.bodyBox`), with θ a right angle:
+
+$$\binom{x}{y}_{\text{board}}=\binom{p_x}{p_y}+R_\theta\binom{m_x}{-m_y}$$
+
+**Inside the convex board outline** (`Fit3D.pointIn`): the cross product has one sign for every edge (a, b):
+
+$$(b-a)\times(c-a)\ \ge 0$$
+
+**Stack-up thickness** (`Specs.stackup_within_tolerance`):
+
+$$0.5+1.5+4.348+0.6+45.6+0.6+4.348+1.5+0.5 = 59.496\ \text{mil} \in 62 \pm 10\%$$
+
+**LED current** (`Breaks.break3_default_drive_fails`, `Fixers.led_design`):
+
+$$I_{\max}=\frac{V_{DD,\max}-V_{f,\min}}{0.95\,R}=\frac{3.35-1.8}{313.5\ \Omega}=4.945\ \text{mA} > 4\ \text{mA}, \qquad 7\,I_{\max} = 34.6\ \text{mA} \le 50\ \text{mA}$$
+
+**Regulator junction temperature** (`Specs.ldo_junction_ok`):
+
+$$T_j = T_a + \theta_{JA}\,(V_{BUS,\max}-V_{out,\min})\,I = 50 + 250\cdot 2.0\cdot 0.112 = 106^\circ\text{C} < 125^\circ\text{C}$$
+
+**Crystal load** (`Specs.crystal_load_window`), for every stray capacitance from 2 to 5 pF:
+
+$$C_L=\frac{C_6C_7}{C_6+C_7}+C_s = 7.5 + C_s \in [9.5,\ 12.5]\ \text{pF}$$
+
+**ADC supply filter** (`Specs.adc_filter_corner`), for every in-tolerance R and C and every π between 3.141 and 3.142:
+
+$$313 \le \frac{1}{2\pi RC} \le 424\ \text{Hz}$$
+
+**Differential impedance in tolerance** (`Breaks.break4_impedance_in_tolerance`), **BOM self-consistency** (`Breaks.break1_only_row5`), **fixers are correct** (`Fixers.find?_sound`), **overall colour is the worst row** (`Report.overall_is_worst`):
+
+$$0.9\cdot 90 \le 89.7 \le 1.1\cdot 90\ \Omega \qquad \lbrace r : \text{qty}(r)\ne \text{count}(r)\rbrace=\lbrace 5\rbrace \qquad \text{find?}\ p\ l=\text{some}\ a \Rightarrow p(a)\wedge a\in l \qquad \forall r:\ \text{rank}(r)\le\text{rank}(\text{overall})$$
+
+**93 theorems** in six modules: Breaks 19, Fit3D 4, Fixers 30, Report 4, Specs 25, Verify 11. No `sorry`, no `admit`, no `native_decide`; the only axioms used are Lean's three standard ones.
+
+<p align="center"><img src="assets/viz/12_lean_proofs.png" alt="Theorems per module, split into those using no axioms and those using only the standard axioms" width="60%"></p>
+
+## Figures
+
+| | |
 |---|---|
-| `riemannZeta_neg_two_mul_nat_add_one` | the trivial zeros ζ(−2(n+1)) = 0 |
-| `riemannZeta_ne_zero_of_one_lt_re` | no zeros with Re(s) > 1 |
-| `riemannZeta_ne_zero_of_one_le_re` | no zeros on Re(s) = 1 either, so every non-trivial zero lies in the open strip 0 < Re(s) < 1 |
-| intermediate value theorem | a continuous real Z with Z(a)·Z(b) < 0 has a zero in (a, b) |
+| <img src="assets/viz/13_fit_margins.png" alt="Smallest gap between each measured body and its courtyard edge"> | <img src="assets/viz/01_design_space_3d.png" alt="3D scatter of every proposed build, coloured by Lean's verdict"> |
+| <img src="assets/viz/06_ldo_thermal_3d.png" alt="Regulator junction temperature surface over VBUS and load current"> | <img src="assets/viz/05_led_current.png" alt="Worst-case LED current against resistor value with the pin drive limits"> |
+| <img src="assets/viz/08_crystal_surface_3d.png" alt="Crystal load capacitance surface over C6 and C7"> | <img src="assets/viz/07_crystal_load.png" alt="Crystal load against stray capacitance for E12 capacitor values"> |
+| <img src="assets/viz/09_adc_filter.png" alt="ADC filter corner frequency over the resistor and capacitor tolerance box"> | <img src="assets/viz/10_stackup.png" alt="Stack-up thickness for both readings of the inner copper weight"> |
 
-### What to trust, and how much
+Every figure is drawn from real data: the certified runs, the KiCad board, or the exact functions proved in Lean (`leanvsdfm/tools/viz.py`).
 
-> [!IMPORTANT]
-> **Assumptions are named, not hidden.** Electrical inputs that aren't physical constants (LED V<sub>f</sub>, LDO worst case, GPIO budget) are named `def`s marked `ASSUMPTION` in [`Photonics.lean`](lean/Sierrathon/Photonics.lean). Change one and `lake build` tells you which guarantees still hold.
+## With Claude Code
 
-> [!NOTE]
-> **26 proofs** are checked by the Lean kernel alone (`decide`, `simp`, `omega`, `rfl`). **11** use `native_decide`, which also trusts the compiler; these are the ones that walk the netlist strings. Moving them to kernel-only `decide` is on the roadmap.
+The repository ships slash commands and a skill ([`.claude/`](.claude)), so you can ask in plain words.
 
-## Hardware spec
-
-<table>
-<tr><td valign="top">
-
-| Stack-up (4-layer, 62 mil) | |
+| Command | What it does |
 |---|---|
-| Material | FR-4, Isola 370HR |
-| L1 / L4 | signal, 1 oz finished |
-| L2 / L3 | power planes |
-| SE 50 Ω | 7.6 mil (L1 ref L2, L4 ref L3) |
-| **Diff 90 Ω** | **5.0 / 4.0 mil** w/s |
+| `/leancheck [board]` | Verdict for a board, row by row |
+| `/explore [n]` | Propose n builds and let Lean rate them |
+| `/verify` | Rebuild every proof and audit the axioms |
+| `/board3d` | Export STEP and test it against Lean's placement |
 
-</td><td valign="top">
+A real exchange from building this project:
 
-| Rules | |
-|---|---|
-| Min trace / space | 6 / 6 mil |
-| Min drill | 8 mil, through-hole |
-| Drill-to-copper | 8 mil |
-| Class | IPC Class 2 |
-| Max current | 1 A |
-| Mask / silk | green / white |
+```
+You:    Does Lean's idea of where the parts are in 3D match KiCad's STEP export?
+Claude: $ python3 tools/check_step_agreement.py out3d/sierrathon_parts.json
+        49 Lean bodies vs 49 bodies in KiCad's STEP export: largest outline (x, y)
+        difference 0.0 µm, largest height difference 50 µm -> PASS
+```
 
-</td></tr>
-</table>
+## Run it locally
 
-**90 Ω pairs:** `USB_P/USB_N`, `USBR_P/USBR_N`, `D_P/D_N`
+You need Lean 4 (through elan) and KiCad 7 with its Python module. On Windows, use WSL with Ubuntu 24.04.
 
-**Layout plan** *(in progress)*: a hexagonal 4-layer board with components packed as tightly as the 6 mil rules allow, plus a **thermal model** of the packed board (LDO, RP2040 and LEDs as heat sources) to check that the density stays cool.
+```bash
+sudo apt install kicad kicad-footprints
+```
 
-**Issues found in the provided docs:**
-- BOM line 5 says **Qty 8** for LEDs but lists **7** refdes (D3–D9). The schematic has 7.
-- The stack-up drawing shows **0.5 oz** inner copper. The written spec says **1 oz**.
+```bash
+curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh
+```
 
-<details>
-<summary><b>Bill of materials (21 lines)</b></summary>
+```bash
+cd leanvsdfm && lake build
+```
 
-| RefDes | Qty | Value | Manufacturer | MPN |
-|---|:-:|---|---|---|
-| C1, C2 | 2 | 1 µF 0603 | Murata | GCM188R71C105KA64D |
-| C3, C5, C14, C17 | 4 | 2.2 µF 0805 | Murata | GCM21BR71C225KA64L |
-| C4, C8–C13, C15, C16 | 9 | 0.1 µF 0402 | Murata | GCM155R71C104KA55D |
-| C6, C7 | 2 | 15 pF 0402 | Murata | GCM1555C1H150JA16D |
-| D3–D9 | 7 | red LED 0603 | QT Brightek | QBLP601-R5 |
-| J1 | 1 | USB-C | Same Sky | UJ20-C-H-G-SMT-TR |
-| MH1–MH4 | 4 | M4 hole | | DNI |
-| R1, R2 | 2 | 5.1 k | YAGEO | RC0402JR-075K1L |
-| R4 | 1 | 200 Ω 0603 | YAGEO | RC0603JR-07200RL |
-| R5, R6 | 2 | 27 Ω | YAGEO | RC0402FR-0727RL |
-| R7, R8 | 2 | 1 k | YAGEO | RC0402FR-071KL |
-| R9, R10, R19 | 3 | 10 k | YAGEO | RC0402JR-0710KL |
-| R12–R18 | 7 | 330 Ω | YAGEO | AF0402JR-07330RL |
-| SW1, SW2 | 2 | BOOT / RESET | C&K | PTS526SM15SMTR2 LFS |
-| SW3 | 1 | user switch | C&K | D6R90 F2 LFS |
-| U1 | 1 | MCU | Raspberry Pi | RP2040 (SC0914(13)) |
-| U2 | 1 | 3.3 V LDO | Diodes Inc. | AP2112K-3.3TRG1 |
-| U3 | 1 | 128 Mbit flash | Winbond | W25Q128JVSIQ TR |
-| U4 | 1 | USB ESD | ST | USBLC6-2SC6 |
-| Y1 | 1 | 12 MHz | Abracon | ABM8-272-T3 |
+```bash
+python3 tools/leancheck.py pcb/sierrathon.kicad_pcb --html report.html
+```
 
-</details>
+`lake build` checks every proof. `leancheck` exits 0 for green, 1 for yellow, 3 for red and 4 if the kernel did not certify the result.
 
 ## Repository
 
 ```
-├── lean/                     Lean 4 project (lake build)
-│   ├── gen_from_design.py    netlist + BOM  →  Sierrathon/Design.lean
-│   └── Sierrathon/           Hardware · Debounce · Rng · Dice · Photonics · Protocol
-├── netlist/                  golden netlist (Universal Netlist v3) + its builder
-├── altium/                   Altium .SchLib / .PcbLib / .LibPkg, written with altium-designer-mcp
-└── assets/                   banner and diagrams (SVG sources + PNG)
+├── leanvsdfm/               the project
+│   ├── LeanVsDFM/           Lean: PartsVerifier · Fit3D · Breaks · Fixers · Specs · Report · Verify
+│   ├── tools/               leancheck, board builder and placer, STEP tools, explorer, figures
+│   ├── pcb/                 our board and four fault boards (KiCad 7)
+│   ├── out3d/               the STEP and GLB that KiCad and OpenCascade produced
+│   ├── models3d/            the 3D part models used, with their measured sizes
+│   ├── explore/             51 rated builds, including the AI proposals
+│   └── reports/             HTML reports
+├── netlist/                 the schematic as a netlist (transcribed from the PDF)
+├── altium/                  Altium symbol and footprint libraries
+├── site/                    the website
+├── assets/                  banner, figures, the marked-up Sierrathon files
+├── .claude/                 Claude Code commands and skill
+└── archive/                 earlier directions, kept for history
 ```
 
-## Run it
+## What this does not do yet
 
-```bash
-cd lean && lake build
-```
-
-`lake build` checks every proof. Lean 4.15.0 is pinned in `lean/lean-toolchain`.
-
-To re-check the netlist:
-
-```bash
-npm install -g @intelligentelectron/universal-netlist
-```
-
-```bash
-universal-netlist run_erc netlist/Sierrathon.netlist.json
-```
-
-## Status
-
-- [x] Golden netlist from the schematic: ERC clean
-- [x] 37 Lean board theorems, 0 `sorry`
-- [x] Altium library: 18 of 21 parts with footprints (IPC-7351 land patterns)
-- [ ] Zeta lemmas over Mathlib (sign change ⇒ critical-line zero, zero-free region Re(s) ≥ 1)
-- [ ] RP2040 zero-hunter firmware (pico-sdk): Riemann–Siegel Z(t), USB stream, LED zero counter
-- [ ] Host verification against mpmath: PASS / FAIL / NOT_TESTED per zero
-- [ ] Compact hexagonal 4-layer PCB, DRC, per-layer renders, thermal model
-- [ ] Footprints for SW1/SW2 (PTS526), SW3 (D6R90) and J1 (UJ20-C-H-G-SMT) from manufacturer land patterns
+- **The board is placed, not routed.** There are no traces, so there is no DRC result and no DFM run to show.
+- **Four parts use library stand-ins** (USB-C J1, switches SW1 to SW3). Their manufacturer footprints and 3D models are needed; the report keeps them yellow until then.
+- **Bodies are checked as boxes**, their measured bounding boxes. That is the conservative choice.
+- **The schematic was transcribed from the PDF by hand** into a netlist. Lean checks the board against that netlist.
+- **Datasheet numbers are named assumptions** in the Lean files. Change one and `lake build` tells you which results still hold.

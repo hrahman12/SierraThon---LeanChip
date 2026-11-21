@@ -59,7 +59,17 @@ def fp_for(ref):
     return FOOTPRINT[f"{ref[0]}_{SIZE[ref]}"]
 
 
-def build(out, fault=None):
+LIBDIR = [("C_", "Capacitor_SMD"), ("R_", "Resistor_SMD"), ("LED_", "LED_SMD"), ("QFN", "Package_DFN_QFN"),
+          ("SOT-", "Package_TO_SOT_SMD"), ("SOIC", "Package_SO"), ("Crystal", "Crystal")]
+
+
+def lib_of(name):
+    return next(d for p, d in LIBDIR if name.startswith(p))
+
+
+def build(out, fault=None, combo=None):
+    """combo = {"fp": {ref: footprint_name}, "u3_pads": "ul" | "kicad"} overrides the defaults."""
+    combo = combo or {}
     nl = json.load(open(os.path.join(ROOT, "..", "netlist", "Sierrathon.netlist.json")))
     board = pcbnew.BOARD()
     board.SetCopperLayerCount(4)
@@ -73,6 +83,9 @@ def build(out, fault=None):
     comps = nl["components"]
     for k, ref in enumerate(sorted(comps, key=lambda r: (r.rstrip("0123456789"), int(r.lstrip("CDJMHRSUWY") or 0)))):
         lib, name = fp_for(ref)
+        if ref in combo.get("fp", {}):
+            name = combo["fp"][ref]
+            lib = lib_of(name)
         if fault == "narrow_flash" and ref == "U3":
             name = "SOIC-8_3.9x4.9mm_P1.27mm"
         if fault == "wrong_cap_size" and ref == "C4":
@@ -82,7 +95,7 @@ def build(out, fault=None):
         fp.SetValue(comps[ref].get("value", ""))
         fp.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(10 + 12 * (k % 8)), pcbnew.FromMM(10 + 12 * (k // 8))))
         board.Add(fp)
-        if ref == "U3" and name.startswith("SOIC-8_5.23"):
+        if ref == "U3" and name.startswith("SOIC-8_5.23") and combo.get("u3_pads", "ul") == "ul":
             for p in fp.Pads():
                 x, y, w, h = UL_SOIC208[p.GetNumber()]
                 p.SetSize(pcbnew.VECTOR2I(pcbnew.FromMM(w), pcbnew.FromMM(h)))
@@ -108,8 +121,8 @@ def build(out, fault=None):
 if __name__ == "__main__":
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     fault = sys.argv[sys.argv.index("--fault") + 1] if "--fault" in sys.argv else None
-    if fault in args:
-        args.remove(fault)
+    combo = json.load(open(sys.argv[sys.argv.index("--combo") + 1])) if "--combo" in sys.argv else None
+    args = [a for a in args if a not in (fault,) and not a.endswith(".json")]
     out = args[0] if args else os.path.join(ROOT, "pcb", "sierrathon.kicad_pcb")
     os.makedirs(os.path.dirname(out), exist_ok=True)
-    print("wrote", build(out, fault))
+    print("wrote", build(out, fault, combo))

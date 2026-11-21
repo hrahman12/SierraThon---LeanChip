@@ -31,9 +31,7 @@ theorem our_board_electrically_clean : electrical (verify PcbData.board) = [] :=
 /-- Fault: the 150 mil SOIC-8 used for the 208 mil W25Q128JVSIQ. Clean geometry, wrong part. -/
 theorem catches_narrow_flash :
     electrical (verify PcbFaultNarrowFlash.board) =
-      [.wrongPackage "U3" "SOIC-8_3.9x4.9mm_P1.27mm" "SOIC-8_5.23x5.23mm_P1.27mm",
-       .landPattern "U3" "1", .landPattern "U3" "2", .landPattern "U3" "3", .landPattern "U3" "4",
-       .landPattern "U3" "5", .landPattern "U3" "6", .landPattern "U3" "7", .landPattern "U3" "8"] := by
+      [.wrongPackage "U3" "SOIC-8_3.9x4.9mm_P1.27mm" "SOIC-8_5.23x5.23mm_P1.27mm"] := by
   decide +kernel
 
 /-- Fault: D5 placed with anode and cathode swapped. -/
@@ -55,5 +53,28 @@ theorem catches_swapped_flash_pins :
       [.wrongNet "U3" "2" "QSPI_D0" "QSPI_D1", .wrongNet "U3" "5" "QSPI_D1" "QSPI_D0",
        .strayNet "U3" "2" "QSPI_D0", .strayNet "U3" "5" "QSPI_D1"] := by
   decide +kernel
+
+/-! ## 2D → 3D: the placed board fits together -/
+
+/-- **Our board fits.** Every 3D body is inside its courtyard, no two courtyards overlap, every
+pad and body is inside the hexagonal outline, and every drill is at least 8 mil. -/
+theorem our_board_fits : Fit3D.fit3d PcbData.outline PcbData.parts = [] := by decide +kernel
+
+/-- **No two part bodies overlap on our board.** This is the general theorem
+`Fit3D.bodies_never_collide` applied to our board; the kernel checks the hypothesis. -/
+theorem our_board_bodies_never_collide : PcbData.parts.Pairwise Fit3D.bodySep :=
+  Fit3D.bodies_never_collide _ (by decide +kernel)
+
+/-- The only part without a 3D body model is the USB-C connector (library stand-in). -/
+theorem our_board_unmodelled : Fit3D.noBody PcbData.parts = ["J1"] := by decide +kernel
+
+/-- Assembled height: 1.511 mm board (59.496 mil stack-up) + 4.300 mm tallest body
+(SW3's stand-in model) = 5.811 mm. -/
+theorem our_board_envelope :
+    PcbData.thicknessNm = 1511198 ∧ Fit3D.maxHeight PcbData.parts = 4300000 := by decide +kernel
+
+/-- All 54 parts are on the board model, 49 of them with a 3D body. -/
+theorem our_board_counts :
+    PcbData.parts.length = 54 ∧ (PcbData.parts.filter (·.model.isSome)).length = 49 := by decide +kernel
 
 end LeanVsDFM.Verify

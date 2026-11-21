@@ -1,3 +1,7 @@
 .lake/
 __pycache__/
 *.bak
+*.kicad_prl
+*.kicad_pro
+leanvsdfm/pcb/sierrathon_grid.kicad_pcb
+node_modules/

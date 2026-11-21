@@ -1,0 +1,2 @@
+51 combos judged; all certified: True
+{('preferred', 'YELLOW'): 1, ('hand', 'RED'): 1, ('naive', 'RED'): 1, ('ai', 'YELLOW'): 4, ('ai', 'RED'): 2, ('one-variant', 'YELLOW'): 11, ('one-wrong', 'RED'): 14, ('one-variant', 'RED'): 2, ('random', 'RED'): 15}

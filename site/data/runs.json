@@ -1,0 +1,760 @@
+[
+ {
+  "id": "sierrathon",
+  "title": "Our board",
+  "about": "The placed 52 \u00d7 45 mm hexagon, every part from the Sierrathon BOM.",
+  "file": "leanvsdfm/pcb/sierrathon.kicad_pcb",
+  "overall": "YELLOW",
+  "rows": [
+   {
+    "section": "Board",
+    "check": "Every schematic part is placed and on the BOM",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "Footprint package matches the BOM part number",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "Manufacturer footprint used (not a library stand-in)",
+    "color": "YELLOW",
+    "detail": "J1: footprint USB_C_Receptacle_HRO_TYPE-C-31-M-12, part needs MFR:UJ20-C-H-G-SMT-TR; SW1: footprint SW_SPST_TL3342, part needs MFR:PTS526SM15SMTR2; SW2: footprint SW_SPST_TL3342, part needs MFR:PTS526SM15SMTR2; SW3: footprint SW_PUSH_6mm, part needs MFR:D6R90F2LFS"
+   },
+   {
+    "section": "Board",
+    "check": "Every schematic pin is on the right net (schematic \u2194 PCB)",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "No connections that are not on the schematic",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "LED polarity (cathode to GND)",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "U3 land pattern = manufacturer (UltraLibrarian)",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "Preferred land pattern (IPC nominal / manufacturer), not a variant",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "Every 3D body sits inside its own courtyard",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "No two courtyards overlap, so no two bodies can collide",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "Pads and bodies are on the board (inside the outline)",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "Every drilled hole is at least 8 mil",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "Every part has a 3D body model",
+    "color": "YELLOW",
+    "detail": "J1: no 3D model in the library"
+   },
+   {
+    "section": "Package",
+    "check": "BOM quantities match the designator lists",
+    "color": "YELLOW",
+    "detail": "row 5: qty 8 but 7 designators"
+   },
+   {
+    "section": "Package",
+    "check": "Inner copper: stack-up agrees with instructions",
+    "color": "YELLOW",
+    "detail": "stack-up 5/10 oz vs instructions 10/10 oz; ask the fab (both readings meet 62 mil \u00b1 10 %)"
+   },
+   {
+    "section": "Package",
+    "check": "Stack-up thickness within 62 mil \u00b1 10 %",
+    "color": "GREEN",
+    "detail": "59.5 mil"
+   },
+   {
+    "section": "Package",
+    "check": "90 \u03a9 pairs use the stack-up geometry (5/4 mil), all other nets \u2265 6 mil",
+    "color": "GREEN",
+    "detail": "a single global 6 mil DFM rule would wrongly flag these 6 nets"
+   },
+   {
+    "section": "Specs",
+    "check": "LED current within the RP2040 default 4 mA drive",
+    "color": "YELLOW",
+    "detail": "330 \u03a9 gives up to 4.945 mA: GPIO17\u201323 must be set to 8 mA drive (or 430 \u03a9)"
+   },
+   {
+    "section": "Specs",
+    "check": "AP2112 junction temperature < 125 \u00b0C",
+    "color": "GREEN",
+    "detail": "106 \u00b0C worst case"
+   },
+   {
+    "section": "Specs",
+    "check": "USB clock exactly 48 MHz",
+    "color": "GREEN",
+    "detail": "PLL 12 MHz \u00d7 100 \u00f7 5 \u00f7 5"
+   },
+   {
+    "section": "Specs",
+    "check": "QSPI clock within W25Q128 limit",
+    "color": "GREEN",
+    "detail": "62.5 \u2264 133 MHz"
+   }
+  ],
+  "certified": true,
+  "issues": [
+   "LeanVsDFM.Parts.Issue.wrongPackage \"J1\" \"USB_C_Receptacle_HRO_TYPE-C-31-M-12\" \"MFR:UJ20-C-H-G-SMT-TR\"",
+   "LeanVsDFM.Parts.Issue.wrongPackage \"SW1\" \"SW_SPST_TL3342\" \"MFR:PTS526SM15SMTR2\"",
+   "LeanVsDFM.Parts.Issue.wrongPackage \"SW2\" \"SW_SPST_TL3342\" \"MFR:PTS526SM15SMTR2\"",
+   "LeanVsDFM.Parts.Issue.wrongPackage \"SW3\" \"SW_PUSH_6mm\" \"MFR:D6R90F2LFS\""
+  ],
+  "fit_issues": [],
+  "envelope": {
+   "board_thickness_mm": 1.5112,
+   "tallest_body_mm": 4.3,
+   "total_height_mm": 5.811
+  },
+  "no_collision_theorem": true
+ },
+ {
+  "id": "fault_led_reversed",
+  "title": "LED D5 reversed",
+  "about": "Same board, D5 placed with anode and cathode swapped.",
+  "file": "leanvsdfm/pcb/fault_led_reversed.kicad_pcb",
+  "overall": "RED",
+  "rows": [
+   {
+    "section": "Board",
+    "check": "Every schematic part is placed and on the BOM",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "Footprint package matches the BOM part number",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "Manufacturer footprint used (not a library stand-in)",
+    "color": "YELLOW",
+    "detail": "J1: footprint USB_C_Receptacle_HRO_TYPE-C-31-M-12, part needs MFR:UJ20-C-H-G-SMT-TR; SW1: footprint SW_SPST_TL3342, part needs MFR:PTS526SM15SMTR2; SW2: footprint SW_SPST_TL3342, part needs MFR:PTS526SM15SMTR2; SW3: footprint SW_PUSH_6mm, part needs MFR:D6R90F2LFS"
+   },
+   {
+    "section": "Board",
+    "check": "Every schematic pin is on the right net (schematic \u2194 PCB)",
+    "color": "RED",
+    "detail": "D5 pad 1: net LED3_A, schematic says GND; D5 pad 2: net GND, schematic says LED3_A"
+   },
+   {
+    "section": "Board",
+    "check": "No connections that are not on the schematic",
+    "color": "RED",
+    "detail": "D5 pad 1: connected to LED3_A, not on the schematic; D5 pad 2: connected to GND, not on the schematic"
+   },
+   {
+    "section": "Board",
+    "check": "LED polarity (cathode to GND)",
+    "color": "RED",
+    "detail": "D5: cathode (pad 1) not on GND"
+   },
+   {
+    "section": "Board",
+    "check": "U3 land pattern = manufacturer (UltraLibrarian)",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "Preferred land pattern (IPC nominal / manufacturer), not a variant",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "Every 3D body sits inside its own courtyard",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "No two courtyards overlap, so no two bodies can collide",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "Pads and bodies are on the board (inside the outline)",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "Every drilled hole is at least 8 mil",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "Every part has a 3D body model",
+    "color": "YELLOW",
+    "detail": "J1: no 3D model in the library"
+   },
+   {
+    "section": "Package",
+    "check": "BOM quantities match the designator lists",
+    "color": "YELLOW",
+    "detail": "row 5: qty 8 but 7 designators"
+   },
+   {
+    "section": "Package",
+    "check": "Inner copper: stack-up agrees with instructions",
+    "color": "YELLOW",
+    "detail": "stack-up 5/10 oz vs instructions 10/10 oz; ask the fab (both readings meet 62 mil \u00b1 10 %)"
+   },
+   {
+    "section": "Package",
+    "check": "Stack-up thickness within 62 mil \u00b1 10 %",
+    "color": "GREEN",
+    "detail": "59.5 mil"
+   },
+   {
+    "section": "Package",
+    "check": "90 \u03a9 pairs use the stack-up geometry (5/4 mil), all other nets \u2265 6 mil",
+    "color": "GREEN",
+    "detail": "a single global 6 mil DFM rule would wrongly flag these 6 nets"
+   },
+   {
+    "section": "Specs",
+    "check": "LED current within the RP2040 default 4 mA drive",
+    "color": "YELLOW",
+    "detail": "330 \u03a9 gives up to 4.945 mA: GPIO17\u201323 must be set to 8 mA drive (or 430 \u03a9)"
+   },
+   {
+    "section": "Specs",
+    "check": "AP2112 junction temperature < 125 \u00b0C",
+    "color": "GREEN",
+    "detail": "106 \u00b0C worst case"
+   },
+   {
+    "section": "Specs",
+    "check": "USB clock exactly 48 MHz",
+    "color": "GREEN",
+    "detail": "PLL 12 MHz \u00d7 100 \u00f7 5 \u00f7 5"
+   },
+   {
+    "section": "Specs",
+    "check": "QSPI clock within W25Q128 limit",
+    "color": "GREEN",
+    "detail": "62.5 \u2264 133 MHz"
+   }
+  ],
+  "certified": true,
+  "issues": [
+   "LeanVsDFM.Parts.Issue.wrongPackage \"J1\" \"USB_C_Receptacle_HRO_TYPE-C-31-M-12\" \"MFR:UJ20-C-H-G-SMT-TR\"",
+   "LeanVsDFM.Parts.Issue.wrongPackage \"SW1\" \"SW_SPST_TL3342\" \"MFR:PTS526SM15SMTR2\"",
+   "LeanVsDFM.Parts.Issue.wrongPackage \"SW2\" \"SW_SPST_TL3342\" \"MFR:PTS526SM15SMTR2\"",
+   "LeanVsDFM.Parts.Issue.wrongPackage \"SW3\" \"SW_PUSH_6mm\" \"MFR:D6R90F2LFS\"",
+   "LeanVsDFM.Parts.Issue.wrongNet \"D5\" \"1\" \"LED3_A\" \"GND\"",
+   "LeanVsDFM.Parts.Issue.wrongNet \"D5\" \"2\" \"GND\" \"LED3_A\"",
+   "LeanVsDFM.Parts.Issue.strayNet \"D5\" \"1\" \"LED3_A\"",
+   "LeanVsDFM.Parts.Issue.strayNet \"D5\" \"2\" \"GND\"",
+   "LeanVsDFM.Parts.Issue.polarity \"D5\""
+  ],
+  "fit_issues": [],
+  "envelope": {
+   "board_thickness_mm": 1.5112,
+   "tallest_body_mm": 4.3,
+   "total_height_mm": 5.811
+  },
+  "no_collision_theorem": true
+ },
+ {
+  "id": "fault_narrow_flash",
+  "title": "Narrow flash footprint",
+  "about": "U3 on the 150 mil SOIC-8 instead of the 208 mil package the W25Q128JVSIQ comes in.",
+  "file": "leanvsdfm/pcb/fault_narrow_flash.kicad_pcb",
+  "overall": "RED",
+  "rows": [
+   {
+    "section": "Board",
+    "check": "Every schematic part is placed and on the BOM",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "Footprint package matches the BOM part number",
+    "color": "RED",
+    "detail": "U3: footprint SOIC-8_3.9x4.9mm_P1.27mm, part needs SOIC-8_5.23x5.23mm_P1.27mm"
+   },
+   {
+    "section": "Board",
+    "check": "Manufacturer footprint used (not a library stand-in)",
+    "color": "YELLOW",
+    "detail": "J1: footprint USB_C_Receptacle_HRO_TYPE-C-31-M-12, part needs MFR:UJ20-C-H-G-SMT-TR; SW1: footprint SW_SPST_TL3342, part needs MFR:PTS526SM15SMTR2; SW2: footprint SW_SPST_TL3342, part needs MFR:PTS526SM15SMTR2; SW3: footprint SW_PUSH_6mm, part needs MFR:D6R90F2LFS"
+   },
+   {
+    "section": "Board",
+    "check": "Every schematic pin is on the right net (schematic \u2194 PCB)",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "No connections that are not on the schematic",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "LED polarity (cathode to GND)",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "U3 land pattern = manufacturer (UltraLibrarian)",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "Preferred land pattern (IPC nominal / manufacturer), not a variant",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "Every 3D body sits inside its own courtyard",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "No two courtyards overlap, so no two bodies can collide",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "Pads and bodies are on the board (inside the outline)",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "Every drilled hole is at least 8 mil",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "Every part has a 3D body model",
+    "color": "YELLOW",
+    "detail": "J1: no 3D model in the library"
+   },
+   {
+    "section": "Package",
+    "check": "BOM quantities match the designator lists",
+    "color": "YELLOW",
+    "detail": "row 5: qty 8 but 7 designators"
+   },
+   {
+    "section": "Package",
+    "check": "Inner copper: stack-up agrees with instructions",
+    "color": "YELLOW",
+    "detail": "stack-up 5/10 oz vs instructions 10/10 oz; ask the fab (both readings meet 62 mil \u00b1 10 %)"
+   },
+   {
+    "section": "Package",
+    "check": "Stack-up thickness within 62 mil \u00b1 10 %",
+    "color": "GREEN",
+    "detail": "59.5 mil"
+   },
+   {
+    "section": "Package",
+    "check": "90 \u03a9 pairs use the stack-up geometry (5/4 mil), all other nets \u2265 6 mil",
+    "color": "GREEN",
+    "detail": "a single global 6 mil DFM rule would wrongly flag these 6 nets"
+   },
+   {
+    "section": "Specs",
+    "check": "LED current within the RP2040 default 4 mA drive",
+    "color": "YELLOW",
+    "detail": "330 \u03a9 gives up to 4.945 mA: GPIO17\u201323 must be set to 8 mA drive (or 430 \u03a9)"
+   },
+   {
+    "section": "Specs",
+    "check": "AP2112 junction temperature < 125 \u00b0C",
+    "color": "GREEN",
+    "detail": "106 \u00b0C worst case"
+   },
+   {
+    "section": "Specs",
+    "check": "USB clock exactly 48 MHz",
+    "color": "GREEN",
+    "detail": "PLL 12 MHz \u00d7 100 \u00f7 5 \u00f7 5"
+   },
+   {
+    "section": "Specs",
+    "check": "QSPI clock within W25Q128 limit",
+    "color": "GREEN",
+    "detail": "62.5 \u2264 133 MHz"
+   }
+  ],
+  "certified": true,
+  "issues": [
+   "LeanVsDFM.Parts.Issue.wrongPackage \"J1\" \"USB_C_Receptacle_HRO_TYPE-C-31-M-12\" \"MFR:UJ20-C-H-G-SMT-TR\"",
+   "LeanVsDFM.Parts.Issue.wrongPackage \"SW1\" \"SW_SPST_TL3342\" \"MFR:PTS526SM15SMTR2\"",
+   "LeanVsDFM.Parts.Issue.wrongPackage \"SW2\" \"SW_SPST_TL3342\" \"MFR:PTS526SM15SMTR2\"",
+   "LeanVsDFM.Parts.Issue.wrongPackage \"SW3\" \"SW_PUSH_6mm\" \"MFR:D6R90F2LFS\"",
+   "LeanVsDFM.Parts.Issue.wrongPackage \"U3\" \"SOIC-8_3.9x4.9mm_P1.27mm\" \"SOIC-8_5.23x5.23mm_P1.27mm\""
+  ],
+  "fit_issues": [],
+  "envelope": {
+   "board_thickness_mm": 1.5112,
+   "tallest_body_mm": 4.3,
+   "total_height_mm": 5.811
+  },
+  "no_collision_theorem": true
+ },
+ {
+  "id": "fault_wrong_cap_size",
+  "title": "0603 footprint on an 0402 line",
+  "about": "C4 given an 0603 footprint; the BOM part is 0402.",
+  "file": "leanvsdfm/pcb/fault_wrong_cap_size.kicad_pcb",
+  "overall": "RED",
+  "rows": [
+   {
+    "section": "Board",
+    "check": "Every schematic part is placed and on the BOM",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "Footprint package matches the BOM part number",
+    "color": "RED",
+    "detail": "C4: footprint C_0603_1608Metric, part needs C_0402_1005Metric"
+   },
+   {
+    "section": "Board",
+    "check": "Manufacturer footprint used (not a library stand-in)",
+    "color": "YELLOW",
+    "detail": "J1: footprint USB_C_Receptacle_HRO_TYPE-C-31-M-12, part needs MFR:UJ20-C-H-G-SMT-TR; SW1: footprint SW_SPST_TL3342, part needs MFR:PTS526SM15SMTR2; SW2: footprint SW_SPST_TL3342, part needs MFR:PTS526SM15SMTR2; SW3: footprint SW_PUSH_6mm, part needs MFR:D6R90F2LFS"
+   },
+   {
+    "section": "Board",
+    "check": "Every schematic pin is on the right net (schematic \u2194 PCB)",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "No connections that are not on the schematic",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "LED polarity (cathode to GND)",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "U3 land pattern = manufacturer (UltraLibrarian)",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "Preferred land pattern (IPC nominal / manufacturer), not a variant",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "Every 3D body sits inside its own courtyard",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "No two courtyards overlap, so no two bodies can collide",
+    "color": "RED",
+    "detail": "C12 and C4: courtyards overlap"
+   },
+   {
+    "section": "3D fit",
+    "check": "Pads and bodies are on the board (inside the outline)",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "Every drilled hole is at least 8 mil",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "Every part has a 3D body model",
+    "color": "YELLOW",
+    "detail": "J1: no 3D model in the library"
+   },
+   {
+    "section": "Package",
+    "check": "BOM quantities match the designator lists",
+    "color": "YELLOW",
+    "detail": "row 5: qty 8 but 7 designators"
+   },
+   {
+    "section": "Package",
+    "check": "Inner copper: stack-up agrees with instructions",
+    "color": "YELLOW",
+    "detail": "stack-up 5/10 oz vs instructions 10/10 oz; ask the fab (both readings meet 62 mil \u00b1 10 %)"
+   },
+   {
+    "section": "Package",
+    "check": "Stack-up thickness within 62 mil \u00b1 10 %",
+    "color": "GREEN",
+    "detail": "59.5 mil"
+   },
+   {
+    "section": "Package",
+    "check": "90 \u03a9 pairs use the stack-up geometry (5/4 mil), all other nets \u2265 6 mil",
+    "color": "GREEN",
+    "detail": "a single global 6 mil DFM rule would wrongly flag these 6 nets"
+   },
+   {
+    "section": "Specs",
+    "check": "LED current within the RP2040 default 4 mA drive",
+    "color": "YELLOW",
+    "detail": "330 \u03a9 gives up to 4.945 mA: GPIO17\u201323 must be set to 8 mA drive (or 430 \u03a9)"
+   },
+   {
+    "section": "Specs",
+    "check": "AP2112 junction temperature < 125 \u00b0C",
+    "color": "GREEN",
+    "detail": "106 \u00b0C worst case"
+   },
+   {
+    "section": "Specs",
+    "check": "USB clock exactly 48 MHz",
+    "color": "GREEN",
+    "detail": "PLL 12 MHz \u00d7 100 \u00f7 5 \u00f7 5"
+   },
+   {
+    "section": "Specs",
+    "check": "QSPI clock within W25Q128 limit",
+    "color": "GREEN",
+    "detail": "62.5 \u2264 133 MHz"
+   }
+  ],
+  "certified": true,
+  "issues": [
+   "LeanVsDFM.Parts.Issue.wrongPackage \"C4\" \"C_0603_1608Metric\" \"C_0402_1005Metric\"",
+   "LeanVsDFM.Parts.Issue.wrongPackage \"J1\" \"USB_C_Receptacle_HRO_TYPE-C-31-M-12\" \"MFR:UJ20-C-H-G-SMT-TR\"",
+   "LeanVsDFM.Parts.Issue.wrongPackage \"SW1\" \"SW_SPST_TL3342\" \"MFR:PTS526SM15SMTR2\"",
+   "LeanVsDFM.Parts.Issue.wrongPackage \"SW2\" \"SW_SPST_TL3342\" \"MFR:PTS526SM15SMTR2\"",
+   "LeanVsDFM.Parts.Issue.wrongPackage \"SW3\" \"SW_PUSH_6mm\" \"MFR:D6R90F2LFS\""
+  ],
+  "fit_issues": [
+   "LeanVsDFM.Fit3D.Issue.courtyardsOverlap \"C12\" \"C4\""
+  ],
+  "envelope": {
+   "board_thickness_mm": 1.5112,
+   "tallest_body_mm": 4.3,
+   "total_height_mm": 5.811
+  },
+  "no_collision_theorem": false
+ },
+ {
+  "id": "fault_flash_pins_swapped",
+  "title": "Flash data pins swapped",
+  "about": "U3 DO/D1 and DI/D0 exchanged on the footprint.",
+  "file": "leanvsdfm/pcb/fault_flash_pins_swapped.kicad_pcb",
+  "overall": "RED",
+  "rows": [
+   {
+    "section": "Board",
+    "check": "Every schematic part is placed and on the BOM",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "Footprint package matches the BOM part number",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "Manufacturer footprint used (not a library stand-in)",
+    "color": "YELLOW",
+    "detail": "J1: footprint USB_C_Receptacle_HRO_TYPE-C-31-M-12, part needs MFR:UJ20-C-H-G-SMT-TR; SW1: footprint SW_SPST_TL3342, part needs MFR:PTS526SM15SMTR2; SW2: footprint SW_SPST_TL3342, part needs MFR:PTS526SM15SMTR2; SW3: footprint SW_PUSH_6mm, part needs MFR:D6R90F2LFS"
+   },
+   {
+    "section": "Board",
+    "check": "Every schematic pin is on the right net (schematic \u2194 PCB)",
+    "color": "RED",
+    "detail": "U3 pad 2: net QSPI_D0, schematic says QSPI_D1; U3 pad 5: net QSPI_D1, schematic says QSPI_D0"
+   },
+   {
+    "section": "Board",
+    "check": "No connections that are not on the schematic",
+    "color": "RED",
+    "detail": "U3 pad 2: connected to QSPI_D0, not on the schematic; U3 pad 5: connected to QSPI_D1, not on the schematic"
+   },
+   {
+    "section": "Board",
+    "check": "LED polarity (cathode to GND)",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "U3 land pattern = manufacturer (UltraLibrarian)",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "Board",
+    "check": "Preferred land pattern (IPC nominal / manufacturer), not a variant",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "Every 3D body sits inside its own courtyard",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "No two courtyards overlap, so no two bodies can collide",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "Pads and bodies are on the board (inside the outline)",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "Every drilled hole is at least 8 mil",
+    "color": "GREEN",
+    "detail": "proved"
+   },
+   {
+    "section": "3D fit",
+    "check": "Every part has a 3D body model",
+    "color": "YELLOW",
+    "detail": "J1: no 3D model in the library"
+   },
+   {
+    "section": "Package",
+    "check": "BOM quantities match the designator lists",
+    "color": "YELLOW",
+    "detail": "row 5: qty 8 but 7 designators"
+   },
+   {
+    "section": "Package",
+    "check": "Inner copper: stack-up agrees with instructions",
+    "color": "YELLOW",
+    "detail": "stack-up 5/10 oz vs instructions 10/10 oz; ask the fab (both readings meet 62 mil \u00b1 10 %)"
+   },
+   {
+    "section": "Package",
+    "check": "Stack-up thickness within 62 mil \u00b1 10 %",
+    "color": "GREEN",
+    "detail": "59.5 mil"
+   },
+   {
+    "section": "Package",
+    "check": "90 \u03a9 pairs use the stack-up geometry (5/4 mil), all other nets \u2265 6 mil",
+    "color": "GREEN",
+    "detail": "a single global 6 mil DFM rule would wrongly flag these 6 nets"
+   },
+   {
+    "section": "Specs",
+    "check": "LED current within the RP2040 default 4 mA drive",
+    "color": "YELLOW",
+    "detail": "330 \u03a9 gives up to 4.945 mA: GPIO17\u201323 must be set to 8 mA drive (or 430 \u03a9)"
+   },
+   {
+    "section": "Specs",
+    "check": "AP2112 junction temperature < 125 \u00b0C",
+    "color": "GREEN",
+    "detail": "106 \u00b0C worst case"
+   },
+   {
+    "section": "Specs",
+    "check": "USB clock exactly 48 MHz",
+    "color": "GREEN",
+    "detail": "PLL 12 MHz \u00d7 100 \u00f7 5 \u00f7 5"
+   },
+   {
+    "section": "Specs",
+    "check": "QSPI clock within W25Q128 limit",
+    "color": "GREEN",
+    "detail": "62.5 \u2264 133 MHz"
+   }
+  ],
+  "certified": true,
+  "issues": [
+   "LeanVsDFM.Parts.Issue.wrongPackage \"J1\" \"USB_C_Receptacle_HRO_TYPE-C-31-M-12\" \"MFR:UJ20-C-H-G-SMT-TR\"",
+   "LeanVsDFM.Parts.Issue.wrongPackage \"SW1\" \"SW_SPST_TL3342\" \"MFR:PTS526SM15SMTR2\"",
+   "LeanVsDFM.Parts.Issue.wrongPackage \"SW2\" \"SW_SPST_TL3342\" \"MFR:PTS526SM15SMTR2\"",
+   "LeanVsDFM.Parts.Issue.wrongPackage \"SW3\" \"SW_PUSH_6mm\" \"MFR:D6R90F2LFS\"",
+   "LeanVsDFM.Parts.Issue.wrongNet \"U3\" \"2\" \"QSPI_D0\" \"QSPI_D1\"",
+   "LeanVsDFM.Parts.Issue.wrongNet \"U3\" \"5\" \"QSPI_D1\" \"QSPI_D0\"",
+   "LeanVsDFM.Parts.Issue.strayNet \"U3\" \"2\" \"QSPI_D0\"",
+   "LeanVsDFM.Parts.Issue.strayNet \"U3\" \"5\" \"QSPI_D1\""
+  ],
+  "fit_issues": [],
+  "envelope": {
+   "board_thickness_mm": 1.5112,
+   "tallest_body_mm": 4.3,
+   "total_height_mm": 5.811
+  },
+  "no_collision_theorem": true
+ }
+]

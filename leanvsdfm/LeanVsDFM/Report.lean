@@ -1,6 +1,7 @@
 import LeanVsDFM.PartsVerifier
 import LeanVsDFM.Breaks
 import LeanVsDFM.Specs
+import LeanVsDFM.Fit3D
 /-!
 # Traffic-light report for a PCB design
 
@@ -39,7 +40,7 @@ structure Row where
 
 def refOf : Issue → String
   | .missing r | .notOnBom r | .wrongPackage r _ _ | .noPad r _ | .wrongNet r _ _ _
-  | .strayNet r _ _ | .polarity r | .landPattern r _ => r
+  | .strayNet r _ _ | .polarity r | .landPattern r _ | .variantFootprint r _ => r
 
 def describe : Issue → String
   | .missing r => s!"{r} missing from the board"
@@ -50,6 +51,7 @@ def describe : Issue → String
   | .strayNet r p n => s!"{r} pad {p}: connected to {n}, not on the schematic"
   | .polarity r => s!"{r}: cathode (pad 1) not on GND"
   | .landPattern r p => s!"{r} pad {p}: differs from the manufacturer land pattern"
+  | .variantFootprint r l => s!"{r}: {l} is a buildable variant, not the preferred land pattern"
 
 def isMfr : Issue → Bool
   | .wrongPackage _ _ w => w.startsWith "MFR:"
@@ -74,8 +76,39 @@ def boardRows (b : List Footprint) : List Row :=
     row "Board" "No connections that are not on the schematic" .red
       (is.filter fun | .strayNet .. => true | _ => false),
     row "Board" "LED polarity (cathode to GND)" .red (is.filter fun | .polarity _ => true | _ => false),
-    row "Board" "U3 land pattern = manufacturer (UltraLibrarian)" .red
-      (is.filter fun | .landPattern .. => true | _ => false) ]
+    row "Board" "U3 land pattern = manufacturer (UltraLibrarian)" .yellow
+      (is.filter fun | .landPattern .. => true | _ => false),
+    row "Board" "Preferred land pattern (IPC nominal / manufacturer), not a variant" .yellow
+      (is.filter fun | .variantFootprint .. => true | _ => false) ]
+
+def describe3 : Fit3D.Issue → String
+  | .bodyOutsideCourtyard r => s!"{r}: 3D body sticks out of its courtyard"
+  | .courtyardsOverlap a b => s!"{a} and {b}: courtyards overlap"
+  | .padsOffBoard r => s!"{r}: pads outside the board outline"
+  | .bodyOffBoard r => s!"{r}: 3D body hangs over the board edge"
+  | .unsupportedRotation r => s!"{r}: rotation is not a right angle"
+  | .drillTooSmall r => s!"{r}: drill below 8 mil"
+  | .outlineNotConvex => "board outline missing or not convex"
+
+def rowS (sec check : String) (color : Color) (msgs : List String) : Row :=
+  if msgs.isEmpty then ⟨sec, check, .green, "proved"⟩
+  else ⟨sec, check, color, String.intercalate "; " (msgs.take 6) ++
+    (if msgs.length > 6 then s!"; … (+{msgs.length - 6})" else "")⟩
+
+/-- Rows about the 2D → 3D fit: bodies, courtyards, outline, drills. -/
+def fitRows (outline : List (Int × Int)) (ps : List Fit3D.Part) : List Row :=
+  let is := Fit3D.fit3d outline ps
+  let sel (f : Fit3D.Issue → Bool) : List String := (is.filter f).map describe3
+  [ rowS "3D fit" "Every 3D body sits inside its own courtyard" .red
+      (sel fun | .bodyOutsideCourtyard _ | .unsupportedRotation _ => true | _ => false),
+    rowS "3D fit" "No two courtyards overlap, so no two bodies can collide" .red
+      (sel fun | .courtyardsOverlap .. => true | _ => false),
+    rowS "3D fit" "Pads and bodies are on the board (inside the outline)" .red
+      (sel fun | .padsOffBoard _ | .bodyOffBoard _ | .outlineNotConvex => true | _ => false),
+    rowS "3D fit" "Every drilled hole is at least 8 mil" .red
+      (sel fun | .drillTooSmall _ => true | _ => false),
+    rowS "3D fit" "Every part has a 3D body model" .yellow
+      ((Fit3D.noBody ps).map fun r => s!"{r}: no 3D model in the library") ]
 
 /-- Rows about the design package (BOM, stack-up, specs). Computed, not hard-coded. -/
 def packageRows : List Row :=
@@ -103,7 +136,8 @@ def packageRows : List Row :=
     if Specs.pllSys.outKHz / 2 ≤ Specs.flashMaxQuadMHz * 1000 then ⟨"Specs", "QSPI clock within W25Q128 limit", .green, "62.5 ≤ 133 MHz"⟩
     else ⟨"Specs", "QSPI clock within W25Q128 limit", .red, "overclocked"⟩ ]
 
-def report (b : List Footprint) : List Row := boardRows b ++ packageRows
+def report (b : List Footprint) (outline : List (Int × Int)) (ps : List Fit3D.Part) : List Row :=
+  boardRows b ++ fitRows outline ps ++ packageRows
 
 def overall (rows : List Row) : Color := rows.foldl (fun c r => c.worst r.color) .green
 

@@ -1,0 +1,817 @@
+{
+ "builds": [
+  {
+   "id": 0,
+   "strategy": "preferred",
+   "changed_line": null,
+   "verdict": "YELLOW",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "YELLOW",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [],
+   "pad_area_mm2": 217.733,
+   "changed": []
+  },
+  {
+   "id": 1,
+   "strategy": "hand",
+   "changed_line": null,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 7,
+   "reasons": [
+    "No two courtyards overlap, so no two bodies can collide: C14 and U4: courtyards overlap; R13 and Y1: courtyards overlap; R14 and Y1: courtyards overlap; R16 and Y1: courtyards overlap; R17 and Y1: courtyards overlap; R5 and R6: courtyards overlap; \u2026 (+1)",
+    "Every drilled hole is at least 8 mil: U1: drill below 8 mil"
+   ],
+   "pad_area_mm2": 250.676,
+   "changed": []
+  },
+  {
+   "id": 2,
+   "strategy": "naive",
+   "changed_line": null,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [
+    "Footprint package matches the BOM part number: U1: footprint QFN-56-1EP_7x7mm_P0.4mm_EP5.6x5.6mm, part needs QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm; U3: footprint SOIC-8_3.9x4.9mm_P1.27mm, part needs SOIC-8_5.23x5.23mm_P1.27mm"
+   ],
+   "pad_area_mm2": 255.536,
+   "changed": []
+  },
+  {
+   "id": 3,
+   "strategy": "ai",
+   "changed_line": null,
+   "verdict": "YELLOW",
+   "name": "ai-1 keep it nominal",
+   "rationale": "IPC-nominal land patterns everywhere and the manufacturer pattern for the flash: the safest choice for reflow assembly.",
+   "board_verdict": "YELLOW",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [],
+   "pad_area_mm2": 217.733,
+   "changed": []
+  },
+  {
+   "id": 4,
+   "strategy": "ai",
+   "changed_line": null,
+   "verdict": "RED",
+   "name": "ai-2 thermal vias under the RP2040",
+   "rationale": "Use KiCad's thermal-via QFN footprint so the exposed pad can dump heat into the inner planes.",
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [
+    "Every drilled hole is at least 8 mil: U1: drill below 8 mil"
+   ],
+   "pad_area_mm2": 227.313,
+   "changed": []
+  },
+  {
+   "id": 5,
+   "strategy": "ai",
+   "changed_line": null,
+   "verdict": "YELLOW",
+   "name": "ai-3 hand-solder the big passives",
+   "rationale": "The 0603 and 0805 parts are the ones a person would rework by hand, so give only those the longer hand-solder pads.",
+   "board_verdict": "YELLOW",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [],
+   "pad_area_mm2": 220.76,
+   "changed": []
+  },
+  {
+   "id": 6,
+   "strategy": "ai",
+   "changed_line": null,
+   "verdict": "YELLOW",
+   "name": "ai-4 wider SOIC for the flash",
+   "rationale": "KiCad's 5.275 mm SOIC-8 footprint also targets 208 mil bodies and has slightly longer pads.",
+   "board_verdict": "YELLOW",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [],
+   "pad_area_mm2": 218.961,
+   "changed": []
+  },
+  {
+   "id": 7,
+   "strategy": "ai",
+   "changed_line": null,
+   "verdict": "RED",
+   "name": "ai-5 hand-solder the crystal",
+   "rationale": "The 3225 crystal has pads under the body; the hand-solder footprint exposes them for an iron.",
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 4,
+   "reasons": [
+    "No two courtyards overlap, so no two bodies can collide: R13 and Y1: courtyards overlap; R14 and Y1: courtyards overlap; R17 and Y1: courtyards overlap; R7 and Y1: courtyards overlap"
+   ],
+   "pad_area_mm2": 226.133,
+   "changed": []
+  },
+  {
+   "id": 8,
+   "strategy": "ai",
+   "changed_line": null,
+   "verdict": "YELLOW",
+   "name": "ai-6 hand-solder LEDs and regulator",
+   "rationale": "LEDs are polarised and often replaced, and the regulator is the hottest part; longer pads make both easier to rework.",
+   "board_verdict": "YELLOW",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [],
+   "pad_area_mm2": 221.155,
+   "changed": []
+  },
+  {
+   "id": 9,
+   "strategy": "one-variant",
+   "changed_line": 1,
+   "verdict": "YELLOW",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "YELLOW",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [],
+   "pad_area_mm2": 218.398,
+   "changed": []
+  },
+  {
+   "id": 10,
+   "strategy": "one-wrong",
+   "changed_line": 1,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [
+    "Footprint package matches the BOM part number: C1: footprint C_0402_1005Metric, part needs C_0603_1608Metric; C2: footprint C_0402_1005Metric, part needs C_0603_1608Metric"
+   ],
+   "pad_area_mm2": 215.702,
+   "changed": []
+  },
+  {
+   "id": 11,
+   "strategy": "one-variant",
+   "changed_line": 2,
+   "verdict": "YELLOW",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "YELLOW",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [],
+   "pad_area_mm2": 219.763,
+   "changed": []
+  },
+  {
+   "id": 12,
+   "strategy": "one-wrong",
+   "changed_line": 2,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [
+    "Footprint package matches the BOM part number: C14: footprint C_0603_1608Metric, part needs C_0805_2012Metric; C17: footprint C_0603_1608Metric, part needs C_0805_2012Metric; C3: footprint C_0603_1608Metric, part needs C_0805_2012Metric; C5: footprint C_0603_1608Metric, part needs C_0805_2012Metric"
+   ],
+   "pad_area_mm2": 212.973,
+   "changed": []
+  },
+  {
+   "id": 13,
+   "strategy": "one-variant",
+   "changed_line": 3,
+   "verdict": "YELLOW",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "YELLOW",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [],
+   "pad_area_mm2": 219.686,
+   "changed": []
+  },
+  {
+   "id": 14,
+   "strategy": "one-wrong",
+   "changed_line": 3,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 7,
+   "reasons": [
+    "Footprint package matches the BOM part number: C10: footprint C_0603_1608Metric, part needs C_0402_1005Metric; C11: footprint C_0603_1608Metric, part needs C_0402_1005Metric; C12: footprint C_0603_1608Metric, part needs C_0402_1005Metric; C13: footprint C_0603_1608Metric, part needs C_0402_1005Metric; C15: footprint C_0603_1608Metric, part needs C_0402_1005Metric; C16: footprint C_0603_1608Metric, part needs C_0402_1005Metric; \u2026 (+3)",
+    "No two courtyards overlap, so no two bodies can collide: C12 and C13: courtyards overlap; C12 and C4: courtyards overlap; C12 and C8: courtyards overlap; C12 and R6: courtyards overlap; C13 and C4: courtyards overlap; C13 and C8: courtyards overlap; \u2026 (+1)"
+   ],
+   "pad_area_mm2": 226.873,
+   "changed": []
+  },
+  {
+   "id": 15,
+   "strategy": "one-variant",
+   "changed_line": 4,
+   "verdict": "YELLOW",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "YELLOW",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [],
+   "pad_area_mm2": 218.167,
+   "changed": []
+  },
+  {
+   "id": 16,
+   "strategy": "one-wrong",
+   "changed_line": 4,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 1,
+   "reasons": [
+    "Footprint package matches the BOM part number: C6: footprint C_0603_1608Metric, part needs C_0402_1005Metric; C7: footprint C_0603_1608Metric, part needs C_0402_1005Metric",
+    "No two courtyards overlap, so no two bodies can collide: C7 and R13: courtyards overlap"
+   ],
+   "pad_area_mm2": 219.764,
+   "changed": []
+  },
+  {
+   "id": 17,
+   "strategy": "one-variant",
+   "changed_line": 5,
+   "verdict": "YELLOW",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "YELLOW",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [],
+   "pad_area_mm2": 220.06,
+   "changed": []
+  },
+  {
+   "id": 18,
+   "strategy": "one-variant",
+   "changed_line": 8,
+   "verdict": "YELLOW",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "YELLOW",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [],
+   "pad_area_mm2": 218.181,
+   "changed": []
+  },
+  {
+   "id": 19,
+   "strategy": "one-wrong",
+   "changed_line": 8,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 1,
+   "reasons": [
+    "Footprint package matches the BOM part number: R1: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R2: footprint R_0603_1608Metric, part needs R_0402_1005Metric",
+    "No two courtyards overlap, so no two bodies can collide: J1 and R2: courtyards overlap"
+   ],
+   "pad_area_mm2": 219.391,
+   "changed": []
+  },
+  {
+   "id": 20,
+   "strategy": "one-variant",
+   "changed_line": 9,
+   "verdict": "YELLOW",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "YELLOW",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [],
+   "pad_area_mm2": 218.065,
+   "changed": []
+  },
+  {
+   "id": 21,
+   "strategy": "one-wrong",
+   "changed_line": 9,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [
+    "Footprint package matches the BOM part number: R4: footprint R_0402_1005Metric, part needs R_0603_1608Metric"
+   ],
+   "pad_area_mm2": 216.904,
+   "changed": []
+  },
+  {
+   "id": 22,
+   "strategy": "one-variant",
+   "changed_line": 10,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 1,
+   "reasons": [
+    "No two courtyards overlap, so no two bodies can collide: R5 and R6: courtyards overlap"
+   ],
+   "pad_area_mm2": 218.181,
+   "changed": []
+  },
+  {
+   "id": 23,
+   "strategy": "one-wrong",
+   "changed_line": 10,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 1,
+   "reasons": [
+    "Footprint package matches the BOM part number: R5: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R6: footprint R_0603_1608Metric, part needs R_0402_1005Metric",
+    "No two courtyards overlap, so no two bodies can collide: C12 and R6: courtyards overlap; R5 and R6: courtyards overlap"
+   ],
+   "pad_area_mm2": 219.391,
+   "changed": []
+  },
+  {
+   "id": 24,
+   "strategy": "one-variant",
+   "changed_line": 11,
+   "verdict": "YELLOW",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "YELLOW",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [],
+   "pad_area_mm2": 218.181,
+   "changed": []
+  },
+  {
+   "id": 25,
+   "strategy": "one-wrong",
+   "changed_line": 11,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [
+    "Footprint package matches the BOM part number: R7: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R8: footprint R_0603_1608Metric, part needs R_0402_1005Metric"
+   ],
+   "pad_area_mm2": 219.391,
+   "changed": []
+  },
+  {
+   "id": 26,
+   "strategy": "one-variant",
+   "changed_line": 12,
+   "verdict": "YELLOW",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "YELLOW",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [],
+   "pad_area_mm2": 218.405,
+   "changed": []
+  },
+  {
+   "id": 27,
+   "strategy": "one-wrong",
+   "changed_line": 12,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 1,
+   "reasons": [
+    "Footprint package matches the BOM part number: R10: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R19: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R9: footprint R_0603_1608Metric, part needs R_0402_1005Metric",
+    "No two courtyards overlap, so no two bodies can collide: R10 and U1: courtyards overlap"
+   ],
+   "pad_area_mm2": 220.219,
+   "changed": []
+  },
+  {
+   "id": 28,
+   "strategy": "one-variant",
+   "changed_line": 13,
+   "verdict": "YELLOW",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "YELLOW",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [],
+   "pad_area_mm2": 219.301,
+   "changed": []
+  },
+  {
+   "id": 29,
+   "strategy": "one-wrong",
+   "changed_line": 13,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 8,
+   "reasons": [
+    "Footprint package matches the BOM part number: R12: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R13: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R14: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R15: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R16: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R17: footprint R_0603_1608Metric, part needs R_0402_1005Metric; \u2026 (+1)",
+    "No two courtyards overlap, so no two bodies can collide: C6 and R16: courtyards overlap; R12 and R13: courtyards overlap; R13 and R14: courtyards overlap; R13 and R18: courtyards overlap; R14 and R16: courtyards overlap; R14 and R18: courtyards overlap; \u2026 (+2)"
+   ],
+   "pad_area_mm2": 223.535,
+   "changed": []
+  },
+  {
+   "id": 30,
+   "strategy": "one-wrong",
+   "changed_line": 17,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [
+    "Footprint package matches the BOM part number: U1: footprint QFN-56-1EP_7x7mm_P0.4mm_EP5.6x5.6mm, part needs QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm"
+   ],
+   "pad_area_mm2": 252.627,
+   "changed": []
+  },
+  {
+   "id": 31,
+   "strategy": "one-variant",
+   "changed_line": 18,
+   "verdict": "YELLOW",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "YELLOW",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [],
+   "pad_area_mm2": 218.828,
+   "changed": []
+  },
+  {
+   "id": 32,
+   "strategy": "one-wrong",
+   "changed_line": 18,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [
+    "Footprint package matches the BOM part number: U2: footprint SOT-23-6, part needs SOT-23-5"
+   ],
+   "pad_area_mm2": 218.528,
+   "changed": []
+  },
+  {
+   "id": 33,
+   "strategy": "one-wrong",
+   "changed_line": 19,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [
+    "Footprint package matches the BOM part number: U3: footprint SOIC-8_3.9x4.9mm_P1.27mm, part needs SOIC-8_5.23x5.23mm_P1.27mm"
+   ],
+   "pad_area_mm2": 220.641,
+   "changed": []
+  },
+  {
+   "id": 34,
+   "strategy": "one-variant",
+   "changed_line": 20,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 1,
+   "reasons": [
+    "No two courtyards overlap, so no two bodies can collide: C14 and U4: courtyards overlap"
+   ],
+   "pad_area_mm2": 219.047,
+   "changed": []
+  },
+  {
+   "id": 35,
+   "strategy": "one-wrong",
+   "changed_line": 20,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [
+    "Footprint package matches the BOM part number: U4: footprint SOT-23-5, part needs SOT-23-6",
+    "Every schematic pin is on the right net (schematic \u2194 PCB): U4: schematic pin 6 has no pad"
+   ],
+   "pad_area_mm2": 216.938,
+   "changed": []
+  },
+  {
+   "id": 36,
+   "strategy": "random",
+   "changed_line": null,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 8,
+   "reasons": [
+    "Footprint package matches the BOM part number: C10: footprint C_0603_1608Metric, part needs C_0402_1005Metric; C11: footprint C_0603_1608Metric, part needs C_0402_1005Metric; C12: footprint C_0603_1608Metric, part needs C_0402_1005Metric; C13: footprint C_0603_1608Metric, part needs C_0402_1005Metric; C15: footprint C_0603_1608Metric, part needs C_0402_1005Metric; C16: footprint C_0603_1608Metric, part needs C_0402_1005Metric; \u2026 (+7)",
+    "No two courtyards overlap, so no two bodies can collide: C12 and C13: courtyards overlap; C12 and C4: courtyards overlap; C12 and C8: courtyards overlap; C12 and R6: courtyards overlap; C13 and C4: courtyards overlap; C13 and C8: courtyards overlap; \u2026 (+2)",
+    "Every drilled hole is at least 8 mil: U1: drill below 8 mil"
+   ],
+   "pad_area_mm2": 246.711,
+   "changed": []
+  },
+  {
+   "id": 37,
+   "strategy": "random",
+   "changed_line": null,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 1,
+   "reasons": [
+    "No two courtyards overlap, so no two bodies can collide: C14 and U4: courtyards overlap"
+   ],
+   "pad_area_mm2": 231.367,
+   "changed": []
+  },
+  {
+   "id": 38,
+   "strategy": "random",
+   "changed_line": null,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 5,
+   "reasons": [
+    "Footprint package matches the BOM part number: U2: footprint SOT-23-6, part needs SOT-23-5; U3: footprint SOIC-8_7.5x5.85mm_P1.27mm, part needs SOIC-8_5.23x5.23mm_P1.27mm",
+    "No two courtyards overlap, so no two bodies can collide: C14 and U4: courtyards overlap; MH3 and U3: courtyards overlap; R5 and R6: courtyards overlap; R8 and U3: courtyards overlap; SW1 and U3: courtyards overlap",
+    "Every drilled hole is at least 8 mil: U1: drill below 8 mil"
+   ],
+   "pad_area_mm2": 237.438,
+   "changed": []
+  },
+  {
+   "id": 39,
+   "strategy": "random",
+   "changed_line": null,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 5,
+   "reasons": [
+    "Footprint package matches the BOM part number: U4: footprint SOT-23-5, part needs SOT-23-6",
+    "Every schematic pin is on the right net (schematic \u2194 PCB): U4: schematic pin 6 has no pad",
+    "No two courtyards overlap, so no two bodies can collide: R13 and Y1: courtyards overlap; R14 and Y1: courtyards overlap; R16 and Y1: courtyards overlap; R17 and Y1: courtyards overlap; R7 and Y1: courtyards overlap"
+   ],
+   "pad_area_mm2": 241.938,
+   "changed": []
+  },
+  {
+   "id": 40,
+   "strategy": "random",
+   "changed_line": null,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 5,
+   "reasons": [
+    "Footprint package matches the BOM part number: R4: footprint R_0402_1005Metric, part needs R_0603_1608Metric",
+    "No two courtyards overlap, so no two bodies can collide: R13 and Y1: courtyards overlap; R14 and Y1: courtyards overlap; R16 and Y1: courtyards overlap; R17 and Y1: courtyards overlap; R7 and Y1: courtyards overlap"
+   ],
+   "pad_area_mm2": 232.518,
+   "changed": []
+  },
+  {
+   "id": 41,
+   "strategy": "random",
+   "changed_line": null,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 8,
+   "reasons": [
+    "Footprint package matches the BOM part number: C10: footprint C_0603_1608Metric, part needs C_0402_1005Metric; C11: footprint C_0603_1608Metric, part needs C_0402_1005Metric; C12: footprint C_0603_1608Metric, part needs C_0402_1005Metric; C13: footprint C_0603_1608Metric, part needs C_0402_1005Metric; C15: footprint C_0603_1608Metric, part needs C_0402_1005Metric; C16: footprint C_0603_1608Metric, part needs C_0402_1005Metric; \u2026 (+5)",
+    "No two courtyards overlap, so no two bodies can collide: C12 and C13: courtyards overlap; C12 and C4: courtyards overlap; C12 and C8: courtyards overlap; C12 and R6: courtyards overlap; C13 and C4: courtyards overlap; C13 and C8: courtyards overlap; \u2026 (+2)",
+    "Every drilled hole is at least 8 mil: U1: drill below 8 mil"
+   ],
+   "pad_area_mm2": 243.205,
+   "changed": []
+  },
+  {
+   "id": 42,
+   "strategy": "random",
+   "changed_line": null,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 3,
+   "reasons": [
+    "Footprint package matches the BOM part number: R1: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R10: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R19: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R2: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R9: footprint R_0603_1608Metric, part needs R_0402_1005Metric",
+    "No two courtyards overlap, so no two bodies can collide: C17 and R19: courtyards overlap; J1 and R2: courtyards overlap; R10 and U1: courtyards overlap",
+    "Every drilled hole is at least 8 mil: U1: drill below 8 mil"
+   ],
+   "pad_area_mm2": 239.59,
+   "changed": []
+  },
+  {
+   "id": 43,
+   "strategy": "random",
+   "changed_line": null,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 6,
+   "reasons": [
+    "Footprint package matches the BOM part number: C14: footprint C_0603_1608Metric, part needs C_0805_2012Metric; C17: footprint C_0603_1608Metric, part needs C_0805_2012Metric; C3: footprint C_0603_1608Metric, part needs C_0805_2012Metric; C5: footprint C_0603_1608Metric, part needs C_0805_2012Metric",
+    "No two courtyards overlap, so no two bodies can collide: R13 and Y1: courtyards overlap; R14 and Y1: courtyards overlap; R16 and Y1: courtyards overlap; R17 and Y1: courtyards overlap; R5 and R6: courtyards overlap; R7 and Y1: courtyards overlap"
+   ],
+   "pad_area_mm2": 233.186,
+   "changed": []
+  },
+  {
+   "id": 44,
+   "strategy": "random",
+   "changed_line": null,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 0,
+   "reasons": [
+    "Every drilled hole is at least 8 mil: U1: drill below 8 mil"
+   ],
+   "pad_area_mm2": 232.772,
+   "changed": []
+  },
+  {
+   "id": 45,
+   "strategy": "random",
+   "changed_line": null,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 1,
+   "reasons": [
+    "Footprint package matches the BOM part number: U2: footprint SOT-23-6, part needs SOT-23-5",
+    "No two courtyards overlap, so no two bodies can collide: R5 and R6: courtyards overlap",
+    "Every drilled hole is at least 8 mil: U1: drill below 8 mil"
+   ],
+   "pad_area_mm2": 232.077,
+   "changed": []
+  },
+  {
+   "id": 46,
+   "strategy": "random",
+   "changed_line": null,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 5,
+   "reasons": [
+    "Footprint package matches the BOM part number: R4: footprint R_0402_1005Metric, part needs R_0603_1608Metric; U2: footprint SOT-23-6, part needs SOT-23-5",
+    "No two courtyards overlap, so no two bodies can collide: C14 and U4: courtyards overlap; R13 and Y1: courtyards overlap; R14 and Y1: courtyards overlap; R17 and Y1: courtyards overlap; R7 and Y1: courtyards overlap"
+   ],
+   "pad_area_mm2": 232.142,
+   "changed": []
+  },
+  {
+   "id": 47,
+   "strategy": "random",
+   "changed_line": null,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 16,
+   "reasons": [
+    "Footprint package matches the BOM part number: C1: footprint C_0402_1005Metric, part needs C_0603_1608Metric; C2: footprint C_0402_1005Metric, part needs C_0603_1608Metric; R12: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R13: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R14: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R15: footprint R_0603_1608Metric, part needs R_0402_1005Metric; \u2026 (+6)",
+    "No two courtyards overlap, so no two bodies can collide: C12 and R6: courtyards overlap; C6 and R16: courtyards overlap; R12 and R13: courtyards overlap; R12 and Y1: courtyards overlap; R13 and R14: courtyards overlap; R13 and R18: courtyards overlap; \u2026 (+10)"
+   ],
+   "pad_area_mm2": 237.064,
+   "changed": []
+  },
+  {
+   "id": 48,
+   "strategy": "random",
+   "changed_line": null,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 9,
+   "reasons": [
+    "Footprint package matches the BOM part number: R12: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R13: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R14: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R15: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R16: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R17: footprint R_0603_1608Metric, part needs R_0402_1005Metric; \u2026 (+1)",
+    "No two courtyards overlap, so no two bodies can collide: C6 and R16: courtyards overlap; R12 and R13: courtyards overlap; R13 and R14: courtyards overlap; R13 and R18: courtyards overlap; R14 and R16: courtyards overlap; R14 and R18: courtyards overlap; \u2026 (+3)",
+    "Every drilled hole is at least 8 mil: U1: drill below 8 mil"
+   ],
+   "pad_area_mm2": 238.991,
+   "changed": []
+  },
+  {
+   "id": 49,
+   "strategy": "random",
+   "changed_line": null,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 5,
+   "reasons": [
+    "Footprint package matches the BOM part number: R5: footprint R_0603_1608Metric, part needs R_0402_1005Metric; R6: footprint R_0603_1608Metric, part needs R_0402_1005Metric; U1: footprint QFN-56-1EP_7x7mm_P0.4mm_EP5.6x5.6mm, part needs QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm; U2: footprint SOT-23-6, part needs SOT-23-5; U3: footprint SOIC-8_7.5x5.85mm_P1.27mm, part needs SOIC-8_5.23x5.23mm_P1.27mm",
+    "No two courtyards overlap, so no two bodies can collide: C12 and R6: courtyards overlap; MH3 and U3: courtyards overlap; R5 and R6: courtyards overlap; R8 and U3: courtyards overlap; SW1 and U3: courtyards overlap"
+   ],
+   "pad_area_mm2": 261.864,
+   "changed": []
+  },
+  {
+   "id": 50,
+   "strategy": "random",
+   "changed_line": null,
+   "verdict": "RED",
+   "name": null,
+   "rationale": null,
+   "board_verdict": "RED",
+   "certified": true,
+   "collisions": 1,
+   "reasons": [
+    "No two courtyards overlap, so no two bodies can collide: R5 and R6: courtyards overlap",
+    "Every drilled hole is at least 8 mil: U1: drill below 8 mil"
+   ],
+   "pad_area_mm2": 234.354,
+   "changed": []
+  }
+ ],
+ "llm": null
+}

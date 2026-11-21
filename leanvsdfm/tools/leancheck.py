@@ -26,22 +26,94 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ANSI = {"GREEN": "\033[42;30m GREEN  \033[0m", "YELLOW": "\033[43;30m YELLOW \033[0m", "RED": "\033[41;97m  RED   \033[0m"}
 
 
+def _nm_box(x0, y0, x1, y1):
+    return f"⟨{int(x0)}, {int(y0)}, {int(x1)}, {int(y1)}⟩"
+
+
+def _courtyard(fp):
+    """Courtyard rectangle from the graphic's real geometry (no line-width inflation)."""
+    xs, ys = [], []
+    for g in fp.GraphicalItems():
+        if g.GetLayer() not in (pcbnew.F_CrtYd, pcbnew.B_CrtYd):
+            continue
+        if g.GetShape() == pcbnew.SHAPE_T_CIRCLE:
+            c, r = g.GetCenter(), g.GetRadius()
+            xs += [c.x - r, c.x + r]
+            ys += [c.y - r, c.y + r]
+        elif g.GetShape() in (pcbnew.SHAPE_T_SEGMENT, pcbnew.SHAPE_T_RECT):
+            xs += [g.GetStart().x, g.GetEnd().x]
+            ys += [g.GetStart().y, g.GetEnd().y]
+        else:
+            bb, w = g.GetBoundingBox(), g.GetWidth() // 2
+            xs += [bb.GetLeft() + w, bb.GetRight() - w]
+            ys += [bb.GetTop() + w, bb.GetBottom() - w]
+    if not xs:
+        bb = fp.GetBoundingBox(False, False)
+        xs, ys = [bb.GetLeft(), bb.GetRight()], [bb.GetTop(), bb.GetBottom()]
+    return min(xs), min(ys), max(xs), max(ys)
+
+
+def _outline(board):
+    segs = [((d.GetStart().x, d.GetStart().y), (d.GetEnd().x, d.GetEnd().y)) for d in board.GetDrawings()
+            if d.GetLayer() == pcbnew.Edge_Cuts and d.GetShape() == pcbnew.SHAPE_T_SEGMENT]
+    if not segs:
+        return []
+    loop, cur = [segs[0][0]], segs[0][1]
+    rest = segs[1:]
+    while rest and cur != loop[0]:
+        loop.append(cur)
+        for i, (a, b) in enumerate(rest):
+            if a == cur or b == cur:
+                cur = b if a == cur else a
+                rest.pop(i)
+                break
+        else:
+            return []
+    return loop
+
+
 def board_term(path):
-    """The board as a Lean term (List Footprint), integer nanometres."""
+    """The board as Lean terms: footprints with pads, parts with 3D data, and the outline (nm)."""
     q = json.dumps
+    bbox = json.load(open(os.path.join(ROOT, "models3d", "bbox.json")))["models"]
     b = pcbnew.LoadBoard(path)
-    fps = []
+    fps, parts = [], []
     for fp in sorted(b.GetFootprints(), key=lambda f: f.GetReference()):
-        o = fp.GetPosition()
-        pads = []
+        pads, px, py, drills = [], [], [], []
         for p in fp.Pads():
+            bb = p.GetBoundingBox()
+            px += [bb.GetLeft(), bb.GetRight()]
+            py += [bb.GetTop(), bb.GetBottom()]
+            dr = p.GetDrillSize()
+            if dr.x > 0:
+                drills.append(min(dr.x, dr.y) if dr.y > 0 else dr.x)
             if not p.GetNumber():
                 continue
-            d, s = p.GetPosition() - o, p.GetSize()
+            d, s = p.GetPos0(), p.GetSize()  # footprint-local (rotation-invariant)
             pads.append(f"⟨{q(p.GetNumber())}, {q(p.GetNetname())}, {int(d.x)}, {int(d.y)}, {int(s.x)}, {int(s.y)}⟩")
-        fps.append(f"⟨{q(fp.GetReference())}, {q(str(fp.GetFPID().GetLibItemName()))}, "
+        ref = fp.GetReference()
+        fps.append(f"⟨{q(ref)}, {q(str(fp.GetFPID().GetLibItemName()))}, "
                    f"{int(fp.GetOrientationDegrees())}, [{', '.join(pads)}]⟩")
-    return "[" + ",\n  ".join(fps) + "]", len(fps)
+        model, height = "none", 0
+        ms = list(fp.Models())
+        if ms:
+            m = ms[0]
+            name = os.path.splitext(os.path.basename(str(m.m_Filename)))[0]
+            plain = all(abs(v) < 1e-9 for v in (m.m_Offset.x, m.m_Offset.y, m.m_Offset.z, m.m_Rotation.x, m.m_Rotation.y,
+                                                 m.m_Rotation.z)) and all(abs(v - 1) < 1e-9 for v in (m.m_Scale.x, m.m_Scale.y, m.m_Scale.z))
+            if name in bbox and plain:
+                mn, mx = bbox[name]["min"], bbox[name]["max"]
+                model, height = f"(some {_nm_box(mn[0], mn[1], mx[0], mx[1])})", mx[2]
+        o = fp.GetPosition()
+        rot = fp.GetOrientationDegrees()
+        rot = int(round(rot)) if abs(rot - round(rot)) < 1e-6 else 1
+        parts.append(f"⟨{q(ref)}, {int(o.x)}, {int(o.y)}, {rot}, {_nm_box(*_courtyard(fp))}, "
+                     f"{_nm_box(min(px), min(py), max(px), max(py)) if px else _nm_box(o.x, o.y, o.x, o.y)}, {model}, {height}, "
+                     f"{min(drills) if drills else 0}⟩")
+    outline = "[" + ", ".join(f"({x}, {y})" for x, y in _outline(b)) + "]"
+    thickness = int(b.GetDesignSettings().GetBoardThickness())
+    return {"fps": "[" + ",\n  ".join(fps) + "]", "parts": "[" + ",\n  ".join(parts) + "]", "outline": outline,
+            "n": len(fps), "thickness_nm": thickness}
 
 
 def lean(src):
@@ -59,7 +131,9 @@ def lean(src):
 HEADER = """import LeanVsDFM
 open LeanVsDFM.Pcb LeanVsDFM.Parts LeanVsDFM.Report
 set_option maxRecDepth 100000
-def board : List Footprint := {board}
+def board : List Footprint := {fps}
+def parts : List LeanVsDFM.Fit3D.Part := {parts}
+def outline : List (Int × Int) := {outline}
 """
 
 
@@ -91,6 +165,7 @@ code{{color:#b9a7ff}} .cert{{margin-top:16px;color:var(--dim)}}
 <div class="big">{data['overall']}</div>
 <table><tr><th>Section</th><th>Check</th><th>Result</th><th>Detail</th></tr>{rows}</table>
 <div class="cert">{cert}</div>
+<div class="cert">3D envelope: board {data['envelope']['board_thickness_mm']} mm + tallest body {data['envelope']['tallest_body_mm']} mm = {data['envelope']['total_height_mm']} mm.{' Theorem proved for this board: no two part bodies overlap.' if data.get('no_collision_theorem') else ''}</div>
 </main></body></html>"""
     open(path, "w").write(doc)
 
@@ -101,23 +176,43 @@ def main():
         return 2
     src = sys.argv[1]
     out_html = sys.argv[sys.argv.index("--html") + 1] if "--html" in sys.argv else None
-    term, nfp = board_term(src)
+    t = board_term(src)
+    nfp = t["n"]
+    head = HEADER.format(fps=t["fps"], parts=t["parts"], outline=t["outline"])
 
     # 1. evaluate
-    p = lean(HEADER.format(board=term) + "#eval IO.println (toJson (report board))\n#eval IO.println (repr (verify board))\n")
+    p = lean(head + "#eval IO.println (toJson (report board outline parts))\n"
+                    "#eval IO.println (repr (LeanVsDFM.Fit3D.maxHeight parts))\n"
+                    "#eval IO.println \"---\"\n#eval IO.println (repr (verify board))\n"
+                    "#eval IO.println \"---\"\n#eval IO.println (repr (LeanVsDFM.Fit3D.fit3d outline parts))\n")
     if p.returncode != 0:
         print(p.stdout, p.stderr)
         return 2
-    lines = p.stdout.strip().split("\n")
-    data = json.loads(lines[0])
-    findings = "\n".join(lines[1:])
+    chunks = p.stdout.strip().split("\n---\n")
+    first = chunks[0].split("\n")
+    data = json.loads(first[0])
+    max_h = int(first[1])
+    findings, fit = chunks[1], chunks[2]
+    fits = fit.strip() == "[]"
+    data["envelope"] = {"board_thickness_mm": round(t["thickness_nm"] / 1e6, 4), "tallest_body_mm": round(max_h / 1e6, 3),
+                        "total_height_mm": round((t["thickness_nm"] + max_h) / 1e6, 3)}
 
-    # 2. certify
-    c = lean(HEADER.format(board=term) +
+    # 2. certify: the findings are theorems, and (when the fit is clean) so is "no two bodies overlap"
+    c = lean(head +
              f"theorem certified : verify board = {findings} := by decide +kernel\n"
-             f"theorem certified_overall : (overall (report board)).name = \"{data['overall']}\" := by decide +kernel\n")
+             f"theorem certified_fit : LeanVsDFM.Fit3D.fit3d outline parts = {fit} := by decide +kernel\n"
+             f"theorem certified_overall : (overall (report board outline parts)).name = \"{data['overall']}\" := by decide +kernel\n"
+             + ("theorem certified_no_collision : parts.Pairwise LeanVsDFM.Fit3D.bodySep :=\n"
+                "  LeanVsDFM.Fit3D.bodies_never_collide _ (by decide +kernel)\n" if fits else ""))
     certified = c.returncode == 0
+    data["no_collision_theorem"] = bool(fits and certified)
 
+    if "--json" in sys.argv:
+        clean = lambda txt: [l.strip().strip(",[]") for l in txt.splitlines() if l.strip().strip(",[]")]
+        print(json.dumps({"overall": data["overall"], "rows": data["rows"], "certified": certified,
+                          "issues": clean(findings), "fit_issues": clean(fit), "envelope": data["envelope"],
+                          "no_collision_theorem": data["no_collision_theorem"]}))
+        return 0
     print(f"\nleancheck  {os.path.basename(src)}  ({nfp} footprints, Sierrathon BOM parts only)\n")
     sec = None
     for r in data["rows"]:
@@ -129,6 +224,9 @@ def main():
             print(f"              {r['detail']}")
     print(f"\n  OVERALL {ANSI[data['overall']]}   "
           + ("certified by the Lean kernel (decide +kernel)" if certified else "NOT certified: " + c.stdout[-300:]))
+    e = data["envelope"]
+    print(f"  3D envelope: board {e['board_thickness_mm']} mm + tallest body {e['tallest_body_mm']} mm = {e['total_height_mm']} mm"
+          + ("   | theorem: no two bodies overlap" if data["no_collision_theorem"] else ""))
     if out_html:
         write_html(out_html, data, src, certified, nfp)
         print(f"  report: {out_html}")
