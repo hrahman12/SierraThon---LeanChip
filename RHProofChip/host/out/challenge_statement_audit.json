@@ -1,0 +1,77 @@
+{
+  "RiemannHypothesis": {
+    "found": true,
+    "kind": "def",
+    "type": "Sort 0",
+    "type_fingerprint": "163acc3afa633730d3add59a6470285e9436b2bed31dc36c031f31b99641e1b5",
+    "value": "∀ (s : @Complex), ∀ (x._@.Mathlib.NumberTheory.LSeries.RiemannZeta.1380004773._hygCtx._hyg.8 : (@Eq.{(0+1)} @Complex (@riemannZeta s) (@OfNat.ofNat.{0} @Complex 0 (@Zero.toOfNat0.{0} @Complex @Complex.instZero)))), ∀ (x._@.Mathlib.NumberTheory.LSeries.RiemannZeta.1380004773._hygCtx._hyg.15 : (@Not (@Exists.{(0+1)} @Nat λ (n : @Nat), (@Eq.{(0+1)} @Complex s (@HMul.hMul.{0, 0, 0} @Complex @Complex @Complex (@instHMul.{0} @Complex @Complex.instMul) (@Neg.neg.{0} @Complex @Complex.instNeg (@OfNat.ofNat.{0} @Complex 2 (@instOfNatAtLeastTwo.{0} @Complex 2 @Complex.instNatCast @RiemannHypothesis._proof_1))) (@HAdd.hAdd.{0, 0, 0} @Complex @Complex @Complex (@instHAdd.{0} @Complex @Complex.instAdd) (@Nat.cast.{0} @Complex @Complex.instNatCast n) (@OfNat.ofNat.{0} @Complex 1 (@One.toOfNat1.{0} @Complex @Complex.instOne)))))))), ∀ (x._@.Mathlib.NumberTheory.LSeries.RiemannZeta.1380004773._hygCtx._hyg.39 : (@Ne.{(0+1)} @Complex s (@OfNat.ofNat.{0} @Complex 1 (@One.toOfNat1.{0} @Complex @Complex.instOne)))), (@Eq.{(0+1)} @Real (@Complex.re s) (@HDiv.hDiv.{0, 0, 0} @Real @Real @Real (@instHDiv.{0} @Real (@DivInvMonoid.toDiv.{0} @Real @Real.instDivInvMonoid)) (@OfNat.ofNat.{0} @Real 1 (@One.toOfNat1.{0} @Real @Real.instOne)) (@OfNat.ofNat.{0} @Real 2 (@instOfNatAtLeastTwo.{0} @Real 2 @Real.instNatCast @RiemannHypothesis._proof_1))))",
+    "value_fingerprint": "351d16534a214b123ee5cd1e8f100602885b93d1d29f1e602bf835a3e97e5a24"
+  },
+  "riemannHypothesis": {
+    "found": true,
+    "kind": "thm",
+    "type": "@RiemannHypothesis",
+    "type_fingerprint": "6bc0099b155854a80e4da90268ba4af4871b9972788af43af1899465c594873c",
+    "proof_head": "sorryAx"
+  },
+  "riemannZeta_eq_zero_re": {
+    "found": true,
+    "kind": "thm",
+    "type": "@RiemannZetaZerosOnLine",
+    "type_fingerprint": "754c2232cc832add8bd830009f5564afe021aa867a579489c11de636c300912f",
+    "proof_head": "sorryAx"
+  },
+  "LFunction_ne_zero_of_half_lt_re": {
+    "found": true,
+    "kind": "thm",
+    "type": "@DirichletLNonvanishingRightOfHalf",
+    "type_fingerprint": "656a473797b3675176349f6a225bfb03bc105a1a524b5ec583debe3bec1a2517",
+    "proof_head": "sorryAx"
+  },
+  "LFunction_eq_zero_re": {
+    "found": true,
+    "kind": "thm",
+    "type": "@DirichletLZerosOnLine",
+    "type_fingerprint": "58234c87b8fa4053536e390335904240ee897f131b439d45f1276a1c4abe4aaf",
+    "proof_head": "sorryAx"
+  },
+  "LFunction_eq_zero_re_of_isPrimitive": {
+    "found": true,
+    "kind": "thm",
+    "type": "@PrimitiveDirichletLZerosOnLine",
+    "type_fingerprint": "e2caa3a1965eaec713ed41963c641a6c53a93b86e5300929dee91b1e909191b2",
+    "proof_head": "sorryAx"
+  },
+  "RiemannZetaZerosOnLine": {
+    "found": true,
+    "kind": "def",
+    "type": "Sort 0",
+    "type_fingerprint": "163acc3afa633730d3add59a6470285e9436b2bed31dc36c031f31b99641e1b5",
+    "value": "∀ (s : @Complex), ∀ (a._@._internal._hyg.0 : (@Eq.{(0+1)} @Complex (@riemannZeta s) (@OfNat.ofNat.{0} @Complex 0 (@Zero.toOfNat0.{0} @Complex @Complex.instZero)))), ∀ (a._@._internal._hyg.0 : (@Not (@Exists.{(0+1)} @Nat λ (n : @Nat), (@Eq.{(0+1)} @Complex s (@HMul.hMul.{0, 0, 0} @Complex @Complex @Complex (@instHMul.{0} @Complex @Complex.instMul) (@Neg.neg.{0} @Complex @Complex.instNeg (@OfNat.ofNat.{0} @Complex 2 (@instOfNatAtLeastTwo.{0} @Complex 2 @Complex.instNatCast @RiemannZetaZerosOnLine._proof_1))) (@HAdd.hAdd.{0, 0, 0} @Complex @Complex @Complex (@instHAdd.{0} @Complex @Complex.instAdd) (@Nat.cast.{0} @Complex @Complex.instNatCast n) (@OfNat.ofNat.{0} @Complex 1 (@One.toOfNat1.{0} @Complex @Complex.instOne)))))))), ∀ (a._@._internal._hyg.0 : (@Ne.{(0+1)} @Complex s (@OfNat.ofNat.{0} @Complex 1 (@One.toOfNat1.{0} @Complex @Complex.instOne)))), (@Eq.{(0+1)} @Real (@Complex.re s) (@HDiv.hDiv.{0, 0, 0} @Real @Real @Real (@instHDiv.{0} @Real (@DivInvMonoid.toDiv.{0} @Real @Real.instDivInvMonoid)) (@OfNat.ofNat.{0} @Real 1 (@One.toOfNat1.{0} @Real @Real.instOne)) (@OfNat.ofNat.{0} @Real 2 (@instOfNatAtLeastTwo.{0} @Real 2 @Real.instNatCast @RiemannZetaZerosOnLine._proof_1))))",
+    "value_fingerprint": "84d6f2cacae7ad893ef7fc9b0b242f9cdb7ea95eaf596e9ceb4fa4721724b043"
+  },
+  "DirichletLNonvanishingRightOfHalf": {
+    "found": true,
+    "kind": "def",
+    "type": "Sort 0",
+    "type_fingerprint": "163acc3afa633730d3add59a6470285e9436b2bed31dc36c031f31b99641e1b5",
+    "value": "∀ (N : @Nat), ∀ [inst._@.Challenge.2658817955._hygCtx._hyg.8 : (@NeZero.{0} @Nat (@MulZeroClass.toZero.{0} @Nat @Nat.instMulZeroClass) N)], ∀ (χ : (@DirichletCharacter.{0} @Complex (@CommGroupWithZero.toCommMonoidWithZero.{0} @Complex (@Semifield.toCommGroupWithZero.{0} @Complex (@Field.toSemifield.{0} @Complex @Complex.instField))) N)), ∀ (s : @Complex), ∀ (a._@._internal._hyg.0 : (@LT.lt.{0} @Real @Real.instLT (@HDiv.hDiv.{0, 0, 0} @Real @Real @Real (@instHDiv.{0} @Real (@DivInvMonoid.toDiv.{0} @Real @Real.instDivInvMonoid)) (@OfNat.ofNat.{0} @Real 1 (@One.toOfNat1.{0} @Real @Real.instOne)) (@OfNat.ofNat.{0} @Real 2 (@instOfNatAtLeastTwo.{0} @Real 2 @Real.instNatCast @RiemannZetaZerosOnLine._proof_1))) (@Complex.re s))), ∀ (a._@._internal._hyg.0 : (@Or (@Ne.{(0+1)} (@DirichletCharacter.{0} @Complex (@CommGroupWithZero.toCommMonoidWithZero.{0} @Complex (@Semifield.toCommGroupWithZero.{0} @Complex (@Field.toSemifield.{0} @Complex @Complex.instField))) N) χ (@OfNat.ofNat.{0} (@DirichletCharacter.{0} @Complex (@CommGroupWithZero.toCommMonoidWithZero.{0} @Complex (@Semifield.toCommGroupWithZero.{0} @Complex (@Field.toSemifield.{0} @Complex @Complex.instField))) N) 1 (@One.toOfNat1.{0} (@DirichletCharacter.{0} @Complex (@CommGroupWithZero.toCommMonoidWithZero.{0} @Complex (@Semifield.toCommGroupWithZero.{0} @Complex (@Field.toSemifield.{0} @Complex @Complex.instField))) N) (@MulChar.hasOne.{0, 0} (@ZMod N) (@CommRing.toCommMonoid.{0} (@ZMod N) (@ZMod.commRing N)) @Complex (@CommGroupWithZero.toCommMonoidWithZero.{0} @Complex (@Semifield.toCommGroupWithZero.{0} @Complex (@Field.toSemifield.{0} @Complex @Complex.instField))))))) (@Ne.{(0+1)} @Complex s (@OfNat.ofNat.{0} @Complex 1 (@One.toOfNat1.{0} @Complex @Complex.instOne))))), (@Ne.{(0+1)} @Complex (@DirichletCharacter.LFunction N inst._@.Challenge.2658817955._hygCtx._hyg.8 χ s) (@OfNat.ofNat.{0} @Complex 0 (@Zero.toOfNat0.{0} @Complex @Complex.instZero)))",
+    "value_fingerprint": "9833ef38b3c03c267af10a8376ab368994820f7ddb0a2afaeeb60cad8bd416a6"
+  },
+  "DirichletLZerosOnLine": {
+    "found": true,
+    "kind": "def",
+    "type": "Sort 0",
+    "type_fingerprint": "163acc3afa633730d3add59a6470285e9436b2bed31dc36c031f31b99641e1b5",
+    "value": "∀ (N : @Nat), ∀ [inst._@.Challenge.2306055118._hygCtx._hyg.8 : (@NeZero.{0} @Nat (@MulZeroClass.toZero.{0} @Nat @Nat.instMulZeroClass) N)], ∀ (χ : (@DirichletCharacter.{0} @Complex (@CommGroupWithZero.toCommMonoidWithZero.{0} @Complex (@Semifield.toCommGroupWithZero.{0} @Complex (@Field.toSemifield.{0} @Complex @Complex.instField))) N)), ∀ (s : @Complex), ∀ (a._@._internal._hyg.0 : (@LT.lt.{0} @Real @Real.instLT (@OfNat.ofNat.{0} @Real 0 (@Zero.toOfNat0.{0} @Real @Real.instZero)) (@Complex.re s))), ∀ (a._@._internal._hyg.0 : (@LT.lt.{0} @Real @Real.instLT (@Complex.re s) (@OfNat.ofNat.{0} @Real 1 (@One.toOfNat1.{0} @Real @Real.instOne)))), ∀ (a._@._internal._hyg.0 : (@Eq.{(0+1)} @Complex (@DirichletCharacter.LFunction N inst._@.Challenge.2306055118._hygCtx._hyg.8 χ s) (@OfNat.ofNat.{0} @Complex 0 (@Zero.toOfNat0.{0} @Complex @Complex.instZero)))), (@Eq.{(0+1)} @Real (@Complex.re s) (@HDiv.hDiv.{0, 0, 0} @Real @Real @Real (@instHDiv.{0} @Real (@DivInvMonoid.toDiv.{0} @Real @Real.instDivInvMonoid)) (@OfNat.ofNat.{0} @Real 1 (@One.toOfNat1.{0} @Real @Real.instOne)) (@OfNat.ofNat.{0} @Real 2 (@instOfNatAtLeastTwo.{0} @Real 2 @Real.instNatCast @RiemannZetaZerosOnLine._proof_1))))",
+    "value_fingerprint": "bff4166ebfe3d5ec4a3cdbae447fed8fd83f0d3d1db4b4ab2814c006929414a2"
+  },
+  "PrimitiveDirichletLZerosOnLine": {
+    "found": true,
+    "kind": "def",
+    "type": "Sort 0",
+    "type_fingerprint": "163acc3afa633730d3add59a6470285e9436b2bed31dc36c031f31b99641e1b5",
+    "value": "∀ (N : @Nat), ∀ [inst._@.Challenge.1090354679._hygCtx._hyg.8 : (@NeZero.{0} @Nat (@MulZeroClass.toZero.{0} @Nat @Nat.instMulZeroClass) N)], ∀ (χ : (@DirichletCharacter.{0} @Complex (@CommGroupWithZero.toCommMonoidWithZero.{0} @Complex (@Semifield.toCommGroupWithZero.{0} @Complex (@Field.toSemifield.{0} @Complex @Complex.instField))) N)), ∀ (a._@._internal._hyg.0 : (@DirichletCharacter.IsPrimitive.{0} @Complex (@CommGroupWithZero.toCommMonoidWithZero.{0} @Complex (@Semifield.toCommGroupWithZero.{0} @Complex (@Field.toSemifield.{0} @Complex @Complex.instField))) N χ)), ∀ (s : @Complex), ∀ (a._@._internal._hyg.0 : (@LT.lt.{0} @Real @Real.instLT (@OfNat.ofNat.{0} @Real 0 (@Zero.toOfNat0.{0} @Real @Real.instZero)) (@Complex.re s))), ∀ (a._@._internal._hyg.0 : (@LT.lt.{0} @Real @Real.instLT (@Complex.re s) (@OfNat.ofNat.{0} @Real 1 (@One.toOfNat1.{0} @Real @Real.instOne)))), ∀ (a._@._internal._hyg.0 : (@Eq.{(0+1)} @Complex (@DirichletCharacter.LFunction N inst._@.Challenge.1090354679._hygCtx._hyg.8 χ s) (@OfNat.ofNat.{0} @Complex 0 (@Zero.toOfNat0.{0} @Complex @Complex.instZero)))), (@Eq.{(0+1)} @Real (@Complex.re s) (@HDiv.hDiv.{0, 0, 0} @Real @Real @Real (@instHDiv.{0} @Real (@DivInvMonoid.toDiv.{0} @Real @Real.instDivInvMonoid)) (@OfNat.ofNat.{0} @Real 1 (@One.toOfNat1.{0} @Real @Real.instOne)) (@OfNat.ofNat.{0} @Real 2 (@instOfNatAtLeastTwo.{0} @Real 2 @Real.instNatCast @RiemannZetaZerosOnLine._proof_1))))",
+    "value_fingerprint": "929b5fbfa9ad89e5403ea006ed5c8697f943e2cfa11540b134834926586d17a3"
+  }
+}

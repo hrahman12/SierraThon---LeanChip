@@ -1,0 +1,5 @@
+con-leche: stats: phases: parse 1.6s (index 0.0s), check 13.6s
+con-leche: stats: check pool: 13.591s wall, 4 workers, 64500 records, busy 54.235s (99.7%); tail 0.024s after the last start, 4 busy then, 0.040s worker-time in it (42.1%)
+con-leche: stats: slowest checks: 0.704s theorem _private.Init.Data.String.Lemmas.Lossy.0.String.fromUTF8Lossy_surrogate_append._proof_1_10 (#52123); 0.397s theorem _private.Init.Data.Vector.Extract.0.Vector.extract_append._proof_1 (#59973); 0.326s theorem _private.Init.Data.Array.Extract.0.Array.extract_append._proof_1_1 (#24325); 0.275s theorem _private.Init.Data.Vector.Extract.0.Vector.extract_extract._proof_1 (#59979); 0.201s theorem _private.Init.Data.Vector.Extract.0.Vector.extract_append_extract._proof_1 (#60013)
+con-leche: stats: peak RSS 0.38 GiB
+con-leche: accepted 64500 declarations (--verified)
