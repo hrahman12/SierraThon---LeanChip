@@ -1,0 +1,102 @@
+{
+ "about": "Builds proposed by Claude while this project was made with Claude Code. A proposal is a list of changes to the supplied Sierrathon design. Proposals are untrusted: only the Lean checker's verdict counts. Round 1 was written before Lean rated anything. Each later round was written after reading Lean's findings on the round before.",
+ "rounds": [
+  {
+   "round": 1,
+   "title": "First ideas, before Lean has said anything",
+   "proposals": [
+    {
+     "id": "r1-1",
+     "name": "Keep it nominal",
+     "rationale": "IPC-nominal land patterns everywhere and the manufacturer pattern for the flash: the safest choice for reflow assembly.",
+     "lines": {}
+    },
+    {
+     "id": "r1-2",
+     "name": "Thermal vias under the RP2040",
+     "rationale": "Use KiCad's thermal-via QFN footprint so the exposed pad can dump heat into the inner planes.",
+     "lines": {
+      "17": "QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm_ThermalVias"
+     }
+    },
+    {
+     "id": "r1-3",
+     "name": "Hand-solder the big passives",
+     "rationale": "The 0603 and 0805 parts are the ones a person would rework by hand, so give only those the longer hand-solder pads.",
+     "lines": {
+      "1": "C_0603_1608Metric_Pad1.08x0.95mm_HandSolder",
+      "2": "C_0805_2012Metric_Pad1.18x1.45mm_HandSolder",
+      "9": "R_0603_1608Metric_Pad0.98x0.95mm_HandSolder"
+     }
+    },
+    {
+     "id": "r1-4",
+     "name": "Wider SOIC for the flash",
+     "rationale": "KiCad's 5.275 mm SOIC-8 footprint also targets 208 mil bodies and has slightly longer pads.",
+     "lines": {
+      "19": "SOIC-8_5.275x5.275mm_P1.27mm"
+     }
+    },
+    {
+     "id": "r1-5",
+     "name": "Hand-solder the crystal",
+     "rationale": "The 3225 crystal has pads under the body; the hand-solder footprint exposes them for an iron.",
+     "lines": {
+      "21": "Crystal_SMD_3225-4Pin_3.2x2.5mm_HandSoldering"
+     }
+    },
+    {
+     "id": "r1-6",
+     "name": "Hand-solder LEDs and regulator",
+     "rationale": "LEDs are polarised and often replaced, and the regulator is the hottest part; longer pads make both easier to rework.",
+     "lines": {
+      "5": "LED_0603_1608Metric_Pad1.05x0.95mm_HandSolder",
+      "18": "SOT-23-5_HandSoldering"
+     }
+    }
+   ]
+  },
+  {
+   "round": 2,
+   "title": "After reading Lean's findings on round 1",
+   "proposals": [
+    {
+     "id": "r2-1",
+     "name": "Nominal, with the paperwork fixed",
+     "rationale": "Lean flagged the same three package problems on every round 1 build: BOM row 5 says 8 LEDs for 7 designators, the two documents disagree on inner copper, and 330 Ω needs the 8 mA pad setting. Fix those and keep nominal footprints.",
+     "lines": {},
+     "knobs": {
+      "ledQty": 7,
+      "driveUA": 8000,
+      "cuInstructions": 5
+     }
+    },
+    {
+     "id": "r2-2",
+     "name": "No thermal-via footprint",
+     "rationale": "Lean rejected the thermal-via QFN: its vias are drilled below the 8 mil minimum. Keep the plain QFN and let the exposed pad and planes carry the heat.",
+     "lines": {},
+     "knobs": {
+      "ledQty": 7,
+      "driveUA": 8000,
+      "cuInstructions": 5
+     }
+    },
+    {
+     "id": "r2-3",
+     "name": "Hand-solder pads only where there is room",
+     "rationale": "Lean showed the hand-solder crystal collides with R7, R13, R14 and R17. Keep the nominal crystal; use hand-solder pads only on the LEDs and the regulator, which Lean rated buildable.",
+     "lines": {
+      "5": "LED_0603_1608Metric_Pad1.05x0.95mm_HandSolder",
+      "18": "SOT-23-5_HandSoldering"
+     },
+     "knobs": {
+      "ledQty": 7,
+      "driveUA": 8000,
+      "cuInstructions": 5
+     }
+    }
+   ]
+  }
+ ]
+}

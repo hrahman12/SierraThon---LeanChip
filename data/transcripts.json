@@ -1,0 +1,37 @@
+[
+ {
+  "prompt": "Check our board with Lean. Give me green, yellow or red.",
+  "command": "python3 tools/leancheck.py pcb/sierrathon.kicad_pcb",
+  "output": "     GREEN    Every 3D body sits inside its own courtyard\n     GREEN    No two courtyards overlap, so no two bodies can collide\n     GREEN    Pads and bodies are on the board (inside the outline)\n     GREEN    Every drilled hole is at least 8 mil\n     YELLOW   Every part has a 3D body model\n              J1: no 3D model in the library\n  Package\n     YELLOW   BOM quantities match the designator lists\n              row 5: qty 8 but 7 designators\n     YELLOW   Inner copper: stack-up agrees with instructions\n              stack-up 5/10 oz vs instructions 10/10 oz; ask the fab (both readings meet 62 mil \u00b1 10 %)\n     GREEN    Stack-up thickness within 62 mil \u00b1 10 %\n              59.5 mil\n     GREEN    90 \u03a9 pairs use the stack-up geometry (5/4 mil), all other nets \u2265 6 mil\n              a single global 6 mil DFM rule would wrongly flag these 6 nets\n  Specs\n     YELLOW   LED current within the RP2040 pad drive (4 mA setting)\n              330 \u03a9 gives up to 4.945 mA: GPIO17\u201323 must be set to 8 mA drive (or 430 \u03a9)\n     GREEN    AP2112 junction temperature < 125 \u00b0C\n              106 \u00b0C worst case\n     GREEN    USB clock exactly 48 MHz\n              PLL 12 MHz \u00d7 100 \u00f7 5 \u00f7 5\n     GREEN    QSPI clock within W25Q128 limit\n              62.5 \u2264 133 MHz\n     GREEN    Crystal load capacitors suit the crystal\n              15.0 pF gives a 10.0 pF load\n     GREEN    USB-C Rd pull-downs inside the Type-C window\n              5100 \u03a9\n  Decoupling\n     GREEN    Decoupling on VBUS (1 on the schematic)\n              all fitted, 1000 nF\n     GREEN    Decoupling on +3.3V (10 on the schematic)\n              all fitted, 6100 nF\n     GREEN    Decoupling on +1.1V (3 on the schematic)\n              all fitted, 2400 nF\n     GREEN    Decoupling on ADC_AVDD (1 on the schematic)\n              all fitted, 2200 nF\n\n  OVERALL  YELLOW    certified by the Lean kernel (decide +kernel)\n  3D envelope: board 1.5112 mm + tallest body 4.3 mm = 5.811 mm   | theorem: no two bodies overlap",
+  "exit_code": 1,
+  "note": "Exit code 1 means YELLOW."
+ },
+ {
+  "prompt": "I swapped D5 around by mistake. Does the checker catch it?",
+  "command": "python3 tools/leancheck.py pcb/fault_led_reversed.kicad_pcb",
+  "output": "leancheck  fault_led_reversed.kicad_pcb  (54 footprints, Sierrathon BOM parts only)\n      RED     Every schematic pin is on the right net (schematic \u2194 PCB)\n              D5 pad 1: net LED3_A, schematic says GND; D5 pad 2: net GND, schematic says LED3_A\n      RED     No connections that are not on the schematic\n              D5 pad 1: connected to LED3_A, not on the schematic; D5 pad 2: connected to GND, not on the schematic\n      RED     LED polarity (cathode to GND)\n              D5: cathode (pad 1) not on GND\n  OVERALL   RED      certified by the Lean kernel (decide +kernel)",
+  "exit_code": 3,
+  "note": "Exit code 3 means RED."
+ },
+ {
+  "prompt": "Re-prove everything.",
+  "command": "lake build 2>&1 | tail -1 && grep -c '^theorem' LeanVsDFM/*.lean | grep -v ':0'",
+  "output": "Build completed successfully (34 jobs).\nLeanVsDFM/Breaks.lean:19\nLeanVsDFM/Check.lean:4\nLeanVsDFM/Fit3D.lean:4\nLeanVsDFM/Fixers.lean:30\nLeanVsDFM/Report.lean:4\nLeanVsDFM/Specs.lean:25\nLeanVsDFM/Verify.lean:11",
+  "exit_code": 0,
+  "note": ""
+ },
+ {
+  "prompt": "Does Lean's idea of where the parts are in 3D match KiCad's STEP export?",
+  "command": "python3 tools/check_step_agreement.py out3d/sierrathon_parts.json",
+  "output": "49 Lean bodies vs 49 bodies in KiCad's STEP export: largest outline (x, y) difference 0.0 \u00b5m, largest height difference 50 \u00b5m -> PASS",
+  "exit_code": 0,
+  "note": "A test, not a proof."
+ },
+ {
+  "prompt": "Is there any sorry, admit or native_decide in the proofs?",
+  "command": "grep -rn 'sorry\\|admit\\|native_decide' LeanVsDFM/*.lean | grep -v 'no `native_decide`' || echo 'none found'",
+  "output": "none found",
+  "exit_code": 0,
+  "note": ""
+ }
+]
