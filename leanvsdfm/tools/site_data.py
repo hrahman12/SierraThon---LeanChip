@@ -65,7 +65,7 @@ def main():
         T.append({"prompt": prompt, "command": cmd, "output": "\n".join(lines[-40:]), "exit_code": code, "note": note})
 
     rec("Check our board with Lean. Give me green, yellow or red.",
-        "python3 tools/leancheck.py pcb/sierrathon.kicad_pcb", note="Exit code 1 means YELLOW.")
+        "python3 tools/leancheck.py pcb/sierrathon.kicad_pcb", note="Certified YELLOW is accepted with warnings.")
     rec("I swapped D5 around by mistake. Does the checker catch it?",
         "python3 tools/leancheck.py pcb/fault_led_reversed.kicad_pcb",
         keep=lambda l: "RED" in l or "OVERALL" in l or l.strip().startswith("D5") or "leancheck" in l, note="Exit code 3 means RED.")

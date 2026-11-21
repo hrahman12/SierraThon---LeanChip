@@ -5,9 +5,17 @@ Sierrathon schematic PDF + BOM, transcribed by hand.
 Unnamed schematic nets get descriptive names (CC1, CC2, ADC_AVDD, XOUT_XTAL,
 LED*_A). Everything else uses the schematic's own net names.
 """
-import hashlib, json, datetime
+import argparse
+import datetime
+import hashlib
+import json
 from collections import defaultdict
 from pathlib import Path
+
+SOURCE_FILES = {
+    "Sierrathon_Schematic.pdf": "5ea766dbad13a9056ede6f61209510168a3f14011f0de9dbdb423a5a05102659",
+    "Sierrathon_BOM.xlsx": "39ba15d28d5883e5c12c9deb57445fd459c35ad13e80c90ac27a29e955ae53a8",
+}
 
 # ---- components: refdes -> (value, mpn, manufacturer, description, {pin: name}) ----
 BOM = {
@@ -139,6 +147,15 @@ def canonical(o):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--check", action="store_true", help="verify the supplied files and checked-in transcription")
+    args = parser.parse_args()
+    directory = Path(__file__).resolve().parent
+    for name, digest in SOURCE_FILES.items():
+        source = directory.parent / "site" / "files" / name
+        if hashlib.sha256(source.read_bytes()).hexdigest() != digest:
+            raise SystemExit(f"{name} differs from the source used for the transcription")
+
     nets, comps = build()
     payload = json.dumps(canonical({"nets": nets, "components": comps}), separators=(",", ":"), ensure_ascii=False)
     doc = {
@@ -147,11 +164,21 @@ def main():
             "generatedAt": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z"),
             "netlistHash": "sha256:" + hashlib.sha256(payload.encode()).hexdigest(),
             "origin": {"type": "native"},
+            "sourceTranscription": {"method": "manual", "sha256": SOURCE_FILES},
         },
         "nets": nets,
         "components": comps,
     }
-    out = Path(__file__).resolve().parent / "Sierrathon.netlist.json"
+    out = directory / "Sierrathon.netlist.json"
+    if args.check:
+        checked_in = json.loads(out.read_text())
+        del doc["metadata"]["generatedAt"]
+        checked_in["metadata"].pop("generatedAt", None)
+        if checked_in != doc:
+            raise SystemExit(f"{out.name} differs from the transcription")
+        print(f"Source hashes and transcription verified ({len(nets)} nets, {len(comps)} components).")
+        return
+
     out.write_text(json.dumps(doc, indent=2) + "\n")
     print(f"wrote {out}: {len(nets)} nets, {len(comps)} components")
 

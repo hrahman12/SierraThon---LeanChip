@@ -87,5 +87,6 @@ def main : IO UInt32 := do
   if s.errors.size > 0 then
     IO.println ("{\"error\":" ++ Check.jstr (", ".intercalate (s.errors.toList.take 5)) ++ "}")
     return 2
-  IO.println (Check.check s.knobs s.fps.toList s.outline.toList s.parts.toList s.thickness)
-  return 0
+  let rows := reportK s.knobs s.fps.toList s.outline.toList s.parts.toList
+  IO.println (Check.check rows s.knobs s.fps.toList s.outline.toList s.parts.toList s.thickness)
+  return if (overall rows).accepted then 0 else 3

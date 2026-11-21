@@ -17,8 +17,10 @@ const D = (f) => path.join(root, 'site', 'data', f);
 const tool = JSON.parse(fs.readFileSync(D('tool.json'), 'utf8'));
 const lean = (text) => {
   const p = spawnSync(BIN, [], { input: text, maxBuffer: 32e6 });
-  if (p.status !== 0) throw new Error('checker failed: ' + p.stdout + p.stderr);
-  return JSON.parse(p.stdout.toString('utf8'));
+  if (p.status !== 0 && p.status !== 3) throw new Error('checker failed: ' + p.stdout + p.stderr);
+  const report = JSON.parse(p.stdout.toString('utf8'));
+  if (report.accepted !== (p.status === 0)) throw new Error('checker exit status disagrees with acceptance');
+  return report;
 };
 const recorded = {};
 const run = async (state) => {
@@ -53,7 +55,10 @@ const out = [];
 for (const t of tests.tests) {
   const r = await run(applyProposal(tool, t.build));
   const comp = Object.fromEntries(r.components.map((c) => [c.ref, c.color]));
-  const checks = [{ what: 'overall', expected: t.expect.overall, actual: r.overall }];
+  const checks = [
+    { what: 'overall', expected: t.expect.overall, actual: r.overall },
+    { what: 'accepted', expected: t.expect.overall !== 'RED', actual: r.accepted },
+  ];
   for (const [ref, col] of Object.entries(t.expect.components || {})) checks.push({ what: ref, expected: col, actual: comp[ref] });
   for (const [frag, col] of Object.entries(t.expect.rows || {})) {
     const row = r.rows.find((x) => x.check.includes(frag));

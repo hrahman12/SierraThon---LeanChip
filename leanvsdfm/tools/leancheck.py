@@ -198,9 +198,10 @@ code{{color:#b9a7ff}} .cert{{margin-top:16px;color:var(--dim)}}
 <h1>leancheck: Sierrathon PCB</h1>
 <div class="sub">{html.escape(os.path.basename(src))} · {nfp} footprints · checked against the 21-line Sierrathon BOM and its manufacturer specs</div>
 <div class="big">{data['overall']}</div>
+<div class="cert">Design check: {'accepted' if data['accepted'] else 'blocked'}.</div>
 <table><tr><th>Section</th><th>Check</th><th>Result</th><th>Detail</th></tr>{rows}</table>
 <div class="cert">{cert}</div>
-<div class="cert">3D envelope: board {data['envelope']['board_thickness_mm']} mm + tallest body {data['envelope']['tallest_body_mm']} mm = {data['envelope']['total_height_mm']} mm.{' Theorem proved for this board: no two part bodies overlap.' if data.get('no_collision_theorem') else ''}</div>
+<div class="cert">3D envelope: board {data['envelope']['board_thickness_mm']} mm + tallest body {data['envelope']['tallest_body_mm']} mm = {data['envelope']['total_height_mm']} mm.{' No two modeled bodies overlap.' if data.get('no_collision_theorem') else ''}</div>
 </main></body></html>"""
     open(path, "w").write(doc)
 
@@ -240,14 +241,17 @@ def main():
              + ("theorem certified_no_collision : parts.Pairwise LeanVsDFM.Fit3D.bodySep :=\n"
                 "  LeanVsDFM.Fit3D.bodies_never_collide _ (by decide +kernel)\n" if fits else ""))
     certified = c.returncode == 0
+    data["accepted"] = certified and data["accepted"]
     data["no_collision_theorem"] = bool(fits and certified)
+    status = 4 if not certified else 0 if data["accepted"] else 3
 
     if "--json" in sys.argv:
         clean = lambda txt: [l.strip().strip(",[]") for l in txt.splitlines() if l.strip().strip(",[]")]
-        print(json.dumps({"overall": data["overall"], "rows": data["rows"], "certified": certified,
+        print(json.dumps({"overall": data["overall"], "accepted": data["accepted"],
+                          "rows": data["rows"], "certified": certified,
                           "issues": clean(findings), "fit_issues": clean(fit), "envelope": data["envelope"],
                           "no_collision_theorem": data["no_collision_theorem"]}))
-        return 0
+        return status
     print(f"\nleancheck  {os.path.basename(src)}  ({nfp} footprints, Sierrathon BOM parts only)\n")
     sec = None
     for r in data["rows"]:
@@ -259,13 +263,14 @@ def main():
             print(f"              {r['detail']}")
     print(f"\n  OVERALL {ANSI[data['overall']]}   "
           + ("certified by the Lean kernel (decide +kernel)" if certified else "NOT certified: " + c.stdout[-300:]))
+    print("  Design check: " + ("accepted" if data["accepted"] else "blocked"))
     e = data["envelope"]
     print(f"  3D envelope: board {e['board_thickness_mm']} mm + tallest body {e['tallest_body_mm']} mm = {e['total_height_mm']} mm"
-          + ("   | theorem: no two bodies overlap" if data["no_collision_theorem"] else ""))
+          + ("   | theorem: no two modeled bodies overlap" if data["no_collision_theorem"] else ""))
     if out_html:
         write_html(out_html, data, src, certified, nfp)
         print(f"  report: {out_html}")
-    return {"GREEN": 0, "YELLOW": 1, "RED": 3}[data["overall"]] if certified else 4
+    return status
 
 
 if __name__ == "__main__":

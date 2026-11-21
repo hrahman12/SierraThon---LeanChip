@@ -56,10 +56,6 @@ def describe : Issue → String
   | .landPattern r p => s!"{r} pad {p}: differs from the manufacturer land pattern"
   | .variantFootprint r l => s!"{r}: {l} is a buildable variant, not the preferred land pattern"
 
-def isMfr : Issue → Bool
-  | .wrongPackage _ _ w => w.startsWith "MFR:"
-  | _ => false
-
 def summary (msgs : List String) : String :=
   String.intercalate "; " (msgs.take 6) ++ (if msgs.length > 6 then s!"; … (+{msgs.length - 6})" else "")
 
@@ -78,8 +74,8 @@ def boardRows (b : List Footprint) : List Row :=
   [ row "Board" "Every schematic part is placed and on the BOM" .red
       (is.filter fun | .missing _ | .notOnBom _ => true | _ => false),
     row "Board" "Footprint package matches the BOM part number" .red
-      (is.filter fun i => match i with | .wrongPackage .. => !isMfr i | _ => false),
-    row "Board" "Manufacturer footprint used (not a library stand-in)" .yellow (is.filter isMfr),
+      (is.filter fun i => match i with | .wrongPackage .. => !isStandIn i | _ => false),
+    row "Board" "Manufacturer footprint used (not a library stand-in)" .yellow (is.filter isStandIn),
     row "Board" "Every schematic pin is on the right net (schematic ↔ PCB)" .red
       (is.filter fun | .wrongNet .. | .noPad .. => true | _ => false),
     row "Board" "No connections that are not on the schematic" .red
@@ -294,15 +290,27 @@ def packageRowsK (k : Knobs) : List Row :=
 /-- The package as supplied. -/
 def packageRows : List Row := packageRowsK {}
 
+/-- Every placed footprint needs exactly one matching geometry record. -/
+def geometryIssues (b : List Footprint) (ps : List Fit3D.Part) : List (List String × String) :=
+  let footprints := b.map (·.ref)
+  let parts := ps.map (·.ref)
+  (footprints ++ parts).eraseDups.filterMap fun ref =>
+    if footprints.count ref == 1 && parts.count ref == 1 then none
+    else some ([ref], s!"{ref}: expected one footprint and one geometry record")
+
 /-- The whole report for a board and a setting of the knobs. -/
 def reportK (k : Knobs) (b : List Footprint) (outline : List (Int × Int)) (ps : List Fit3D.Part) : List Row :=
-  boardRows b ++ fitRows outline ps ++ packageRowsK k
+  boardRows b ++ [rowI "3D fit" "Each footprint has one geometry record" .red (geometryIssues b ps)] ++
+    fitRows outline ps ++ packageRowsK k
 
 /-- The report for a board with the package as supplied: this is what `leancheck` prints. -/
 def report (b : List Footprint) (outline : List (Int × Int)) (ps : List Fit3D.Part) : List Row :=
   reportK {} b outline ps
 
 def overall (rows : List Row) : Color := rows.foldl (fun c r => c.worst r.color) .green
+
+/-- Green and yellow are accepted by the design checker. A red finding blocks acceptance. -/
+def Color.accepted (c : Color) : Bool := c.rank < Color.red.rank
 
 /-- The overall colour is at least as bad as every row. -/
 theorem worst_ge_left (a b : Color) : a.rank ≤ (a.worst b).rank := by
@@ -326,11 +334,19 @@ theorem overall_is_worst_aux (rows : List Row) (c : Color) :
 theorem overall_is_worst (rows : List Row) : ∀ r ∈ rows, r.color.rank ≤ (overall rows).rank :=
   (overall_is_worst_aux rows .green).2
 
+theorem accepted_has_no_red (rows : List Row) (h : (overall rows).accepted = true)
+    (r : Row) (hr : r ∈ rows) : r.color ≠ .red := by
+  intro hc
+  have hle := overall_is_worst rows r hr
+  rw [hc] at hle
+  exact (Nat.not_lt_of_ge hle) (of_decide_eq_true h)
+
 /-- JSON for the CLI and the HTML report. -/
 def esc (s : String) : String := (s.replace "\\" "\\\\").replace "\"" "\\\""
 
 def toJson (rows : List Row) : String :=
-  "{\"overall\":\"" ++ (overall rows).name ++ "\",\"rows\":[" ++
+  "{\"overall\":\"" ++ (overall rows).name ++ "\",\"accepted\":" ++
+    toString (overall rows).accepted ++ ",\"rows\":[" ++
     String.intercalate "," (rows.map fun r =>
       "{\"section\":\"" ++ esc r.section_ ++ "\",\"check\":\"" ++ esc r.check ++ "\",\"color\":\"" ++
         r.color.name ++ "\",\"detail\":\"" ++ esc r.detail ++ "\"}") ++ "]}"

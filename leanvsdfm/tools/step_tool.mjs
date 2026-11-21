@@ -2,6 +2,8 @@
 //   node step_tool.mjs bbox <a.step> [b.step ...]      -> JSON {file: {min:[x,y,z], max:[x,y,z]}} in mm
 //   node step_tool.mjs glb  <board.step> <out.glb> <out.json>
 //        -> binary glTF (y-up, mm) + JSON list of top-level parts with name and bbox (z-up, mm)
+//   node step_tool.mjs catalog <out.glb> <part.step> [part.step ...]
+//        -> named STEP models retaining their original footprint origins
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
@@ -23,18 +25,7 @@ function bboxOf(meshes) {
 }
 function collect(node, r, out) { for (const i of node.meshes) out.push(r.meshes[i]); for (const c of node.children) collect(c, r, out); return out; }
 
-const [cmd, ...args] = process.argv.slice(2);
-if (cmd === 'bbox') {
-  const out = {};
-  for (const f of args) out[path.basename(f)] = bboxOf(read(f).meshes);
-  console.log(JSON.stringify(out, null, 1));
-} else if (cmd === 'glb') {
-  const [src, dst, meta] = args;
-  const r = read(src);
-  // ---- part list (top-level children of the assembly) ----
-  let top = r.root; while (top.children.length === 1 && top.meshes.length === 0) top = top.children[0];
-  const parts = top.children.map(c => ({ name: c.name, ...bboxOf(collect(c, r, [])) }));
-  // ---- GLB ----
+function writeGlb(r, dst) {
   const bufs = []; let off = 0;
   const views = [], accessors = [], materials = [], matIndex = new Map(), gmeshes = [], nodes = [];
   const push = (typed, target) => { const b = Buffer.from(typed.buffer, typed.byteOffset, typed.byteLength); const pad = (4 - (b.length % 4)) % 4;
@@ -59,6 +50,7 @@ if (cmd === 'bbox') {
   }
   const meshMap = []; const outMeshes = []; gmeshes.forEach((g, i) => { if (g) { meshMap[i] = outMeshes.length; outMeshes.push(g); } });
   const addNode = (n) => { const me = { name: n.name }; const kids = [];
+    if (n.stepModel) me.extras = { stepModel: n.stepModel };
     for (const i of n.meshes) if (meshMap[i] !== undefined) { nodes.push({ name: r.meshes[i].name, mesh: meshMap[i] }); kids.push(nodes.length - 1); }
     for (const c of n.children) kids.push(addNode(c)); if (kids.length) me.children = kids; nodes.push(me); return nodes.length - 1; };
   const rootIdx = addNode(r.root);
@@ -68,6 +60,31 @@ if (cmd === 'bbox') {
   const bin = Buffer.concat(bufs); const head = Buffer.alloc(12); head.writeUInt32LE(0x46546C67, 0); head.writeUInt32LE(2, 4); head.writeUInt32LE(12 + 8 + jb.length + 8 + bin.length, 8);
   const jh = Buffer.alloc(8); jh.writeUInt32LE(jb.length, 0); jh.writeUInt32LE(0x4E4F534A, 4); const bh = Buffer.alloc(8); bh.writeUInt32LE(bin.length, 0); bh.writeUInt32LE(0x004E4942, 4);
   fs.writeFileSync(dst, Buffer.concat([head, jh, jb, bh, bin]));
+  console.log(`wrote ${dst} (${(fs.statSync(dst).size / 1e6).toFixed(2)} MB), ${outMeshes.length} meshes, ${materials.length} materials`);
+}
+
+const [cmd, ...args] = process.argv.slice(2);
+if (cmd === 'bbox') {
+  const out = {};
+  for (const f of args) out[path.basename(f)] = bboxOf(read(f).meshes);
+  console.log(JSON.stringify(out, null, 1));
+} else if (cmd === 'glb') {
+  const [src, dst, meta] = args;
+  const r = read(src);
+  let top = r.root; while (top.children.length === 1 && top.meshes.length === 0) top = top.children[0];
+  const parts = top.children.map(c => ({ name: c.name, ...bboxOf(collect(c, r, [])) }));
+  writeGlb(r, dst);
   fs.writeFileSync(meta, JSON.stringify({ source: path.basename(src), parts }, null, 1));
-  console.log(`wrote ${dst} (${(fs.statSync(dst).size / 1e6).toFixed(2)} MB), ${outMeshes.length} meshes, ${materials.length} materials, ${parts.length} top-level parts`);
-} else { console.error('usage: step_tool.mjs bbox <files> | glb <board.step> <out.glb> <out.json>'); process.exit(2); }
+} else if (cmd === 'catalog' && args.length >= 2) {
+  const [dst, ...sources] = args;
+  const meshes = [];
+  const names = new Set();
+  const children = sources.map((source) => {
+    const name = path.basename(source, path.extname(source));
+    if (names.has(name)) throw new Error(`Duplicate catalog model: ${name}`);
+    names.add(name);
+    const ids = read(source).meshes.map((mesh) => meshes.push(mesh) - 1);
+    return { name, stepModel: name, meshes: ids, children: [] };
+  });
+  writeGlb({ meshes, root: { name: 'Component catalog', meshes: [], children } }, dst);
+} else { console.error('usage: step_tool.mjs bbox <files> | glb <board.step> <out.glb> <out.json> | catalog <out.glb> <part.step> [part.step ...]'); process.exit(2); }

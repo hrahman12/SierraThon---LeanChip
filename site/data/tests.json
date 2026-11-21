@@ -15,6 +15,11 @@
      "actual": "YELLOW"
     },
     {
+     "what": "accepted",
+     "expected": true,
+     "actual": true
+    },
+    {
      "what": "U1",
      "expected": "GREEN",
      "actual": "GREEN"
@@ -68,6 +73,11 @@
      "what": "overall",
      "expected": "YELLOW",
      "actual": "YELLOW"
+    },
+    {
+     "what": "accepted",
+     "expected": true,
+     "actual": true
     },
     {
      "what": "D5",
@@ -128,6 +138,11 @@
      "actual": "RED"
     },
     {
+     "what": "accepted",
+     "expected": false,
+     "actual": false
+    },
+    {
      "what": "D5",
      "expected": "RED",
      "actual": "RED"
@@ -166,6 +181,11 @@
      "actual": "RED"
     },
     {
+     "what": "accepted",
+     "expected": false,
+     "actual": false
+    },
+    {
      "what": "U3",
      "expected": "RED",
      "actual": "RED"
@@ -199,6 +219,11 @@
      "actual": "RED"
     },
     {
+     "what": "accepted",
+     "expected": false,
+     "actual": false
+    },
+    {
      "what": "U3",
      "expected": "RED",
      "actual": "RED"
@@ -230,6 +255,11 @@
      "what": "overall",
      "expected": "RED",
      "actual": "RED"
+    },
+    {
+     "what": "accepted",
+     "expected": false,
+     "actual": false
     },
     {
      "what": "C4",
@@ -270,6 +300,11 @@
      "actual": "RED"
     },
     {
+     "what": "accepted",
+     "expected": false,
+     "actual": false
+    },
+    {
      "what": "U1",
      "expected": "RED",
      "actual": "RED"
@@ -301,6 +336,11 @@
      "what": "overall",
      "expected": "RED",
      "actual": "RED"
+    },
+    {
+     "what": "accepted",
+     "expected": false,
+     "actual": false
     },
     {
      "what": "Y1",
@@ -341,6 +381,11 @@
      "actual": "YELLOW"
     },
     {
+     "what": "accepted",
+     "expected": true,
+     "actual": true
+    },
+    {
      "what": "C3",
      "expected": "YELLOW",
      "actual": "YELLOW"
@@ -373,6 +418,11 @@
      "what": "overall",
      "expected": "RED",
      "actual": "RED"
+    },
+    {
+     "what": "accepted",
+     "expected": false,
+     "actual": false
     },
     {
      "what": "C3",
@@ -413,6 +463,11 @@
      "actual": "RED"
     },
     {
+     "what": "accepted",
+     "expected": false,
+     "actual": false
+    },
+    {
      "what": "C8",
      "expected": "RED",
      "actual": "RED"
@@ -444,6 +499,11 @@
      "what": "overall",
      "expected": "RED",
      "actual": "RED"
+    },
+    {
+     "what": "accepted",
+     "expected": false,
+     "actual": false
     },
     {
      "what": "C17",
@@ -479,6 +539,11 @@
      "actual": "RED"
     },
     {
+     "what": "accepted",
+     "expected": false,
+     "actual": false
+    },
+    {
      "what": "R12",
      "expected": "RED",
      "actual": "RED"
@@ -512,6 +577,11 @@
      "actual": "RED"
     },
     {
+     "what": "accepted",
+     "expected": false,
+     "actual": false
+    },
+    {
      "what": "90 Ω pairs",
      "expected": "RED",
      "actual": "RED"
@@ -538,6 +608,11 @@
      "what": "overall",
      "expected": "RED",
      "actual": "RED"
+    },
+    {
+     "what": "accepted",
+     "expected": false,
+     "actual": false
     },
     {
      "what": "Y1",
@@ -573,6 +648,11 @@
      "actual": "RED"
     },
     {
+     "what": "accepted",
+     "expected": false,
+     "actual": false
+    },
+    {
      "what": "U2",
      "expected": "RED",
      "actual": "RED"
@@ -604,6 +684,11 @@
      "what": "overall",
      "expected": "RED",
      "actual": "RED"
+    },
+    {
+     "what": "accepted",
+     "expected": false,
+     "actual": false
     },
     {
      "what": "Stack-up thickness",

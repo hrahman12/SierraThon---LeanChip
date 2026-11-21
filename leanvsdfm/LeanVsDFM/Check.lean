@@ -92,19 +92,20 @@ def compJson (rows : List Row) (b : List Footprint) (ps : List Fit3D.Part) (dni 
   ",\"notes\":" ++ jarr ((hits rows ref).map fun h => jstr h.2) ++ geo ++ "}"
 
 /-- Everything the page shows for one build. -/
-def check (k : Knobs) (b : List Footprint) (outline : List (Int × Int)) (ps : List Fit3D.Part) (thickness : Int) : String :=
-  let rows := reportK k b outline ps
+def check (rows : List Row) (k : Knobs) (b : List Footprint) (outline : List (Int × Int))
+    (ps : List Fit3D.Part) (thickness : Int) : String :=
   let refs := b.map (·.ref) ++ Package.schematicRefdes.filter (fun r => !(b.any (·.ref == r)))
   let cols := refs.map (compColor rows)
   let n (c : Color) : Nat := (cols.filter (· == c)).length
   "{\"overall\":" ++ jstr (overall rows).name ++
+  ",\"accepted\":" ++ toString (overall rows).accepted ++
   ",\"rows\":" ++ jarr (rows.map rowJson) ++
   ",\"components\":" ++ jarr (refs.map (compJson rows b ps k.dni)) ++
   ",\"board\":{\"color\":" ++ jstr (boardColor rows).name ++ ",\"notes\":" ++ jarr ((boardHits rows).map fun h => jstr h.2) ++ "}" ++
   ",\"outline\":" ++ jarr (outline.map fun (x, y) => s!"[{x},{y}]") ++
   s!",\"counts\":\{\"green\":{n .green},\"yellow\":{n .yellow},\"red\":{n .red}}" ++
   s!",\"envelope\":\{\"thickness_nm\":{thickness},\"tallest_nm\":{Fit3D.maxHeight ps}}" ++
-  ",\"collision_free\":" ++ (if Fit3D.fitOk ps then "true" else "false") ++
+  ",\"collision_free\":" ++ toString ((geometryIssues b ps).isEmpty && Fit3D.fitOk ps) ++
   ",\"rails\":" ++ jarr (rails.map fun r => "{\"net\":" ++ jstr r.net ++ s!",\"minTotalNF\":{r.minTotalNF},\"minSmall\":{r.minSmall}" ++
     ",\"why\":" ++ jstr r.why ++ ",\"caps\":" ++ jarr ((railCaps r.net).map fun c => "{\"ref\":" ++ jstr c ++ s!",\"nF\":{capNF c}}") ++ "}") ++
   ",\"checker\":\"Lean 4, compiled from LeanVsDFM/Check.lean\"}"

@@ -96,6 +96,9 @@ select{width:100%;font:14px var(--sans);background:var(--bg);color:var(--ink);bo
 .vhead{display:flex;flex-wrap:wrap;gap:12px;align-items:center} .pill.big{font-size:20px;padding:8px 18px}
 #boardwrap{background:radial-gradient(ellipse at 50% 55%,#14264a,#060b18 78%);border:1px solid var(--line);border-radius:12px;overflow:hidden}
 #board2d,#board3d{display:block;width:100%;aspect-ratio:1.16;touch-action:none}
+#boardwrap [hidden],#resetView[hidden]{display:none}
+#board3d{cursor:grab} #board3d:active{cursor:grabbing}
+#modelStatus{min-height:1.4em;padding:3px 0}
 #board2d rect{transition:fill .45s} #board2d .c{cursor:pointer} #board2d text{font:1.1px var(--mono);fill:#fff;pointer-events:none}
 </style>
 </head>
@@ -104,7 +107,7 @@ select{width:100%;font:14px var(--sans);background:var(--bg);color:var(--ink);bo
   <img src="assets/leanchip_banner.png" alt="LeanChip: 2D to 3D, verified in Lean. The real Sierrathon schematic and stack-up on the left, a 3D render of the board exported by KiCad on the right, the Lean turnstile between them.">
   <nav aria-label="Sections">
     <a class="primary" href="#tool">The tool</a><a href="#tests">Test cases</a><a href="#demo">Certified runs</a><a href="#board">3D export</a><a href="#breaks">Where it breaks</a>
-    <a href="#math">The proofs</a><a href="#claude">Claude Code</a><a href="#run">Run it locally</a>
+    <a href="#math">The proofs</a><a href="#claude">Claude Code</a><a href="#run-local">Run it locally</a>
     <a href="https://github.com/hrahman12/SierraThon---LeanChip">GitHub</a>
   </nav>
 </header>
@@ -112,7 +115,7 @@ select{width:100%;font:14px var(--sans);background:var(--bg);color:var(--ink);bo
 <h1>Does the 2D design really become the 3D board?</h1>
 <p class="lead">Pick a build, tweak it, and Lean answers for every component: <span class="pill GREEN">GREEN</span> proved, <span class="pill YELLOW">YELLOW</span> buildable but needs an action, <span class="pill RED">RED</span> not the design you meant. The checker behind this page is the compiled Lean code, the same one the command line runs.</p>
 
-<h2 id="tool"><span class="t">⊢</span>The tool</h2>
+<h2 id="tool"><span class="t" id="run">⊢</span>The tool</h2>
 <div class="tool">
  <div class="col">
   <section class="pane"><div class="ph">1 · CHOOSE A BUILD</div>
@@ -142,8 +145,9 @@ select{width:100%;font:14px var(--sans);background:var(--bg);color:var(--ink);bo
  <section class="pane" id="verdict"><div class="ph">3 · LEAN'S VERDICT</div>
   <div class="vhead"><span class="pill big" id="vpill">…</span><span id="vcounts" class="mono"></span></div>
   <div class="dim sm" id="vsrc"></div>
-  <div class="tabs" style="margin:10px 0 6px"><button id="v2d" aria-selected="true">2D design</button><button id="v3d" aria-selected="false">3D board</button></div>
-  <div id="boardwrap"><svg id="board2d" role="img" aria-label="Board with each component coloured by Lean's verdict"></svg><canvas id="board3d" hidden></canvas></div>
+  <div class="tabs" style="margin:10px 0 6px"><button id="v3d" aria-selected="true">3D board</button><button id="v2d" aria-selected="false">2D design</button><button id="resetView">Reset view</button></div>
+  <div id="boardwrap"><svg id="board2d" role="img" aria-label="Board with each component coloured by Lean's verdict" hidden></svg><canvas id="board3d" aria-label="Interactive 3D circuit board with component verdicts" aria-describedby="modelStatus"></canvas></div>
+  <div class="dim sm" id="modelStatus" role="status"></div>
   <div class="card sm" id="compinfo">Click a component to see what Lean found.</div>
   <div class="tablewrap" style="margin-top:10px"><table id="vrows"><thead><tr><th>Check</th><th>Result</th><th>Detail</th></tr></thead><tbody></tbody></table></div>
   <details class="sm" style="margin-top:8px"><summary>How this was checked</summary><div class="dim">The page turns your choices into a board description and sends it to <code>leanchip</code>, a binary compiled from <code>LeanVsDFM/Check.lean</code>. It runs <code>reportK</code>, the function the theorems are about. A component's colour is the worst finding that names it; <code>comp_le_overall</code> proves no component is worse than the overall verdict, and <code>bodies_never_collide</code> proves that when the fit check passes no two bodies overlap. For a kernel certificate of one board, run <code>leancheck</code> locally.</div></details>
@@ -210,7 +214,7 @@ select{width:100%;font:14px var(--sans);background:var(--bg);color:var(--ink);bo
 </div>
 <div id="transcripts"></div>
 
-<h2 id="run"><span class="t">⊢</span>Run it locally</h2>
+<h2 id="run-local"><span class="t">⊢</span>Run it locally</h2>
 <p class="dim">You need Lean 4 (through elan) and KiCad 7 with its Python module. On Windows, use WSL with Ubuntu 24.04.</p>
 <pre><span class="p">$</span> sudo apt install kicad kicad-footprints
 <span class="p">$</span> curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh
@@ -221,11 +225,11 @@ select{width:100%;font:14px var(--sans);background:var(--bg);color:var(--ink);bo
 
 <h2 id="limits"><span class="t">⊢</span>What this does not do yet</h2>
 <ul>
-  <li><b>The board is placed, not routed.</b> There are no traces yet, so there is no DRC result to show.</li>
+  <li><b>Fabrication check.</b> The supplied board has 124 unconnected items in KiCad 9.0.2 DRC. Run <code>check_drc.py</code> with the board file to gate on routing and DRC.</li>
   <li><b>Four parts use library stand-ins</b> (USB-C J1, switches SW1 to SW3). Their manufacturer footprints and 3D models are needed; the report keeps them yellow until then.</li>
-  <li><b>Bodies are checked as boxes</b> (their measured bounding boxes), which is the conservative choice.</li>
-  <li><b>The schematic was transcribed from the PDF by hand</b> into a netlist. Lean checks the board against that netlist.</li>
-  <li><b>Datasheet numbers are named assumptions</b> in the Lean files. Change one and the build tells you which results still hold.</li>
+  <li><b>3D fit checks.</b> Lean proves separation for measured bounding boxes. OpenCascade checks shared solid volume in the STEP assembly. The current export covers 49 bodies and is missing J1.</li>
+  <li><b>Schematic provenance.</b> The 39-net transcription is tied to the supplied schematic PDF and BOM by SHA-256. An independent connectivity check requires the native design or its exported netlist.</li>
+  <li><b>Electrical inputs.</b> The Raspberry Pi SDK specifies the pad-drive settings. The thermal, load and parasitic estimates in the Lean model still need board-level verification.</li>
 </ul>
 <footer>LeanChip · Sierrathon 2026 · Hanah Rahman · built with Lean 4, KiCad 7, OpenCascade and Claude Code</footer>
 </main>
@@ -239,6 +243,7 @@ const j = (u) => fetch(u).then((r) => r.json());
 const COL = { GREEN: '#1f9d55', YELLOW: '#d69e2e', RED: '#e5484d' };
 const [tool, props, tests, recorded] = await Promise.all([j('data/tool.json'), j('data/proposals.json'), j('data/tests.json'), j('data/recorded.json')]);
 let state = defaultState(tool), live = null, last = null, seq = 0, upload = null, picked = null;
+let boardProtocol;
 
 async function lean(text) {            // the live Lean binary; recorded Lean output if it cannot be reached
   if (live !== false) try {
@@ -254,22 +259,37 @@ async function lean(text) {            // the live Lean binary; recorded Lean ou
 const textNow = () => upload ? upload.text(state) : buildText(tool, state);
 async function check() {
   const me = ++seq; $('#vsrc').textContent = 'checking…';
+  last = null;
+  $('#vpill').className = 'pill big';
+  $('#vpill').textContent = '…';
+  $('#vcounts').textContent = '';
+  $('#vrows tbody').replaceChildren();
+  $('#compinfo').textContent = '';
   for (const r of document.querySelectorAll('#board2d rect.b')) r.setAttribute('fill', '#5b6779');
-  let d; try { d = await lean(textNow()); } catch (e) { $('#vsrc').textContent = 'Checker error: ' + e.message; return; }
+  const protocol = textNow();
+  let d; try { d = await lean(protocol); } catch (e) {
+    if (me === seq) {
+      $('#vpill').textContent = '?';
+      $('#vsrc').textContent = 'Checker error: ' + e.message;
+    }
+    return;
+  }
   if (me !== seq) return;
   if (!d) { $('#vpill').className = 'pill big'; $('#vpill').textContent = '?'; $('#vcounts').textContent = ''; $('#vsrc').textContent = 'This combination has no recorded result and the live Lean checker is not reachable here. Open leanchip.vercel.app or run the site locally.'; return; }
-  last = d; show(d);
+  last = d; boardProtocol = protocol; show(d);
 }
 function show(d) {
   $('#vpill').className = 'pill big ' + d.overall; $('#vpill').textContent = d.overall;
   $('#vcounts').textContent = `${d.counts.green} green · ${d.counts.yellow} yellow · ${d.counts.red} red components`;
-  $('#vsrc').textContent = d._src + (d.collision_free ? ' · no two bodies can collide' : '');
+  const decision = d.accepted === true ? (d.overall === 'YELLOW' ? 'Design accepted with warnings' : 'Design accepted') : 'Design blocked';
+  $('#vsrc').textContent = decision + ' · ' + d._src + (d.collision_free ? ' · modeled bodies have clear courtyards' : '');
   $('#vrows tbody').innerHTML = d.rows.map((r) => `<tr><td><span class="dim mono" style="font-size:12px">${esc(r.section)}</span><br>${esc(r.check)}</td><td><span class="pill ${r.color}">${r.color}</span></td><td class="dim">${esc(r.detail)}</td></tr>`).join('');
   draw2d(d); if (!$('#board3d').hidden) draw3d(d);
   info(picked && d.components.find((c) => c.ref === picked) ? picked : null);
 }
 function info(ref) {
   picked = ref; const d = last; if (!d) return;
+  boardViewer?.select(ref);
   if (!ref) { $('#compinfo').innerHTML = (d.board.notes.length ? `<b>Bare board</b> <span class="pill ${d.board.color}">${d.board.color}</span><br>${d.board.notes.map(esc).join('<br>')}<br>` : '') + '<span class="dim">Click a component to see what Lean found.</span>'; return; }
   const c = d.components.find((x) => x.ref === ref);
   $('#compinfo').innerHTML = `<b>${esc(c.ref)}</b> <span class="pill ${c.color}">${c.color}</span> <span class="dim mono" style="font-size:12.5px">${esc(c.lib)}${c.fitted ? '' : ' · not fitted'}</span><br>` + (c.notes.length ? c.notes.map(esc).join('<br>') : '<span class="dim">Proved: right package, every pin on its net, body inside its courtyard, no overlap, on the board.</span>');
@@ -288,27 +308,42 @@ function draw2d(d) {
   requestAnimationFrame(() => setTimeout(() => svg.querySelectorAll('rect.b').forEach((r) => r.setAttribute('fill', r.dataset.fill)), 120));   // colours land at the end of the build
   svg.querySelectorAll('.c').forEach((n) => n.onclick = () => { info(n.dataset.ref); draw2d(last); });
 }
-let three = null;
+let boardViewer, viewerLoad;
 async function draw3d(d) {
-  const cv = $('#board3d');
   try {
-    if (!three) { const T = await import('three'), { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
-      const r = new T.WebGLRenderer({ canvas: cv, antialias: true, alpha: true }), sc = new T.Scene(), cam = new T.PerspectiveCamera(30, 1.16, 1, 2000), ctl = new OrbitControls(cam, cv);
-      sc.add(new T.HemisphereLight(0xffffff, 0x1a2540, 1.6)); const k = new T.DirectionalLight(0xffffff, 2); k.position.set(40, 90, 60); sc.add(k);
-      cam.position.set(-30, 62, 62); ctl.enableDamping = true; const grp = new T.Group(); sc.add(grp);
-      const fit = () => { const w = cv.clientWidth, h = cv.clientHeight; r.setPixelRatio(Math.min(devicePixelRatio, 2)); r.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); };
-      new ResizeObserver(fit).observe(cv); fit(); r.setAnimationLoop(() => { ctl.update(); r.render(sc, cam); }); three = { T, grp }; }
-    const { T, grp } = three; grp.clear(); const mm = (v) => v / 1e6, th = mm(d.envelope.thickness_nm);
-    const cxm = d.outline.reduce((a, p) => a + mm(p[0]), 0) / d.outline.length, cym = d.outline.reduce((a, p) => a + mm(p[1]), 0) / d.outline.length;
-    const sh = new T.Shape(d.outline.map((p) => new T.Vector2(mm(p[0]) - cxm, -(mm(p[1]) - cym))));
-    const pcb = new T.Mesh(new T.ExtrudeGeometry(sh, { depth: th, bevelEnabled: false }), new T.MeshStandardMaterial({ color: 0x1f5a45, roughness: .7 })); pcb.rotation.x = -Math.PI / 2; pcb.position.y = -th; grp.add(pcb);
-    for (const c of d.components) { if (!c.court) continue; const b = (c.body || c.court).map(mm), hh = c.body ? Math.max(mm(c.h), .15) : .08;
-      const m = new T.Mesh(new T.BoxGeometry(b[2] - b[0], hh, b[3] - b[1]), new T.MeshStandardMaterial({ color: COL[c.color], roughness: .5, transparent: !c.fitted, opacity: c.fitted ? 1 : .3 }));
-      m.position.set((b[0] + b[2]) / 2 - cxm, hh / 2, (b[1] + b[3]) / 2 - cym); grp.add(m); }
-  } catch (e) { cv.hidden = true; $('#board2d').hidden = false; $('#v3d').disabled = true; }
+    if (!viewerLoad) {
+      $('#modelStatus').textContent = 'Loading component models…';
+      viewerLoad = import('./board_viewer.js').then(({ createBoardViewer }) => createBoardViewer($('#board3d'), (ref) => {
+        if (!last) return;
+        info(ref);
+        draw2d(last);
+      }));
+    }
+    boardViewer = await viewerLoad;
+    if (d !== last || $('#board3d').hidden) return;
+    const missing = boardViewer.render(d, boardProtocol, picked);
+    $('#modelStatus').textContent = d.outline.length < 3
+      ? 'A closed board outline is needed for the 3D view.'
+      : 'Drag to orbit · scroll to zoom · select a component for its findings.'
+        + (missing.length ? ' Footprint only: ' + missing.join(', ') + '.' : '');
+  } catch {
+    $('#v3d').disabled = true;
+    setBoardView(false);
+    $('#modelStatus').textContent = '3D rendering is unavailable. Showing the 2D view.';
+  }
 }
-$('#v2d').onclick = () => { $('#board2d').hidden = false; $('#board3d').hidden = true; $('#v2d').setAttribute('aria-selected', true); $('#v3d').setAttribute('aria-selected', false); };
-$('#v3d').onclick = () => { $('#board2d').hidden = true; $('#board3d').hidden = false; $('#v3d').setAttribute('aria-selected', true); $('#v2d').setAttribute('aria-selected', false); if (last) draw3d(last); };
+function setBoardView(showModels) {
+  $('#board2d').toggleAttribute('hidden', showModels);
+  $('#board3d').hidden = !showModels;
+  $('#resetView').hidden = !showModels;
+  $('#v2d').setAttribute('aria-selected', !showModels);
+  $('#v3d').setAttribute('aria-selected', showModels);
+  if (showModels && last) draw3d(last);
+  if (!showModels) $('#modelStatus').textContent = '';
+}
+$('#v2d').onclick = () => setBoardView(false);
+$('#v3d').onclick = () => setBoardView(true);
+$('#resetView').onclick = () => boardViewer?.frame();
 
 // ----- step 2: the knobs -----
 function controls() {
@@ -376,14 +411,22 @@ $('#upfile').onchange = async (e) => {
 
 // ----- test cases -----
 function testTable(live) {
-  $('#testtable tbody').innerHTML = tests.tests.map((t) => `<tr><td><b>${esc(t.name)}</b><br><span class="dim sm">${esc(t.why)}</span></td><td>${t.checks.map((c) => `<span class="pill ${c.expected}">${esc(c.what === 'overall' ? 'overall' : c.what)}</span>`).join(' ')}</td><td><span class="pill ${t.overall}">${t.overall}</span></td><td><b style="color:${t.pass ? '#3ddc84' : '#ff8a80'}">${t.pass ? 'PASS' : 'FAIL'}</b></td></tr>`).join('');
-  $('#testnote').textContent = `${tests.tests.filter((t) => t.pass).length}/${tests.tests.length} pass` + (live ? ' (just re-run on the live Lean checker)' : '');
+  $('#testtable tbody').innerHTML = tests.tests.map((t) => {
+    const acceptance = t.checks.find((c) => c.what === 'accepted');
+    const colors = t.checks.filter((c) => c.what !== 'accepted');
+    return `<tr><td><b>${esc(t.name)}</b><br><span class="dim sm">${esc(t.why)}</span></td><td>${colors.map((c) => `<span class="pill ${c.expected}">${esc(c.what)}</span>`).join(' ')}</td><td><span class="pill ${t.overall}">${t.overall}</span> ${acceptance?.actual === true ? 'Accepted' : 'Blocked'}</td><td><b style="color:${t.pass ? '#3ddc84' : '#ff8a80'}">${t.pass ? 'Matches expectation' : 'Mismatch'}</b></td></tr>`;
+  }).join('');
+  $('#testnote').textContent = `${tests.tests.filter((t) => t.pass).length}/${tests.tests.length} tests matched` + (live ? ' (just re-run on the live Lean checker)' : '');
 }
 $('#rerun').onclick = async () => {
   $('#testnote').textContent = 'running…';
   for (const t of tests.tests) { const d = await lean(buildText(tool, applyProposal(tool, t.build))); if (!d) { $('#testnote').textContent = 'The live checker is not reachable here; showing the recorded run.'; return; }
     const comp = Object.fromEntries(d.components.map((c) => [c.ref, c.color]));
-    for (const c of t.checks) c.actual = c.what === 'overall' ? d.overall : comp[c.what] || (d.rows.find((r) => r.check.includes(c.what)) || {}).color;
+    for (const c of t.checks) {
+      if (c.what === 'accepted') c.actual = d.accepted;
+      else if (c.what === 'overall') c.actual = d.overall;
+      else c.actual = comp[c.what] || d.rows.find((r) => r.check.includes(c.what))?.color;
+    }
     t.overall = d.overall; t.pass = t.checks.every((c) => c.expected === c.actual); }
   testTable(live === true);
 };
@@ -403,7 +446,7 @@ function showRun(i) {
   $('#runhead').innerHTML = `<span class="pill ${r.overall}">${r.overall}</span> &nbsp;<b>${esc(r.title)}</b>
     <div class="dim" style="margin-top:6px">${esc(r.about)}</div>
     <div class="mono dim" style="margin-top:8px">${esc(r.file)} · ${r.certified ? 'certified by the Lean kernel' : 'NOT certified'}
-    · height ${r.envelope.total_height_mm} mm${r.no_collision_theorem ? ' · theorem: no two bodies overlap' : ''}</div>`;
+    · height ${r.envelope.total_height_mm} mm${r.no_collision_theorem ? ' · theorem: no two modeled bodies overlap' : ''}</div>`;
   $('#runtable tbody').innerHTML = r.rows.map((x) => `<tr><td class="dim">${esc(x.section)}</td><td>${esc(x.check)}</td>
     <td><span class="pill ${x.color}">${x.color}</span></td><td class="dim">${esc(x.detail)}</td></tr>`).join('');
 }
@@ -487,12 +530,20 @@ try {
   function paint(mode) {
     for (const [o, name] of meshes) {
       let col = 0x8a94a3, rough = 0.6, metal = 0.1;
-      if (mode === 'real') { const p = REAL.find((p) => p[0].test(name)); if (p) [, col, rough, metal] = p; }
-      else { col = /PCB/.test(name) ? 0x12305a : /^SW_/.test(name) ? 0xd69e2e : 0x1f9d55; }
-      o.material = new THREE.MeshStandardMaterial({ color: col, roughness: rough, metalness: metal });
+      const preset = REAL.find(([pattern]) => pattern.test(name));
+      if (preset) [, col, rough, metal] = preset;
+      const color = new THREE.Color(col);
+      if (mode === 'verdict' && !/PCB/.test(name)) {
+        color.lerp(new THREE.Color(/^SW_/.test(name) ? 0xf2bc62 : 0x54b789), 0.16);
+      }
+      if (!o.userData.displayMaterial) {
+        o.userData.displayMaterial = new THREE.MeshStandardMaterial({ roughness: rough, metalness: metal });
+      }
+      o.material = o.userData.displayMaterial;
+      o.material.color.copy(color);
     }
     $('#mReal').setAttribute('aria-selected', mode === 'real'); $('#mVerdict').setAttribute('aria-selected', mode !== 'real');
-    $('#viewnote').textContent = mode === 'real' ? '' : 'green = exact part verified · yellow = library stand-in';
+    $('#viewnote').textContent = mode === 'real' ? '' : 'Green and amber tints show the recorded package findings.';
   }
   $('#mReal').onclick = () => paint('real'); $('#mVerdict').onclick = () => paint('verdict');
   const fit = () => { const w = canvas.clientWidth, h = canvas.clientHeight; renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); renderer.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); };

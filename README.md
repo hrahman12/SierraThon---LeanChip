@@ -4,7 +4,7 @@
 for the Sierrathon RP2040 board and its exact 21-line parts list.</p>
 
 <p align="center">
-<img src="https://img.shields.io/badge/Lean_4.36-93_theorems-B9A7FF?style=for-the-badge&labelColor=0B1A33" alt="Lean 4.36: 93 theorems">
+<img src="https://img.shields.io/badge/Lean_4.36-98_theorems-B9A7FF?style=for-the-badge&labelColor=0B1A33" alt="Lean 4.36, 98 theorems">
 <img src="https://img.shields.io/badge/sorry-0-2DD4BF?style=for-the-badge&labelColor=0B1A33" alt="0 sorry">
 <img src="https://img.shields.io/badge/native__decide-0-2DD4BF?style=for-the-badge&labelColor=0B1A33" alt="0 native_decide">
 <img src="https://img.shields.io/badge/KiCad_7-STEP_export-FF6B5E?style=for-the-badge&labelColor=0B1A33" alt="KiCad 7 STEP export">
@@ -209,7 +209,7 @@ $$313 \le \frac{1}{2\pi RC} \le 424\ \text{Hz}$$
 
 $$0.9\cdot 90 \le 89.7 \le 1.1\cdot 90\ \Omega \qquad \lbrace r : \text{qty}(r)\ne \text{count}(r)\rbrace=\lbrace 5\rbrace \qquad \text{find?}\ p\ l=\text{some}\ a \Rightarrow p(a)\wedge a\in l \qquad \forall r:\ \text{rank}(r)\le\text{rank}(\text{overall})$$
 
-**93 theorems** in six modules: Breaks 19, Fit3D 4, Fixers 30, Report 4, Specs 25, Verify 11. No `sorry`, no `admit`, no `native_decide`; the only axioms used are Lean's three standard ones.
+The [theorem table](docs/THEOREMS.md) covers 98 theorems across seven modules, including the web checker. The proofs use Lean's three standard axioms.
 
 <p align="center"><img src="assets/viz/12_lean_proofs.png" alt="Theorems per module, split into those using no axioms and those using only the standard axioms" width="60%"></p>
 
@@ -264,7 +264,25 @@ cd leanvsdfm && lake build
 python3 tools/leancheck.py pcb/sierrathon.kicad_pcb --html report.html
 ```
 
-`lake build` checks every proof. `leancheck` exits 0 for green, 1 for yellow, 3 for red and 4 if the kernel did not certify the result.
+`lake build` checks every proof. In text and JSON modes, `leancheck` exits 0 for certified green or yellow, 3 for red, and 4 if certification fails. The web API returns a red report with HTTP 422. Yellow findings are accepted design warnings and still require review.
+
+From the repository root, run the fabrication gate separately with KiCad 9.
+
+```bash
+python3 leanvsdfm/tools/check_drc.py leanvsdfm/pcb/sierrathon.kicad_pcb --report /tmp/sierrathon-drc.json
+```
+
+This command exits 3 for DRC errors or unconnected items, 0 when only warnings or no findings remain, and 2 if DRC cannot run.
+
+Check the exported component solids with OpenCascade using the `OCP` Python module.
+
+```bash
+python3 leanvsdfm/tools/check_step_collisions.py leanvsdfm/out3d/sierrathon.step --expected-components 49
+```
+
+The check uses OpenCascade solid intersections for candidate pairs. Shared volume above `1e-9 mm³` blocks the check. The expected count covers the modeled components in the current export and excludes the PCB substrate.
+
+For live proposals on Vercel, set `ANTHROPIC_API_KEY` as a sensitive server-side variable for the project's Production environment, then redeploy. If the Anthropic project requires a different model, set `LEANCHIP_MODEL` to a model ID available to that project.
 
 ## Repository
 
@@ -287,8 +305,8 @@ python3 tools/leancheck.py pcb/sierrathon.kicad_pcb --html report.html
 
 ## What this does not do yet
 
-- **The board is placed, not routed.** There are no traces, so there is no DRC result and no DFM run to show.
+- **Fabrication is blocked.** KiCad 9.0.2 DRC reports 124 unconnected items and 79 silkscreen warnings on the supplied board. Routing and a fabrication-ready DFM review remain open.
 - **Four parts use library stand-ins** (USB-C J1, switches SW1 to SW3). Their manufacturer footprints and 3D models are needed; the report keeps them yellow until then.
-- **Bodies are checked as boxes**, their measured bounding boxes. That is the conservative choice.
-- **The schematic was transcribed from the PDF by hand** into a netlist. Lean checks the board against that netlist.
-- **Datasheet numbers are named assumptions** in the Lean files. Change one and `lake build` tells you which results still hold.
+- **3D fit has two checks.** Lean proves separation for the measured bounding boxes. OpenCascade checks shared solid volume directly in the STEP export. The current export covers 49 component bodies and is missing J1.
+- **Schematic provenance.** `python3 netlist/build_netlist.py --check` verifies the supplied PDF and BOM hashes and reproduces the 39-net transcription. Comparing connectivity directly with the schematic requires the native EDA design or its exported netlist.
+- **Electrical inputs.** Raspberry Pi's SDK confirms the 4 mA reset setting and the nominal 2, 4, 8 and 12 mA pad-drive options. The thermal resistance, ambient temperature, load budget, LED forward voltage and stray capacitance still need design-specific validation. [RP2040 pad registers](https://github.com/raspberrypi/pico-sdk/blob/2.2.0/src/rp2040/hardware_regs/include/hardware/regs/pads_bank0.h)

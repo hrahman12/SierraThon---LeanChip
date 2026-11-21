@@ -43,7 +43,7 @@ module.exports = async (req, res) => {
     const p = spawnSync(checker(), [], { input: body, maxBuffer: 16e6, timeout: 9000 });
     const out = (p.stdout || '').toString('utf8').trim();
     if (!out) { res.statusCode = 500; res.end(JSON.stringify({ error: 'checker gave no output', detail: String(p.error || (p.stderr || '').toString().slice(0, 300)) })); return; }
-    res.statusCode = p.status === 0 ? 200 : 400;
+    res.statusCode = { 0: 200, 2: 400, 3: 422 }[p.status] || 500;
     res.setHeader('X-Lean-ms', String(Date.now() - t0));
     res.end(out);
   } catch (e) {

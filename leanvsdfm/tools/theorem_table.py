@@ -266,7 +266,7 @@ T["Fit3D"] = [
      "If the checker's courtyard pass says yes, every pair of courtyards is separated.", NO, D_COURT),
     ("bodies_never_collide",
      r"$(\forall i:B_i\subseteq C_i)\land\mathrm{courtSep}(P)\Rightarrow\forall i\lt j:\mathrm{sep}(B_i,B_j)$",
-     "Main theorem: if the checker accepts a board, no two 3D part bodies overlap. It holds for any board.",
+     "When the fit predicate holds, no two modeled bodies overlap.",
      NO, D_COURT),
 ]
 
@@ -281,6 +281,8 @@ T["Report"] = [
      NO, D_VERDICT),
     ("overall_is_worst", r"$\forall r\in R:\mathrm{rank}(r)\le\mathrm{rank}(\mathrm{overall}(R))$",
      "The overall verdict is at least as bad as every row: one red row makes the board red.", NO, D_VERDICT),
+    ("accepted_has_no_red", r"$\mathrm{accepted}(\mathrm{overall}(R))\Rightarrow\forall r\in R:r.\mathrm{color}\ne\mathrm{red}$",
+     "Any red design finding blocks acceptance.", NO, D_VERDICT),
 ]
 
 T["Check"] = [

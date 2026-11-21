@@ -5,6 +5,13 @@
     "netlistHash": "sha256:06f20189de1feb60d2037612ba4380a070a6b2a62f4b20c4d0247bf0c484b71f",
     "origin": {
       "type": "native"
+    },
+    "sourceTranscription": {
+      "method": "manual",
+      "sha256": {
+        "Sierrathon_Schematic.pdf": "5ea766dbad13a9056ede6f61209510168a3f14011f0de9dbdb423a5a05102659",
+        "Sierrathon_BOM.xlsx": "39ba15d28d5883e5c12c9deb57445fd459c35ad13e80c90ac27a29e955ae53a8"
+      }
     }
   },
   "nets": {

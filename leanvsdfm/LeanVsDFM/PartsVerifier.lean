@@ -126,8 +126,15 @@ def verify (b : List Footprint) : List Issue :=
   b.flatMap checkPackage ++ checkPins b ++ b.flatMap checkStray ++ b.flatMap checkPolarity ++
   b.flatMap checkLand
 
-/-- Issues other than "needs the manufacturer footprint" and "variant footprint". -/
+/-- The known placeholders on the demo board. An arbitrary wrong footprint is a hard error. -/
+def isStandIn : Issue → Bool
+  | .wrongPackage "J1" "USB_C_Receptacle_HRO_TYPE-C-31-M-12" _ => true
+  | .wrongPackage "SW1" "SW_SPST_TL3342" _ | .wrongPackage "SW2" "SW_SPST_TL3342" _ => true
+  | .wrongPackage "SW3" "SW_PUSH_6mm" _ => true
+  | _ => false
+
+/-- Issues other than known placeholders and buildable variants. -/
 def electrical (is : List Issue) : List Issue :=
-  is.filter fun | .wrongPackage _ _ w => !w.startsWith "MFR:" | .variantFootprint _ _ => false | _ => true
+  is.filter fun | .variantFootprint _ _ => false | i => !isStandIn i
 
 end LeanVsDFM.Parts
